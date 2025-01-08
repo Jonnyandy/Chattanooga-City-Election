@@ -1,7 +1,7 @@
 import pandas as pd
 import json
-from typing import Dict, Any, Tuple, List
-from shapely.geometry import Point, Polygon
+from typing import Dict, Any, Tuple, List, Optional
+from shapely.geometry import Point, Polygon, mapping
 import math
 from pathlib import Path
 from utils.geocoding import geocode_address
@@ -26,7 +26,7 @@ def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
 
 def get_district_boundaries() -> Dict[str, Any]:
     """
-    Load real GeoJSON boundaries for Chattanooga city council districts
+    Load GeoJSON boundaries for Chattanooga city council districts
     """
     try:
         with open(Path('assets') / 'district_boundaries.json') as f:
@@ -39,6 +39,7 @@ def get_district_boundaries() -> Dict[str, Any]:
                 "type": "Feature",
                 "properties": {
                     "district": district,
+                    "description": feature['properties'].get('description', ''),
                     "style": {
                         "fillColor": "#1E88E5",
                         "color": "#1E88E5",
@@ -56,7 +57,7 @@ def get_district_boundaries() -> Dict[str, Any]:
         st.error("Error reading district boundaries data.")
         return {}
 
-def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Tuple[str, str, str]:
+def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Optional[Tuple[str, str, str]]:
     """
     Find the nearest polling place to the given coordinates using haversine distance
     """
@@ -93,37 +94,64 @@ def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Tupl
 
 def get_district_for_coordinates(lat: float, lon: float) -> str:
     """
-    Determine which district a point falls within using real boundaries
+    Determine which district a point falls within using GIS boundaries
     """
-    point = Point(lon, lat)
+    point = Point(lon, lat)  # Note: GeoJSON uses (lon, lat) order
     district_boundaries = get_district_boundaries()
 
+    # First, check if point is within any district
     for district, geojson in district_boundaries.items():
-        coords = geojson["geometry"]["coordinates"][0]
-        polygon = Polygon(coords)
-        if polygon.contains(point):
-            return district
+        try:
+            coords = geojson["geometry"]["coordinates"][0]
+            polygon = Polygon(coords)
+            if polygon.contains(point):
+                return district
+        except Exception as e:
+            st.debug(f"Error checking district {district}: {str(e)}")
+            continue
 
     # If point isn't in any polygon, find nearest district
     min_dist = float('inf')
     nearest_district = None
 
     for district, geojson in district_boundaries.items():
-        coords = geojson["geometry"]["coordinates"][0]
-        polygon = Polygon(coords)
-        dist = point.distance(polygon)
-        if dist < min_dist:
-            min_dist = dist
-            nearest_district = district
+        try:
+            coords = geojson["geometry"]["coordinates"][0]
+            polygon = Polygon(coords)
+            dist = point.distance(polygon)
+            if dist < min_dist:
+                min_dist = dist
+                nearest_district = district
+        except Exception as e:
+            st.debug(f"Error calculating distance to district {district}: {str(e)}")
+            continue
 
-    return nearest_district if nearest_district else "District not found"
+    if nearest_district:
+        st.info(f"Your location is just outside the city limits. Showing information for the nearest district: {nearest_district}")
+        return nearest_district
+
+    return "District not found"
 
 def get_district_info(lat: float, lon: float) -> dict:
     """
-    Get district information based on coordinates
+    Get comprehensive district information based on coordinates
     """
     # Determine district based on coordinates
     district = get_district_for_coordinates(lat, lon)
+
+    if district == "District not found":
+        return {
+            "district_number": district,
+            "precinct": "Not found",
+            "polling_place": "Not found",
+            "polling_address": "Not found",
+            "distance": "N/A",
+            "error": "Location outside city limits"
+        }
+
+    # Get district boundaries for additional info
+    boundaries = get_district_boundaries()
+    district_data = boundaries.get(district, {}).get('properties', {})
 
     # Get nearest polling place
     df = pd.read_csv('assets/polling_places.csv')
@@ -133,15 +161,17 @@ def get_district_info(lat: float, lon: float) -> dict:
         precinct, location_name, address = polling_info
         return {
             "district_number": district,
+            "district_description": district_data.get('description', ''),
             "precinct": precinct,
             "polling_place": location_name,
             "polling_address": address,
-            "distance": "Based on your location" # This could be enhanced with actual distance
+            "distance": "Based on your location"  # Could be enhanced with actual distance
         }
     else:
         st.warning("Unable to find the nearest polling place. Please contact the Election Commission for assistance.")
         return {
             "district_number": district,
+            "district_description": district_data.get('description', ''),
             "precinct": "Not found",
             "polling_place": "Not found",
             "polling_address": "Not found",
@@ -152,11 +182,19 @@ def get_council_member(district: str) -> dict:
     """
     Get council member information for a district
     """
-    df = pd.read_csv('assets/council_members.csv')
-    member = df[df['district'] == district].iloc[0]
+    try:
+        df = pd.read_csv('assets/council_members.csv')
+        member = df[df['district'] == district].iloc[0]
 
-    return {
-        "name": member['name'],
-        "email": member['email'],
-        "phone": member['phone']
-    }
+        return {
+            "name": member['name'],
+            "email": member['email'],
+            "phone": member['phone']
+        }
+    except Exception as e:
+        st.error(f"Error retrieving council member information: {str(e)}")
+        return {
+            "name": "Information unavailable",
+            "email": "Please contact the City Council office",
+            "phone": "(423) 643-7170"
+        }

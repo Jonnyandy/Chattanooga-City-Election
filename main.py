@@ -1,6 +1,6 @@
 import streamlit as st
 import folium
-from streamlit_folium import folium_static
+from streamlit_folium import st_folium
 import pandas as pd
 from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member, get_district_boundaries
@@ -19,7 +19,10 @@ with open('styles/custom.css') as f:
 
 # Header
 st.title("🗳️ Chattanooga Voting Information")
-st.markdown("Find your voting district, polling place, and election information")
+st.markdown("""
+Find your voting district, polling place, and election information. 
+This tool uses official City of Chattanooga district boundaries and polling location data.
+""")
 
 # Main content
 col1, col2 = st.columns([2, 1])
@@ -28,7 +31,8 @@ with col1:
     st.subheader("Find Your Voting Information")
     address = st.text_input(
         "Enter your street address and ZIP code",
-        placeholder="123 Main St 37402"
+        placeholder="123 Main St 37402",
+        help="Enter your complete street address including ZIP code to find your district and polling place."
     )
 
     if address:
@@ -45,11 +49,13 @@ with col1:
                 if district_info["district_number"] != "District not found":
                     # Create and display map
                     m = create_district_map(lat, lon, district_info)
-                    folium_static(m)
+                    st_folium(m, width=700)
 
                     # Display district information
                     st.subheader("Your District Information")
                     st.write(f"District: {district_info['district_number']}")
+                    if district_info.get('district_description'):
+                        st.write(f"Area: {district_info['district_description']}")
                     st.write(f"Precinct: {district_info['precinct']}")
 
                     # Council member information
@@ -57,7 +63,8 @@ with col1:
                         council_member = get_council_member(district_info['district_number'])
                         st.subheader("Your Council Member")
                         st.write(f"Name: {council_member['name']}")
-                        st.write(f"Contact: {council_member['email']}")
+                        st.write(f"Email: {council_member['email']}")
+                        st.write(f"Phone: {council_member['phone']}")
 
                         # Polling place information
                         if district_info['polling_place'] != "Not found":
@@ -85,7 +92,10 @@ with col1:
                     except Exception as e:
                         st.error("Error retrieving council member information. Please try again later.")
                 else:
-                    st.error("Unable to determine your district. Please verify your address or contact the Election Commission.")
+                    st.error("""
+                    Unable to determine your district. This may mean your address is outside the Chattanooga city limits. 
+                    Please verify your address or contact the Election Commission for assistance.
+                    """)
             else:
                 st.error("Unable to locate your address. Please check the format and try again.")
         else:
@@ -110,6 +120,7 @@ with col2:
 
     st.subheader("Voter ID Requirements")
     st.markdown("""
+    You must present a valid photo ID to vote in person. Acceptable IDs include:
     - Valid Tennessee driver's license
     - Valid photo ID issued by Tennessee
     - Valid U.S. passport
@@ -120,6 +131,6 @@ with col2:
 # Footer
 st.markdown("---")
 st.markdown(
-    "Data provided by Hamilton County Election Commission. "
+    "Data provided by Hamilton County Election Commission and City of Chattanooga. "
     "For official information, please visit the [Election Commission website](https://elect.hamiltontn.gov/)."
 )
