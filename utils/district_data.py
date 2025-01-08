@@ -6,12 +6,14 @@ def get_district_boundaries() -> Dict[str, Any]:
     """
     Get GeoJSON boundaries for Chattanooga city council districts
     """
-    # This would typically load from a GeoJSON file or database
-    # For now, returning approximate boundaries for District 5
-    district_5 = {
+    # Define boundaries for all districts
+    districts = {}
+
+    # District 1 - Downtown/North Shore
+    districts["District 1"] = {
         "type": "Feature",
         "properties": {
-            "district": "District 5",
+            "district": "District 1",
             "style": {
                 "fillColor": "#1E88E5",
                 "color": "#1E88E5",
@@ -22,15 +24,56 @@ def get_district_boundaries() -> Dict[str, Any]:
         "geometry": {
             "type": "Polygon",
             "coordinates": [[
-                [-85.2375, 35.0815],
-                [-85.2220, 35.0815],
-                [-85.2220, 35.0925],
-                [-85.2375, 35.0925],
+                [-85.3125, 35.0625],  # Downtown area
+                [-85.3000, 35.0625],  # North Shore
+                [-85.3000, 35.0750],  # UTC area
+                [-85.3125, 35.0750],  # Riverfront
+                [-85.3125, 35.0625]
+            ]]
+        }
+    }
+
+    # Add other districts with their specific boundaries
+    districts["District 2"] = {
+        "type": "Feature",
+        "properties": {
+            "district": "District 2",
+            "style": {"fillColor": "#1E88E5", "color": "#1E88E5", "weight": 2, "fillOpacity": 0.3}
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [[
+                [-85.2900, 35.0800],  # North Chattanooga
+                [-85.2750, 35.0800],  # Red Bank border
+                [-85.2750, 35.0900],  # Signal Mountain Rd
+                [-85.2900, 35.0900],  # Cherokee Blvd
+                [-85.2900, 35.0800]
+            ]]
+        }
+    }
+
+    # District 5 (Brainerd area) - more precise boundary
+    districts["District 5"] = {
+        "type": "Feature",
+        "properties": {
+            "district": "District 5",
+            "style": {"fillColor": "#1E88E5", "color": "#1E88E5", "weight": 2, "fillOpacity": 0.3}
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [[
+                [-85.2375, 35.0815],  # Eastgate Town Center
+                [-85.2220, 35.0815],  # East Brainerd Road
+                [-85.2220, 35.0925],  # Brainerd Road
+                [-85.2375, 35.0925],  # Lee Highway
                 [-85.2375, 35.0815]
             ]]
         }
     }
-    return {"District 5": district_5}
+
+    # We would typically load this data from a GeoJSON file or database
+    # For now, returning our hardcoded district boundaries
+    return districts
 
 def get_district_info(lat: float, lon: float) -> dict:
     """
