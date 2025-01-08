@@ -1,0 +1,52 @@
+/* Custom styles for the Streamlit app */
+
+/* Main header */
+.stTitle {
+    color: #1E88E5 !important;
+    font-weight: 600 !important;
+}
+
+/* Subheaders */
+.stSubheader {
+    color: #424242 !important;
+    font-weight: 500 !important;
+    margin-top: 1rem !important;
+}
+
+/* Text input */
+.stTextInput input {
+    border-radius: 5px !important;
+    border: 1px solid #E0E0E0 !important;
+}
+
+/* Buttons */
+.stButton button {
+    background-color: #1E88E5 !important;
+    color: white !important;
+    font-weight: 500 !important;
+    border-radius: 5px !important;
+}
+
+/* Error messages */
+.stError {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    padding: 0.75rem !important;
+    border-radius: 5px !important;
+}
+
+/* Information sections */
+.css-1d391kg {
+    background-color: #f8f9fa !important;
+    padding: 1rem !important;
+    border-radius: 5px !important;
+    margin: 0.5rem 0 !important;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    .stColumn {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+    }
+}
