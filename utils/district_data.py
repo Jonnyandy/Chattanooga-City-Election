@@ -4,6 +4,8 @@ from typing import Dict, Any, Tuple, List
 from shapely.geometry import Point, Polygon
 import math
 from pathlib import Path
+from utils.geocoding import geocode_address
+import streamlit as st
 
 def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
@@ -50,6 +52,9 @@ def get_district_boundaries() -> Dict[str, Any]:
     except FileNotFoundError:
         st.error("District boundaries data not found.")
         return {}
+    except json.JSONDecodeError:
+        st.error("Error reading district boundaries data.")
+        return {}
 
 def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Tuple[str, str, str]:
     """
@@ -59,14 +64,18 @@ def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Tupl
     nearest_place = None
 
     for _, place in df.iterrows():
-        # Get polling place coordinates (would need to geocode in production)
-        place_coords = geocode_address(f"{place['address']}, {place['city']}, {place['state']} {place['zip']}")
-        if place_coords:
-            place_lat, place_lon = place_coords
-            dist = haversine_distance(lat, lon, place_lat, place_lon)
-            if dist < min_dist:
-                min_dist = dist
-                nearest_place = place
+        try:
+            # Get polling place coordinates
+            place_coords = geocode_address(f"{place['address']}, {place['city']}, {place['state']} {place['zip']}")
+            if place_coords:
+                place_lat, place_lon = place_coords
+                dist = haversine_distance(lat, lon, place_lat, place_lon)
+                if dist < min_dist:
+                    min_dist = dist
+                    nearest_place = place
+        except Exception as e:
+            st.warning(f"Error geocoding polling place: {str(e)}")
+            continue
 
     if nearest_place is not None:
         return (
