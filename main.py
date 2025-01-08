@@ -3,7 +3,7 @@ import folium
 from streamlit_folium import folium_static
 import pandas as pd
 from utils.geocoding import validate_address, geocode_address
-from utils.district_data import get_district_info, get_council_member
+from utils.district_data import get_district_info, get_council_member, get_district_boundaries
 from utils.mapping import create_district_map
 
 # Page configuration
@@ -35,33 +35,46 @@ with col1:
         # Validate address
         if validate_address(address):
             # Get coordinates
-            lat, lon = geocode_address(address)
-            
-            # Get district information
-            district_info = get_district_info(lat, lon)
-            
-            # Create and display map
-            m = create_district_map(lat, lon, district_info)
-            folium_static(m)
-            
-            # Display district information
-            st.subheader("Your District Information")
-            st.write(f"District: {district_info['district_number']}")
-            st.write(f"Precinct: {district_info['precinct']}")
-            
-            # Council member information
-            council_member = get_council_member(district_info['district_number'])
-            st.subheader("Your Council Member")
-            st.write(f"Name: {council_member['name']}")
-            st.write(f"Contact: {council_member['email']}")
-            
-            # Polling place information
-            st.subheader("Your Polling Place")
-            st.write(f"Location: {district_info['polling_place']}")
-            st.write(f"Address: {district_info['polling_address']}")
-            st.write(f"Hours: 7:00 AM - 7:00 PM on Election Day")
+            coords = geocode_address(address)
+
+            if coords:
+                lat, lon = coords
+                # Get district information
+                district_info = get_district_info(lat, lon)
+
+                if district_info["district_number"] != "District not found":
+                    # Create and display map
+                    m = create_district_map(lat, lon, district_info)
+                    folium_static(m)
+
+                    # Display district information
+                    st.subheader("Your District Information")
+                    st.write(f"District: {district_info['district_number']}")
+                    st.write(f"Precinct: {district_info['precinct']}")
+
+                    # Council member information
+                    try:
+                        council_member = get_council_member(district_info['district_number'])
+                        st.subheader("Your Council Member")
+                        st.write(f"Name: {council_member['name']}")
+                        st.write(f"Contact: {council_member['email']}")
+
+                        # Polling place information
+                        if district_info['polling_place'] != "Not found":
+                            st.subheader("Your Polling Place")
+                            st.write(f"Location: {district_info['polling_place']}")
+                            st.write(f"Address: {district_info['polling_address']}")
+                            st.write(f"Hours: 7:00 AM - 7:00 PM on Election Day")
+                        else:
+                            st.warning("No polling place found for your location. Please contact the Election Commission for assistance.")
+                    except Exception as e:
+                        st.error("Error retrieving council member information. Please try again later.")
+                else:
+                    st.error("Unable to determine your district. Please verify your address or contact the Election Commission.")
+            else:
+                st.error("Unable to locate your address. Please check the format and try again.")
         else:
-            st.error("Please enter a valid Chattanooga address")
+            st.error("Please enter a valid street address and ZIP code (e.g., '123 Main St 37402')")
 
 with col2:
     st.subheader("Important Dates")
@@ -70,7 +83,7 @@ with col2:
     - **Registration Deadline:** October 7, 2024
     - **Early Voting Period:** October 16-31, 2024
     """)
-    
+
     st.subheader("Election Office Contact")
     st.markdown("""
     Hamilton County Election Commission  
@@ -79,7 +92,7 @@ with col2:
     Phone: (423) 493-5100  
     Email: vote@hamiltontn.gov
     """)
-    
+
     st.subheader("Voter ID Requirements")
     st.markdown("""
     - Valid Tennessee driver's license

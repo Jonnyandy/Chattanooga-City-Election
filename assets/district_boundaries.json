@@ -1,0 +1,23 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "district": "District 1",
+                "description": "Downtown/North Shore/UTC area"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-85.308990, 35.062500],  // MLK/UTC area
+                    [-85.305557, 35.059722],  // Riverfront
+                    [-85.302224, 35.065278],  // North Shore
+                    [-85.299446, 35.071667],  // Cherokee Blvd
+                    [-85.303335, 35.074722],  // Highland Park
+                    [-85.308990, 35.062500]   // Back to start
+                ]]
+            }
+        }
+    ]
+}
