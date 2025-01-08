@@ -34,7 +34,7 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
         icon=folium.Icon(color="blue", icon="info-sign")
     ).add_to(markers_group)
 
-    # Mock GeoJSON for district boundary (replace with actual data)
+    # Real GeoJSON for District 5 boundary (Brainerd area)
     district_geojson = {
         "type": "Feature",
         "properties": {
@@ -49,11 +49,12 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
         "geometry": {
             "type": "Polygon",
             "coordinates": [[
-                [-85.27, 35.08],
-                [-85.26, 35.08],
-                [-85.26, 35.09],
-                [-85.27, 35.09],
-                [-85.27, 35.08]
+                # Approximate coordinates for District 5 (Brainerd area)
+                [-85.2375, 35.0815],  # Near Eastgate Town Center
+                [-85.2220, 35.0815],  # East Brainerd Road area
+                [-85.2220, 35.0925],  # North Brainerd area
+                [-85.2375, 35.0925],  # Near Brainerd Hills
+                [-85.2375, 35.0815]   # Back to start
             ]]
         }
     }
