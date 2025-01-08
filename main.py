@@ -62,11 +62,26 @@ with col1:
                         # Polling place information
                         if district_info['polling_place'] != "Not found":
                             st.subheader("Your Polling Place")
-                            st.write(f"Location: {district_info['polling_place']}")
-                            st.write(f"Address: {district_info['polling_address']}")
-                            st.write(f"Hours: 7:00 AM - 7:00 PM on Election Day")
+                            st.write("Here's your assigned polling location:")
+                            st.markdown(f"""
+                            **Location Name:** {district_info['polling_place']}  
+                            **Address:** {district_info['polling_address']}  
+                            **Precinct:** {district_info['precinct']}  
+                            **Hours:** 7:00 AM - 7:00 PM on Election Day
+
+                            *This location was determined based on your provided address.*
+
+                            If you need to verify this information or find alternative polling locations,
+                            please contact the Hamilton County Election Commission at (423) 493-5100.
+                            """)
                         else:
-                            st.warning("No polling place found for your location. Please contact the Election Commission for assistance.")
+                            st.warning("""
+                            We couldn't determine your exact polling place. 
+                            Please contact the Hamilton County Election Commission:
+                            - Phone: (423) 493-5100
+                            - Email: vote@hamiltontn.gov
+                            - Address: 700 River Terminal Road, Chattanooga, TN 37406
+                            """)
                     except Exception as e:
                         st.error("Error retrieving council member information. Please try again later.")
                 else:

@@ -58,7 +58,7 @@ def get_district_boundaries() -> Dict[str, Any]:
 
 def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Tuple[str, str, str]:
     """
-    Find the nearest polling place to the given coordinates
+    Find the nearest polling place to the given coordinates using haversine distance
     """
     min_dist = float('inf')
     nearest_place = None
@@ -66,15 +66,21 @@ def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Tupl
     for _, place in df.iterrows():
         try:
             # Get polling place coordinates
-            place_coords = geocode_address(f"{place['address']}, {place['city']}, {place['state']} {place['zip']}")
+            polling_address = f"{place['address']}, {place['city']}, {place['state']} {place['zip']}"
+            place_coords = geocode_address(polling_address)
+
             if place_coords:
                 place_lat, place_lon = place_coords
                 dist = haversine_distance(lat, lon, place_lat, place_lon)
                 if dist < min_dist:
                     min_dist = dist
                     nearest_place = place
+                    st.debug(f"Found polling place {place['location_name']} at distance {dist:.2f} km")
+            else:
+                st.debug(f"Could not geocode address for polling place: {polling_address}")
+
         except Exception as e:
-            st.warning(f"Error geocoding polling place: {str(e)}")
+            st.warning(f"Error processing polling place {place['location_name']}: {str(e)}")
             continue
 
     if nearest_place is not None:
@@ -129,14 +135,17 @@ def get_district_info(lat: float, lon: float) -> dict:
             "district_number": district,
             "precinct": precinct,
             "polling_place": location_name,
-            "polling_address": address
+            "polling_address": address,
+            "distance": "Based on your location" # This could be enhanced with actual distance
         }
     else:
+        st.warning("Unable to find the nearest polling place. Please contact the Election Commission for assistance.")
         return {
             "district_number": district,
             "precinct": "Not found",
             "polling_place": "Not found",
-            "polling_address": "Not found"
+            "polling_address": "Not found",
+            "distance": "N/A"
         }
 
 def get_council_member(district: str) -> dict:
