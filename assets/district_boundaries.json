@@ -10,12 +10,80 @@
             "geometry": {
                 "type": "Polygon",
                 "coordinates": [[
-                    [-85.308990, 35.062500],  // MLK/UTC area
-                    [-85.305557, 35.059722],  // Riverfront
-                    [-85.302224, 35.065278],  // North Shore
-                    [-85.299446, 35.071667],  // Cherokee Blvd
-                    [-85.303335, 35.074722],  // Highland Park
-                    [-85.308990, 35.062500]   // Back to start
+                    [-85.308990, 35.062500],
+                    [-85.305557, 35.059722],
+                    [-85.302224, 35.065278],
+                    [-85.299446, 35.071667],
+                    [-85.303335, 35.074722],
+                    [-85.308990, 35.062500]
+                ]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "district": "District 2",
+                "description": "North Chattanooga/Red Bank area"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-85.290000, 35.080000],
+                    [-85.275000, 35.080000],
+                    [-85.275000, 35.090000],
+                    [-85.290000, 35.090000],
+                    [-85.290000, 35.080000]
+                ]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "district": "District 3",
+                "description": "Hixson/Middle Valley area"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-85.240000, 35.110000],
+                    [-85.220000, 35.110000],
+                    [-85.220000, 35.120000],
+                    [-85.240000, 35.120000],
+                    [-85.240000, 35.110000]
+                ]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "district": "District 4",
+                "description": "Bonny Oaks/Summit area"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-85.220000, 35.090000],
+                    [-85.200000, 35.090000],
+                    [-85.200000, 35.100000],
+                    [-85.220000, 35.100000],
+                    [-85.220000, 35.090000]
+                ]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "district": "District 5",
+                "description": "Brainerd/East Brainerd area"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-85.237500, 35.081500],
+                    [-85.222000, 35.081500],
+                    [-85.222000, 35.092500],
+                    [-85.237500, 35.092500],
+                    [-85.237500, 35.081500]
                 ]]
             }
         }
