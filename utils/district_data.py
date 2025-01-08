@@ -57,17 +57,16 @@ def get_district_boundaries() -> Dict[str, Any]:
         st.error("Error reading district boundaries data.")
         return {}
 
-def point_in_polygon(point: Point, polygon_coords: List[List[float]], buffer_distance: float = 0.001) -> bool:
+def point_in_polygon(point: Point, polygon_coords: List[List[float]], buffer_distance: float = 0.0001) -> bool:
     """
-    Check if a point is within a polygon with a small buffer zone for better accuracy
+    Check if a point is within a polygon with a very small buffer zone for boundary cases
     """
     try:
         polygon = Polygon(polygon_coords)
-        # Add a small buffer around the polygon to handle edge cases
+        # Reduced buffer distance for more precise boundary detection
         buffered_polygon = polygon.buffer(buffer_distance)
         return buffered_polygon.contains(point)
     except Exception as e:
-        # Replace st.debug with st.write for development feedback
         st.write(f"Notice: Point-in-polygon check: {str(e)}")
         return False
 
@@ -111,7 +110,7 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
     point = Point(lon, lat)  # GeoJSON uses (lon, lat) order
     district_boundaries = get_district_boundaries()
 
-    # First, check exact matches with a small buffer
+    # First pass: Check for exact containment
     for district, geojson in district_boundaries.items():
         try:
             coords = geojson["geometry"]["coordinates"][0]
@@ -121,34 +120,17 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
             st.write(f"Notice: District check for {district}: {str(e)}")
             continue
 
-    # If no exact match, find nearest district with distance calculation
-    min_dist = float('inf')
-    nearest_district = None
-    nearest_distance_km = None
-
+    # Second pass: If not found, check with slightly larger buffer
+    buffer_distance = 0.0005  # Slightly larger buffer for near-boundary cases
     for district, geojson in district_boundaries.items():
         try:
             coords = geojson["geometry"]["coordinates"][0]
-            polygon = Polygon(coords)
-            dist = point.distance(polygon)
-            dist_km = dist * 111  # Rough conversion to kilometers
-
-            if dist_km < min_dist:
-                min_dist = dist_km
-                nearest_district = district
-                nearest_distance_km = dist_km
-
+            if point_in_polygon(point, coords, buffer_distance):
+                st.info(f"Note: Your location is very close to {district} boundary")
+                return district
         except Exception as e:
-            st.write(f"Notice: Distance calculation for {district}: {str(e)}")
+            st.write(f"Notice: District buffer check for {district}: {str(e)}")
             continue
-
-    # Only return nearest district if it's within reasonable distance (5km)
-    if nearest_district and nearest_distance_km is not None and nearest_distance_km <= 5:
-        if nearest_distance_km <= 0.1:  # If very close to boundary
-            return nearest_district
-        else:
-            st.info(f"Note: Your location is near {nearest_district}")
-            return nearest_district
 
     st.warning("Your location appears to be outside Chattanooga city limits.")
     return "District not found"
