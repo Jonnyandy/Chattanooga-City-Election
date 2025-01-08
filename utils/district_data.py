@@ -67,7 +67,8 @@ def point_in_polygon(point: Point, polygon_coords: List[List[float]], buffer_dis
         buffered_polygon = polygon.buffer(buffer_distance)
         return buffered_polygon.contains(point)
     except Exception as e:
-        st.debug(f"Error in point_in_polygon check: {str(e)}")
+        # Replace st.debug with st.write for development feedback
+        st.write(f"Notice: Point-in-polygon check: {str(e)}")
         return False
 
 def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Optional[Tuple[str, str, str]]:
@@ -89,12 +90,10 @@ def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Opti
                 if dist < min_dist:
                     min_dist = dist
                     nearest_place = place
-                    st.debug(f"Found polling place {place['location_name']} at distance {dist:.2f} km")
-            else:
-                st.debug(f"Could not geocode address for polling place: {polling_address}")
-
+                    # Replace st.debug with st.write for development feedback
+                    st.write(f"Found polling place: {place['location_name']} ({dist:.2f} km away)")
         except Exception as e:
-            st.warning(f"Error processing polling place {place['location_name']}: {str(e)}")
+            st.warning(f"Notice: Error processing polling place {place['location_name']}")
             continue
 
     if nearest_place is not None:
@@ -117,10 +116,9 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
         try:
             coords = geojson["geometry"]["coordinates"][0]
             if point_in_polygon(point, coords):
-                st.debug(f"Found exact district match: {district}")
                 return district
         except Exception as e:
-            st.debug(f"Error checking district {district}: {str(e)}")
+            st.write(f"Notice: District check for {district}: {str(e)}")
             continue
 
     # If no exact match, find nearest district with distance calculation
@@ -141,16 +139,16 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
                 nearest_distance_km = dist_km
 
         except Exception as e:
-            st.debug(f"Error calculating distance to district {district}: {str(e)}")
+            st.write(f"Notice: Distance calculation for {district}: {str(e)}")
             continue
 
     # Only return nearest district if it's within reasonable distance (5km)
-    if nearest_district and nearest_distance_km <= 5:
-        st.info(
-            f"Your location appears to be near the boundary of {nearest_district}. "
-            "Distance to district boundary: {:.2f} km".format(nearest_distance_km)
-        )
-        return nearest_district
+    if nearest_district and nearest_distance_km is not None and nearest_distance_km <= 5:
+        if nearest_distance_km <= 0.1:  # If very close to boundary
+            return nearest_district
+        else:
+            st.info(f"Note: Your location is near {nearest_district}")
+            return nearest_district
 
     st.warning("Your location appears to be outside Chattanooga city limits.")
     return "District not found"
