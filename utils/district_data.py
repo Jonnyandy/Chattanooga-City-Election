@@ -57,6 +57,19 @@ def get_district_boundaries() -> Dict[str, Any]:
         st.error("Error reading district boundaries data.")
         return {}
 
+def point_in_polygon(point: Point, polygon_coords: List[List[float]], buffer_distance: float = 0.001) -> bool:
+    """
+    Check if a point is within a polygon with a small buffer zone for better accuracy
+    """
+    try:
+        polygon = Polygon(polygon_coords)
+        # Add a small buffer around the polygon to handle edge cases
+        buffered_polygon = polygon.buffer(buffer_distance)
+        return buffered_polygon.contains(point)
+    except Exception as e:
+        st.debug(f"Error in point_in_polygon check: {str(e)}")
+        return False
+
 def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Optional[Tuple[str, str, str]]:
     """
     Find the nearest polling place to the given coordinates using haversine distance
@@ -94,42 +107,52 @@ def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Opti
 
 def get_district_for_coordinates(lat: float, lon: float) -> str:
     """
-    Determine which district a point falls within using GIS boundaries
+    Determine which district a point falls within using GIS boundaries with improved accuracy
     """
-    point = Point(lon, lat)  # Note: GeoJSON uses (lon, lat) order
+    point = Point(lon, lat)  # GeoJSON uses (lon, lat) order
     district_boundaries = get_district_boundaries()
 
-    # First, check if point is within any district
+    # First, check exact matches with a small buffer
     for district, geojson in district_boundaries.items():
         try:
             coords = geojson["geometry"]["coordinates"][0]
-            polygon = Polygon(coords)
-            if polygon.contains(point):
+            if point_in_polygon(point, coords):
+                st.debug(f"Found exact district match: {district}")
                 return district
         except Exception as e:
             st.debug(f"Error checking district {district}: {str(e)}")
             continue
 
-    # If point isn't in any polygon, find nearest district
+    # If no exact match, find nearest district with distance calculation
     min_dist = float('inf')
     nearest_district = None
+    nearest_distance_km = None
 
     for district, geojson in district_boundaries.items():
         try:
             coords = geojson["geometry"]["coordinates"][0]
             polygon = Polygon(coords)
             dist = point.distance(polygon)
-            if dist < min_dist:
-                min_dist = dist
+            dist_km = dist * 111  # Rough conversion to kilometers
+
+            if dist_km < min_dist:
+                min_dist = dist_km
                 nearest_district = district
+                nearest_distance_km = dist_km
+
         except Exception as e:
             st.debug(f"Error calculating distance to district {district}: {str(e)}")
             continue
 
-    if nearest_district:
-        st.info(f"Your location is just outside the city limits. Showing information for the nearest district: {nearest_district}")
+    # Only return nearest district if it's within reasonable distance (5km)
+    if nearest_district and nearest_distance_km <= 5:
+        st.info(
+            f"Your location appears to be near the boundary of {nearest_district}. "
+            "Distance to district boundary: {:.2f} km".format(nearest_distance_km)
+        )
         return nearest_district
 
+    st.warning("Your location appears to be outside Chattanooga city limits.")
     return "District not found"
 
 def get_district_info(lat: float, lon: float) -> dict:
@@ -154,29 +177,31 @@ def get_district_info(lat: float, lon: float) -> dict:
     district_data = boundaries.get(district, {}).get('properties', {})
 
     # Get nearest polling place
-    df = pd.read_csv('assets/polling_places.csv')
-    polling_info = find_nearest_polling_place(lat, lon, df)
+    try:
+        df = pd.read_csv('assets/polling_places.csv')
+        polling_info = find_nearest_polling_place(lat, lon, df)
 
-    if polling_info:
-        precinct, location_name, address = polling_info
-        return {
-            "district_number": district,
-            "district_description": district_data.get('description', ''),
-            "precinct": precinct,
-            "polling_place": location_name,
-            "polling_address": address,
-            "distance": "Based on your location"  # Could be enhanced with actual distance
-        }
-    else:
-        st.warning("Unable to find the nearest polling place. Please contact the Election Commission for assistance.")
-        return {
-            "district_number": district,
-            "district_description": district_data.get('description', ''),
-            "precinct": "Not found",
-            "polling_place": "Not found",
-            "polling_address": "Not found",
-            "distance": "N/A"
-        }
+        if polling_info:
+            precinct, location_name, address = polling_info
+            return {
+                "district_number": district,
+                "district_description": district_data.get('description', ''),
+                "precinct": precinct,
+                "polling_place": location_name,
+                "polling_address": address,
+                "distance": "Based on your location"
+            }
+    except Exception as e:
+        st.error(f"Error retrieving polling place information: {str(e)}")
+
+    return {
+        "district_number": district,
+        "district_description": district_data.get('description', ''),
+        "precinct": "Not found",
+        "polling_place": "Not found",
+        "polling_address": "Not found",
+        "distance": "N/A"
+    }
 
 def get_council_member(district: str) -> dict:
     """
