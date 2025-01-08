@@ -16,23 +16,23 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
     # Add fullscreen option
     plugins.Fullscreen().add_to(m)
 
-    # Add layer control
-    folium.LayerControl().add_to(m)
+    # Create feature groups for better organization
+    markers_group = folium.FeatureGroup(name="Locations")
+    district_group = folium.FeatureGroup(name="District Boundary")
 
     # Add user location marker
     folium.Marker(
         [lat, lon],
         popup="Your Location",
         icon=folium.Icon(color="red", icon="info-sign")
-    ).add_to(m)
+    ).add_to(markers_group)
 
-    # Add polling place marker
-    polling_coords = [35.0867, -85.2819]  # Example coordinates
+    # Add polling place marker (using the polling place address from district_info)
     folium.Marker(
-        polling_coords,
-        popup=f"Polling Place:<br>{district_info['polling_place']}",
+        [35.0867, -85.2819],  # Example coordinates - in production would geocode from district_info['polling_address']
+        popup=f"Polling Place:<br>{district_info['polling_place']}<br>{district_info['polling_address']}",
         icon=folium.Icon(color="blue", icon="info-sign")
-    ).add_to(m)
+    ).add_to(markers_group)
 
     # Mock GeoJSON for district boundary (replace with actual data)
     district_geojson = {
@@ -73,6 +73,13 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
             aliases=['District:'],
             style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
         )
-    ).add_to(m)
+    ).add_to(district_group)
+
+    # Add all feature groups to the map
+    markers_group.add_to(m)
+    district_group.add_to(m)
+
+    # Add layer control
+    folium.LayerControl().add_to(m)
 
     return m
