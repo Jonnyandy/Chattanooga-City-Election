@@ -27,8 +27,8 @@ col1, col2 = st.columns([2, 1])
 with col1:
     st.subheader("Find Your Voting Information")
     address = st.text_input(
-        "Enter your Chattanooga address",
-        placeholder="123 Main St, Chattanooga, TN"
+        "Enter your street address and ZIP code",
+        placeholder="123 Main St 37402"
     )
 
     if address:
@@ -43,7 +43,7 @@ with col1:
             # Create and display map
             m = create_district_map(lat, lon, district_info)
             folium_static(m)
-
+            
             # Display district information
             st.subheader("Your District Information")
             st.write(f"District: {district_info['district_number']}")
