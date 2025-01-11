@@ -109,19 +109,26 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
     """
     point = Point(lon, lat)  # GeoJSON uses (lon, lat) order
     district_boundaries = get_district_boundaries()
+    
+    if not district_boundaries:
+        st.error("No district boundaries loaded. Please check the data file.")
+        return "District not found"
 
-    # First pass: Check for exact containment
+    # Debug coordinate information
+    st.write(f"Debug - Checking coordinates: ({lat}, {lon})")
+
+    # First pass: Check for exact containment with larger initial tolerance
     for district, geojson in district_boundaries.items():
         try:
             coords = geojson["geometry"]["coordinates"][0]
-            if point_in_polygon(point, coords):
+            if point_in_polygon(point, coords, buffer_distance=0.001):
                 return district
         except Exception as e:
             st.write(f"Notice: District check for {district}: {str(e)}")
             continue
 
-    # Second pass: If not found, check with slightly larger buffer
-    buffer_distance = 0.0005  # Slightly larger buffer for near-boundary cases
+    # Second pass: Even larger buffer for edge cases
+    buffer_distance = 0.002  # Increased buffer distance
     for district, geojson in district_boundaries.items():
         try:
             coords = geojson["geometry"]["coordinates"][0]
@@ -131,8 +138,13 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
         except Exception as e:
             st.write(f"Notice: District buffer check for {district}: {str(e)}")
             continue
-
-    st.warning("Your location appears to be outside Chattanooga city limits.")
+    
+    # If still not found, check coordinates are within reasonable bounds
+    if not (34.9 <= lat <= 35.2 and -85.4 <= lon <= -85.1):
+        st.warning("Coordinates appear to be outside the expected Chattanooga area.")
+    else:
+        st.warning("Location not matched to any district. Please verify the address.")
+    
     return "District not found"
 
 def get_district_info(lat: float, lon: float) -> dict:
