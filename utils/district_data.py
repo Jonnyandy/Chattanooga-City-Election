@@ -114,30 +114,25 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
         st.error("No district boundaries loaded. Please check the data file.")
         return "District not found"
 
-    # Debug coordinate information
     st.write(f"Debug - Checking coordinates: ({lat}, {lon})")
-
-    # First pass: Check for exact containment with larger initial tolerance
-    for district, geojson in district_boundaries.items():
-        try:
-            coords = geojson["geometry"]["coordinates"][0]
-            if point_in_polygon(point, coords, buffer_distance=0.001):
-                return district
-        except Exception as e:
-            st.write(f"Notice: District check for {district}: {str(e)}")
-            continue
-
-    # Second pass: Even larger buffer for edge cases
-    buffer_distance = 0.002  # Increased buffer distance
-    for district, geojson in district_boundaries.items():
-        try:
-            coords = geojson["geometry"]["coordinates"][0]
-            if point_in_polygon(point, coords, buffer_distance):
-                st.info(f"Note: Your location is very close to {district} boundary")
-                return district
-        except Exception as e:
-            st.write(f"Notice: District buffer check for {district}: {str(e)}")
-            continue
+    
+    # Try multiple buffer distances
+    buffer_distances = [0.0001, 0.001, 0.002, 0.003]  # Increasing buffer sizes
+    
+    for buffer_distance in buffer_distances:
+        for district, geojson in district_boundaries.items():
+            try:
+                if 'geometry' not in geojson or 'coordinates' not in geojson['geometry']:
+                    st.warning(f"Invalid geometry data for {district}")
+                    continue
+                    
+                coords = geojson["geometry"]["coordinates"][0]
+                if point_in_polygon(point, coords, buffer_distance):
+                    st.success(f"Found match in {district} with buffer distance {buffer_distance}")
+                    return district
+            except Exception as e:
+                st.write(f"Notice: District check for {district}: {str(e)}")
+                continue
     
     # If still not found, check coordinates are within reasonable bounds
     if not (34.9 <= lat <= 35.2 and -85.4 <= lon <= -85.1):
