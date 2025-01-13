@@ -7,7 +7,7 @@ from shapely.geometry import Polygon, mapping
 
 def convert_polygon_string_to_coords(polygon_str: str) -> list:
     """
-    Convert polygon string from CSV to coordinate list
+    Convert polygon string from CSV to coordinate list with additional validation
     """
     try:
         # Remove POLYGON keyword and both sets of parentheses
@@ -22,8 +22,13 @@ def convert_polygon_string_to_coords(polygon_str: str) -> list:
             try:
                 lon, lat = map(float, pair.split())
                 # Validate coordinates are in reasonable range for Chattanooga
+                # Exclude Red Bank area (approximately)
                 if (-85.5 <= lon <= -85.0) and (34.9 <= lat <= 35.3):
-                    coords.append([lon, lat])
+                    # Red Bank area exclusion (approximate boundaries)
+                    if not (-85.3 <= lon <= -85.28 and 35.09 <= lat <= 35.12):
+                        coords.append([lon, lat])
+                    else:
+                        print(f"Excluding Red Bank coordinate pair: {lon}, {lat}")
                 else:
                     print(f"Skipping invalid coordinate pair: {lon}, {lat}")
             except ValueError as e:
