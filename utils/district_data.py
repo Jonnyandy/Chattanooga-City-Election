@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 from typing import Dict, Any, Tuple, List, Optional
-from shapely.geometry import Point, Polygon, mapping
+from shapely.geometry import Point, Polygon, mapping, shape
 import math
 from pathlib import Path
 from utils.geocoding import geocode_address
@@ -31,29 +31,36 @@ def get_district_boundaries() -> Dict[str, Any]:
             return {}
 
         with boundaries_path.open() as f:
-            geojson = json.load(f)
+            try:
+                geojson = json.load(f)
+                st.write("Debug: Successfully loaded district boundaries")
+            except json.JSONDecodeError as e:
+                st.error(f"Invalid JSON in district boundaries file: {str(e)}")
+                return {}
 
         districts = {}
         for feature in geojson['features']:
-            district = feature['properties']['district']
-            districts[district] = {
-                "type": "Feature",
-                "properties": {
-                    "district": district,
-                    "description": feature['properties'].get('description', ''),
-                    "style": {
-                        "fillColor": "#1E88E5",
-                        "color": "#1E88E5",
-                        "weight": 2,
-                        "fillOpacity": 0.3
-                    }
-                },
-                "geometry": feature['geometry']
-            }
+            try:
+                district = feature['properties']['district']
+                districts[district] = {
+                    "type": "Feature",
+                    "properties": {
+                        "district": district,
+                        "description": feature['properties'].get('description', ''),
+                    },
+                    "geometry": feature['geometry']
+                }
+            except KeyError as e:
+                st.error(f"Missing required property in district data: {str(e)}")
+                continue
+
+        if not districts:
+            st.error("No valid district data found in the file")
+            return {}
+
+        st.write(f"Debug: Loaded {len(districts)} districts")
         return districts
-    except json.JSONDecodeError:
-        st.error("Error reading district boundaries data: Invalid JSON format")
-        return {}
+
     except Exception as e:
         st.error(f"Error loading district boundaries: {str(e)}")
         return {}
@@ -104,35 +111,48 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
     """
     Determine which district a point falls within using GIS boundaries
     """
-    point = Point(lon, lat)  # GeoJSON uses (lon, lat) order
-    district_boundaries = get_district_boundaries()
+    try:
+        point = Point(lon, lat)  # GeoJSON uses (lon, lat) order
+        st.write(f"Debug: Checking coordinates: ({lat}, {lon})")
 
-    if not district_boundaries:
-        return "District not found"
+        # Verify coordinates are within Chattanooga bounds
+        if not (34.9 <= lat <= 35.2 and -85.4 <= lon <= -85.1):
+            st.warning("Coordinates appear to be outside the expected Chattanooga area")
+            return "District not found"
 
-    # Check if coordinates are within reasonable bounds for Chattanooga
-    if not (34.9 <= lat <= 35.2 and -85.4 <= lon <= -85.1):
-        st.warning("Coordinates appear to be outside the expected Chattanooga area.")
-        return "District not found"
+        district_boundaries = get_district_boundaries()
+        if not district_boundaries:
+            st.error("Failed to load district boundaries")
+            return "District not found"
 
-    # Try multiple buffer distances for more accurate matching
-    buffer_distances = [0.0001, 0.001, 0.002]
-
-    for buffer_distance in buffer_distances:
         for district, geojson in district_boundaries.items():
             try:
-                if 'geometry' not in geojson or 'coordinates' not in geojson['geometry']:
+                if 'geometry' not in geojson:
                     continue
 
-                coords = geojson["geometry"]["coordinates"][0]
-                if point_in_polygon(point, coords, buffer_distance):
+                # Convert GeoJSON to Shapely geometry
+                district_shape = shape(geojson['geometry'])
+
+                # Try an exact match first
+                if district_shape.contains(point):
+                    st.success(f"Found matching district: {district}")
                     return district
+
+                # If no exact match, try with a small buffer
+                if district_shape.buffer(0.001).contains(point):
+                    st.success(f"Found matching district with buffer: {district}")
+                    return district
+
             except Exception as e:
                 st.error(f"Error checking district {district}: {str(e)}")
                 continue
 
-    st.warning("Location not matched to any district. Please verify the address.")
-    return "District not found"
+        st.warning("Location not matched to any district. Please verify the address.")
+        return "District not found"
+
+    except Exception as e:
+        st.error(f"Error in district matching: {str(e)}")
+        return "District not found"
 
 def get_district_info(lat: float, lon: float) -> dict:
     """
