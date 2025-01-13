@@ -33,24 +33,43 @@ def get_district_boundaries() -> Dict[str, Any]:
         with boundaries_path.open() as f:
             try:
                 geojson = json.load(f)
+                # Validate GeoJSON structure
+                if not isinstance(geojson, dict) or 'features' not in geojson:
+                    st.error("Invalid GeoJSON structure")
+                    return {}
             except json.JSONDecodeError as e:
                 st.error(f"Invalid JSON in district boundaries file: {str(e)}")
                 return {}
 
         districts = {}
-        for feature in geojson['features']:
+        for feature in geojson.get('features', []):
             try:
-                district = feature['properties']['district']
+                # Ensure all required properties exist and are properly formatted
+                if not isinstance(feature, dict) or 'properties' not in feature:
+                    continue
+
+                properties = feature.get('properties', {})
+                district = str(properties.get('district', ''))  # Convert to string to ensure consistency
+
+                if not district:
+                    continue
+
+                # Ensure geometry is valid
+                geometry = feature.get('geometry', {})
+                if not isinstance(geometry, dict) or 'type' not in geometry or 'coordinates' not in geometry:
+                    continue
+
                 districts[district] = {
                     "type": "Feature",
                     "properties": {
                         "district": district,
-                        "description": feature['properties'].get('description', ''),
+                        "description": str(properties.get('description', '')),  # Ensure string type
+                        "demographics": properties.get('demographics', {})  # Keep demographics if present
                     },
-                    "geometry": feature['geometry']
+                    "geometry": geometry
                 }
-            except KeyError as e:
-                st.error(f"Missing required property in district data: {str(e)}")
+            except Exception as e:
+                st.error(f"Error processing district {district}: {str(e)}")
                 continue
 
         if not districts:
