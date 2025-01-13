@@ -15,13 +15,28 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
         zoom_control=True
     )
 
-    # Add fullscreen option and zoom home button
+    # Add fullscreen option
     plugins.Fullscreen().add_to(m)
-    plugins.HomeButton(
-        position='topleft',
-        home_coordinates=[lat, lon],
-        home_zoom=13
-    ).add_to(m)
+
+    # Add custom home button using JavaScript
+    home_button_js = """
+        function goHome() {
+            var map = document.querySelector('#map');
+            map.setView([%s, %s], 13);
+        }
+
+        // Create custom home button
+        var homeButton = L.control({position: 'topleft'});
+        homeButton.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+            div.innerHTML = '<a href="#" onclick="goHome(); return false;" title="Return to starting view">🏠</a>';
+            return div;
+        };
+        homeButton.addTo(map);
+    """ % (lat, lon)
+
+    # Add the JavaScript to the map
+    m.get_root().script.add_child(folium.Element(home_button_js))
 
     # Create feature groups for better organization
     markers_group = folium.FeatureGroup(name="Locations")
