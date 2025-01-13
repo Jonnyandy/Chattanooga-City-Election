@@ -3,7 +3,7 @@ from folium import plugins
 from utils.district_data import get_district_boundaries
 from utils.geocoding import geocode_address
 
-def create_district_map(lat: float, lon: float, district_info: dict) -> folium.Map:
+def create_district_map(lat: float, lon: float, district_info: dict, opacity: float = 1.0) -> folium.Map:
     """
     Create an interactive map with district boundaries and markers
     """
@@ -69,16 +69,17 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
     # Get all district boundaries for visualization
     district_boundaries = get_district_boundaries()
 
-    # Add all districts with interactive styling
+    # Add all districts with interactive styling and opacity control
     for district_name, district_geojson in district_boundaries.items():
         # Enhanced styling for the user's district
         is_user_district = district_name == district_info['district_number']
 
-        style_function = lambda x, is_user_district=is_user_district: {
+        style_function = lambda x, is_user_district=is_user_district, opacity=opacity: {
             'fillColor': '#1E88E5' if is_user_district else '#64B5F6',
             'color': '#1565C0' if is_user_district else '#2196F3',
             'weight': 3 if is_user_district else 2,
-            'fillOpacity': 0.5 if is_user_district else 0.3,
+            'fillOpacity': (0.5 if is_user_district else 0.3) * opacity,
+            'opacity': opacity,
             'dashArray': None if is_user_district else '5, 5'
         }
 

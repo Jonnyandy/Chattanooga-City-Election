@@ -47,8 +47,19 @@ with col1:
                 district_info = get_district_info(lat, lon)
 
                 if district_info["district_number"] != "District not found":
-                    # Create and display map
-                    m = create_district_map(lat, lon, district_info)
+                    # Add boundary comparison slider
+                    st.subheader("District Boundary Comparison")
+                    boundary_opacity = st.slider(
+                        "Adjust boundary visibility",
+                        min_value=0.0,
+                        max_value=1.0,
+                        value=1.0,
+                        step=0.1,
+                        help="Slide to adjust the visibility of district boundaries"
+                    )
+
+                    # Create and display map with opacity control
+                    m = create_district_map(lat, lon, district_info, opacity=boundary_opacity)
                     st_folium(m, width=700)
 
                     # Display district information
