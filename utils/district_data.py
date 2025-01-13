@@ -33,7 +33,6 @@ def get_district_boundaries() -> Dict[str, Any]:
         with boundaries_path.open() as f:
             try:
                 geojson = json.load(f)
-                st.write("Debug: Successfully loaded district boundaries")
             except json.JSONDecodeError as e:
                 st.error(f"Invalid JSON in district boundaries file: {str(e)}")
                 return {}
@@ -58,7 +57,6 @@ def get_district_boundaries() -> Dict[str, Any]:
             st.error("No valid district data found in the file")
             return {}
 
-        st.write(f"Debug: Loaded {len(districts)} districts")
         return districts
 
     except Exception as e:
@@ -70,7 +68,7 @@ def point_in_polygon(point: Point, polygon_coords: List[List[float]], buffer_dis
     Check if a point is within a polygon with a small buffer zone for boundary cases
     """
     try:
-        polygon = Polygon(polygon_coords)
+        polygon = Polygon(polygon_coords[0])  # Use first ring for exterior boundary
         buffered_polygon = polygon.buffer(buffer_distance)
         return buffered_polygon.contains(point)
     except Exception as e:
@@ -113,7 +111,6 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
     """
     try:
         point = Point(lon, lat)  # GeoJSON uses (lon, lat) order
-        st.write(f"Debug: Checking coordinates: ({lat}, {lon})")
 
         # Verify coordinates are within Chattanooga bounds
         if not (34.9 <= lat <= 35.2 and -85.4 <= lon <= -85.1):
@@ -135,12 +132,10 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
 
                 # Try an exact match first
                 if district_shape.contains(point):
-                    st.success(f"Found matching district: {district}")
                     return district
 
                 # If no exact match, try with a small buffer
                 if district_shape.buffer(0.001).contains(point):
-                    st.success(f"Found matching district with buffer: {district}")
                     return district
 
             except Exception as e:
