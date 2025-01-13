@@ -1,100 +1,98 @@
-import requests
+import pandas as pd
 import json
 from pathlib import Path
 import streamlit as st
+from ast import literal_eval
+from shapely.geometry import Polygon, mapping
+
+def convert_polygon_string_to_coords(polygon_str: str) -> list:
+    """
+    Convert polygon string from CSV to coordinate list
+    """
+    try:
+        # Remove POLYGON keyword and both sets of parentheses
+        coords_str = polygon_str.replace('POLYGON ((', '').replace('))', '')
+        # Split into coordinate pairs
+        coord_pairs = coords_str.split(', ')
+        # Convert to float pairs
+        coords = []
+        for pair in coord_pairs:
+            # Clean up any remaining parentheses and split
+            pair = pair.strip('() ')
+            try:
+                lon, lat = map(float, pair.split())
+                # Validate coordinates are in reasonable range for Chattanooga
+                if (-85.5 <= lon <= -85.0) and (34.9 <= lat <= 35.3):
+                    coords.append([lon, lat])
+                else:
+                    print(f"Skipping invalid coordinate pair: {lon}, {lat}")
+            except ValueError as e:
+                print(f"Error parsing coordinate pair '{pair}': {str(e)}")
+                continue
+
+        # Verify we have enough coordinates to form a valid polygon
+        if len(coords) >= 3:
+            return coords
+        else:
+            print(f"Not enough valid coordinates: {len(coords)}")
+            return []
+
+    except Exception as e:
+        print(f"Error processing polygon string: {str(e)}")
+        return []
 
 def fetch_district_boundaries():
     """
-    Fetch district boundaries from Chattanooga GIS server
+    Create district boundaries from CSV data
     """
-    # GIS Server endpoint for district boundaries
-    url = "https://pwgis.chattanooga.gov/server/rest/services/Administrative_Areas/CouncilDistricts/MapServer/0/query"
-
-    # Parameters for the query
-    params = {
-        'f': 'json',  # Request JSON format
-        'where': '1=1',  # Get all districts
-        'outFields': 'DISTRICT,COUNCIL_MEMBER,DESCRIPTION',
-        'returnGeometry': 'true',
-        'spatialRel': 'esriSpatialRelIntersects',
-        'geometryType': 'esriGeometryEnvelope',
-        'inSR': '102100',  # Web Mercator projection used by the map viewer
-        'outSR': '4326',   # Convert to WGS84 for our use
-        'geometry': json.dumps({  # Chattanooga extent in Web Mercator
-            "xmin": -9509333.352331966,
-            "ymin": 4082084.7143734153,
-            "xmax": -9472643.578755133,
-            "ymax": 4272412.914803248,
-            "spatialReference": {"wkid": 102100}
-        })
-    }
-
-    headers = {
-        'User-Agent': 'ChattanoogaVotingApp/1.0',
-        'Accept': 'application/json',
-        'Referer': 'https://pwgis.chattanooga.gov/portal/apps/webappviewer/'
-    }
-
     try:
-        print("Fetching district boundaries from GIS server...")
-        response = requests.get(url, params=params, headers=headers, timeout=30)
-        response.raise_for_status()
-
-        # Process the GeoJSON data
-        data = response.json()
-        print("Response received:", json.dumps(data)[:200])  # Print first 200 chars for debugging
-
-        if 'error' in data:
-            print(f"GIS server returned an error: {data['error']}")
+        # Read the CSV file
+        csv_path = Path('attached_assets') / 'Chattanooga_Redistricting_-_New_Districts_20250113.csv'
+        if not csv_path.exists():
+            print("District data CSV file not found")
             return False
 
-        if 'features' not in data:
-            print("No features found in the response")
-            return False
+        df = pd.read_csv(csv_path)
+        print(f"Found {len(df)} districts in CSV")
 
-        print(f"Found {len(data['features'])} districts")
-
-        # Transform the data into GeoJSON format
         features = []
-        for feature in data['features']:
+        for _, row in df.iterrows():
             try:
-                attributes = feature.get('attributes', {})
-                district_num = str(attributes.get('DISTRICT', ''))
-                if not district_num:
-                    print(f"Skipping feature without district number: {attributes}")
-                    continue
+                district_num = row['District Name'].replace('District ', '')
+                print(f"\nProcessing {row['District Name']}...")
+                polygon_coords = convert_polygon_string_to_coords(row['polygon'])
 
-                # Convert ESRI geometry to GeoJSON format
-                geometry = feature.get('geometry', {})
-                if 'rings' in geometry:
-                    geometry = {
-                        'type': 'Polygon',
-                        'coordinates': geometry['rings']
-                    }
-                    print(f"Converted geometry for District {district_num}")
-                else:
-                    print(f"No rings found in geometry for District {district_num}")
+                if not polygon_coords:
+                    print(f"Failed to process coordinates for {row['District Name']}")
                     continue
 
                 # Create GeoJSON feature
                 features.append({
                     'type': 'Feature',
                     'properties': {
-                        'district': f'District {district_num}',
+                        'district': district_num,  # Store just the number
                         'description': f'City Council District {district_num}',
-                        'council_member': attributes.get('COUNCIL_MEMBER', 'Information not available'),
-                        'area_description': attributes.get('DESCRIPTION', '')
+                        'demographics': {
+                            'total_population': int(row['Total Population']),
+                            'percent_white': float(row['Percent White']),
+                            'percent_black': float(row['Percent Black']),
+                            'percent_hispanic': float(row['Percent Hispanic']),
+                            'percent_other': float(row['Percent Other'])
+                        }
                     },
-                    'geometry': geometry
+                    'geometry': {
+                        'type': 'Polygon',
+                        'coordinates': [polygon_coords]  # GeoJSON requires nested array
+                    }
                 })
-                print(f"Processed District {district_num}")
+                print(f"Successfully processed District {district_num} with {len(polygon_coords)} coordinates")
 
-            except (KeyError, TypeError) as e:
-                print(f"Error processing district feature: {str(e)}")
+            except Exception as e:
+                print(f"Error processing district: {str(e)}")
                 continue
 
         if not features:
-            print("No valid district features found")
+            print("No valid district features created")
             return False
 
         # Create the final GeoJSON structure
@@ -110,12 +108,9 @@ def fetch_district_boundaries():
         with output_path.open('w') as f:
             json.dump(district_geojson, f, indent=2)
 
-        print(f"Successfully saved {len(features)} district boundaries")
+        print(f"\nSuccessfully saved {len(features)} district boundaries")
         return True
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching district data: {str(e)}")
-        return False
     except Exception as e:
         print(f"Error processing district data: {str(e)}")
         return False
@@ -123,29 +118,6 @@ def fetch_district_boundaries():
 if __name__ == '__main__':
     # Create assets directory if it doesn't exist
     Path('assets').mkdir(exist_ok=True)
-
-    # Add debug info about the request
-    print("Debugging GIS request...")
-    url = "https://pwgis.chattanooga.gov/server/rest/services/Administrative_Areas/CouncilDistricts/MapServer/0/query"
-    params = {
-        'f': 'json',
-        'where': '1=1',
-        'outFields': 'DISTRICT,COUNCIL_MEMBER,DESCRIPTION',
-        'returnGeometry': 'true',
-        'spatialRel': 'esriSpatialRelIntersects',
-        'geometryType': 'esriGeometryEnvelope',
-        'inSR': '102100',
-        'outSR': '4326',
-        'geometry': json.dumps({
-            "xmin": -9509333.352331966,
-            "ymin": 4082084.7143734153,
-            "xmax": -9472643.578755133,
-            "ymax": 4272412.914803248,
-            "spatialReference": {"wkid": 102100}
-        })
-    }
-    print(f"Request URL: {url}")
-    print(f"Request params: {json.dumps(params, indent=2)}")
 
     # Fetch and save district boundaries
     success = fetch_district_boundaries()
