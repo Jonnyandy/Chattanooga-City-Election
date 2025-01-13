@@ -3,28 +3,29 @@ from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 import streamlit as st
 from time import sleep
+from typing import Optional, Tuple
 
 def validate_address(address: str) -> bool:
     """
     Validate if the input address contains a street address and ZIP code
     """
-    # Basic pattern matching for address format: street address + ZIP code
+    # Enhanced pattern matching for address format
     address_pattern = r'^[\w\s\.-]+.*\b\d{5}\b'
     if not re.search(address_pattern, address, re.IGNORECASE):
         return False
-
     return True
 
-def geocode_address(address: str) -> tuple:
+def geocode_address(address: str) -> Optional[Tuple[float, float]]:
     """
     Convert address to coordinates with retry mechanism
+    Returns tuple of (latitude, longitude) or None if geocoding fails
     """
     # Append Chattanooga, TN if not present
-    if not "chattanooga" in address.lower():
+    if "chattanooga" not in address.lower():
         address = f"{address}, Chattanooga, TN"
 
     max_retries = 3
-    timeout = 10  # Increased timeout to 10 seconds
+    timeout = 10
 
     geolocator = Nominatim(user_agent="chattanooga_voting_info")
 
@@ -34,7 +35,8 @@ def geocode_address(address: str) -> tuple:
             if location:
                 return location.latitude, location.longitude
 
-            st.error(f"Could not find the address: {address}")
+            if attempt == max_retries - 1:  # Only show error on last attempt
+                st.error(f"Could not find the address: {address}")
             return None
 
         except (GeocoderTimedOut, GeocoderUnavailable) as e:
@@ -48,8 +50,8 @@ def geocode_address(address: str) -> tuple:
                 """)
                 return None
 
-            # Wait before retrying (exponential backoff)
-            sleep(2 ** attempt)
+            # Wait before retrying with exponential backoff
+            sleep(min(2 ** attempt, 8))  # Cap maximum wait time at 8 seconds
             continue
 
         except Exception as e:
