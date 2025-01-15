@@ -7,18 +7,38 @@ from typing import Optional, Tuple
 
 def validate_address(address: str) -> bool:
     """
-    Validate if the input address contains a street address and ZIP code
-    More lenient pattern to accept various address formats
+    Validate if the input address follows the expected format for Chattanooga
+    Returns True if the address is valid, False otherwise
     """
-    # More lenient pattern that accepts various address formats
-    address_pattern = r'.*\b\d{5}\b'
-    if not re.search(address_pattern, address, re.IGNORECASE):
+    # Check for empty or None input
+    if not address or not isinstance(address, str):
         return False
+
+    # Basic pattern for street address with ZIP code
+    # Matches patterns like "123 Main St 37402" or "456 Market Street 37403"
+    address_pattern = r'^\d+\s+[A-Za-z0-9\s\.]+\s+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Circle|Cir|Court|Ct|Way|Place|Pl|Trail|Tr)?\s*\d{5}$'
+
+    # Clean the address string
+    cleaned_address = address.strip()
+
+    # Check if the address matches the pattern
+    if not re.match(address_pattern, cleaned_address, re.IGNORECASE):
+        return False
+
+    # Extract ZIP code and verify it's a Chattanooga ZIP
+    zip_code = cleaned_address[-5:]
+    chattanooga_zips = {'37401', '37402', '37403', '37404', '37405', '37406', 
+                       '37407', '37408', '37409', '37410', '37411', '37412', 
+                       '37415', '37416', '37419', '37421', '37450', '37351'}
+
+    if zip_code not in chattanooga_zips:
+        return False
+
     return True
 
 def geocode_address(address: str) -> Optional[Tuple[float, float]]:
     """
-    Convert address to coordinates with retry mechanism and improved address handling
+    Convert address to coordinates with retry mechanism and improved error handling
     Returns tuple of (latitude, longitude) or None if geocoding fails
     """
     # Clean and format the address
@@ -52,8 +72,7 @@ def geocode_address(address: str) -> Optional[Tuple[float, float]]:
                 if 34.9 <= location.latitude <= 35.2 and -85.4 <= location.longitude <= -85.1:
                     return location.latitude, location.longitude
                 else:
-                    if attempt == max_retries - 1:
-                        st.error("The address appears to be outside of Chattanooga city limits.")
+                    st.error("The address appears to be outside of Chattanooga city limits.")
                     return None
 
             if attempt == max_retries - 1:
