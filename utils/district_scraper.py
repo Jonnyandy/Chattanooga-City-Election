@@ -4,6 +4,7 @@ from pathlib import Path
 import streamlit as st
 from shapely.geometry import Polygon, mapping
 from shapely import wkt
+from shapely.validation import make_valid
 import math
 
 def fetch_district_boundaries():
@@ -30,9 +31,16 @@ def fetch_district_boundaries():
                 # Parse polygon using WKT
                 geometry = wkt.loads(row['polygon'])
 
+                # If geometry is not valid, try to fix it
                 if not geometry.is_valid:
-                    print(f"Invalid geometry for {district_name}")
-                    continue
+                    try:
+                        geometry = make_valid(geometry)
+                        if not geometry.is_valid:
+                            print(f"Could not fix invalid geometry for {district_name}")
+                            continue
+                    except Exception as e:
+                        print(f"Error fixing geometry for {district_name}: {str(e)}")
+                        continue
 
                 # Create GeoJSON feature
                 feature = {
@@ -77,7 +85,7 @@ def fetch_district_boundaries():
         return True
 
     except Exception as e:
-        print(f"Error processing district data: {str(e)}")
+        print(f"Error in district data processing: {str(e)}")
         return False
 
 if __name__ == '__main__':
