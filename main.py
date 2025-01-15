@@ -3,7 +3,7 @@ import folium
 from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info
-from utils.mapping import create_district_map
+from utils.mapping import create_district_map, create_base_district_map
 
 # Page configuration
 st.set_page_config(
@@ -19,8 +19,8 @@ with open('styles/custom.css') as f:
 # Header
 st.title("🗳️ Chattanooga Voting Information")
 st.markdown("""
-Find your voting district and polling place by entering your address below. 
-This tool uses official City of Chattanooga district boundaries and polling location data.
+Find your voting district by entering your address below. 
+This tool uses official City of Chattanooga district boundaries.
 """)
 
 # Main content
@@ -34,36 +34,43 @@ with col1:
         help="Enter your complete street address including ZIP code to find your district."
     )
 
-    if address:
-        # Validate address format
+    # Always show the base district map
+    if not address:
+        st.subheader("Chattanooga City Council Districts")
+        m = create_base_district_map()
+        st_folium(m, width=700, height=500)
+    elif address:
+        # Process address if entered
         if validate_address(address):
-            # Get coordinates
             coords = geocode_address(address)
-
             if coords:
                 lat, lon = coords
-                # Get district information
                 district_info = get_district_info(lat, lon)
 
                 if district_info["district_number"] != "District not found":
-                    # Create and display map
                     m = create_district_map(lat, lon, district_info)
-                    st_folium(m, width=700)
+                    st_folium(m, width=700, height=500)
 
-                    # Display district information
                     st.subheader("Your District Information")
                     st.write(f"District: {district_info['district_number']}")
                     if district_info.get('district_description'):
                         st.write(f"Area: {district_info['district_description']}")
-
                 else:
                     st.error("""
                     Unable to determine your district. This may mean your address is outside 
                     the Chattanooga city limits. Please verify your address or contact the 
                     Election Commission for assistance.
                     """)
+                    # Show base map as fallback
+                    st.subheader("Chattanooga City Council Districts")
+                    m = create_base_district_map()
+                    st_folium(m, width=700, height=500)
             else:
                 st.error("Unable to locate your address. Please check the format and try again.")
+                # Show base map as fallback
+                st.subheader("Chattanooga City Council Districts")
+                m = create_base_district_map()
+                st_folium(m, width=700, height=500)
         else:
             st.error("""
             Please enter a valid Chattanooga address in the format:
@@ -74,6 +81,10 @@ with col1:
             - Street name
             - ZIP code
             """)
+            # Show base map as fallback
+            st.subheader("Chattanooga City Council Districts")
+            m = create_base_district_map()
+            st_folium(m, width=700, height=500)
 
 with col2:
     st.subheader("Helpful Information")

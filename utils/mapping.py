@@ -3,6 +3,78 @@ from folium import plugins
 from utils.district_data import get_district_boundaries
 from utils.geocoding import geocode_address
 
+def create_base_district_map() -> folium.Map:
+    """
+    Create a base map showing all Chattanooga districts
+    """
+    # Create base map centered on Chattanooga
+    m = folium.Map(
+        location=[35.0456, -85.2672],  # Chattanooga center coordinates
+        zoom_start=12,
+        tiles="cartodbpositron",
+        zoom_control=True
+    )
+
+    # Add fullscreen option
+    plugins.Fullscreen().add_to(m)
+
+    # Get all district boundaries
+    district_boundaries = get_district_boundaries()
+
+    # Color palette for districts
+    colors = ['#1E88E5', '#42A5F5', '#64B5F6', '#90CAF9', '#BBDEFB', 
+              '#0D47A1', '#1565C0', '#1976D2', '#1E88E5']
+
+    # Add districts with different colors
+    for i, (district_name, district_geojson) in enumerate(district_boundaries.items()):
+        color = colors[i % len(colors)]
+
+        style_function = lambda x, color=color: {
+            'fillColor': color,
+            'color': '#1565C0',
+            'weight': 2,
+            'fillOpacity': 0.4,
+            'opacity': 0.8,
+            'dashArray': '5, 5'
+        }
+
+        # Create tooltip with district information
+        tooltip_html = f"""
+        <div style="
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-family: Arial;
+            font-size: 12px;
+            min-width: 150px;
+        ">
+            <strong>District {district_name}</strong><br>
+            {district_geojson['properties'].get('description', '')}
+        </div>
+        """
+
+        # Add district boundary with interactive features
+        folium.GeoJson(
+            district_geojson,
+            style_function=style_function,
+            tooltip=folium.GeoJsonTooltip(
+                fields=['district', 'description'],
+                aliases=['District:', 'Area:'],
+                style="""
+                    background-color: white;
+                    color: #333333;
+                    font-family: arial;
+                    font-size: 12px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                """
+            )
+        ).add_to(m)
+
+    return m
+
 def create_district_map(lat: float, lon: float, district_info: dict, opacity: float = 1.0) -> folium.Map:
     """
     Create an interactive map with district boundaries and markers
