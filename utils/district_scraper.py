@@ -3,50 +3,11 @@ import json
 from pathlib import Path
 import streamlit as st
 from shapely.geometry import Polygon, mapping
+from shapely import wkt
 import math
 
-def calculate_distance(coord1, coord2):
-    """Calculate distance between two coordinates"""
-    lon1, lat1 = coord1
-    lon2, lat2 = coord2
-    return math.sqrt((lon2 - lon1)**2 + (lat2 - lat1)**2)
-
-def convert_polygon_string_to_coords(polygon_str: str) -> list:
-    """Convert polygon string from CSV to coordinate list"""
-    try:
-        # Remove POLYGON keyword and both sets of parentheses
-        coords_str = polygon_str.replace('POLYGON ((', '').replace('))', '')
-        # Split into coordinate pairs
-        coord_pairs = coords_str.split(', ')
-        # Convert to float pairs
-        coords = []
-        for pair in coord_pairs:
-            try:
-                lon, lat = map(float, pair.split())
-                # Validate coordinates are in reasonable range for Chattanooga
-                if (-85.5 <= lon <= -85.0) and (34.9 <= lat <= 35.3):
-                    coords.append([lon, lat])
-            except ValueError:
-                continue
-
-        # Verify we have enough coordinates to form a valid polygon
-        if len(coords) >= 3:
-            # Create a test polygon to verify validity
-            try:
-                poly = Polygon(coords)
-                if poly.is_valid:
-                    return coords
-            except Exception as e:
-                print(f"Error creating polygon: {str(e)}")
-                return []
-        return []
-
-    except Exception as e:
-        print(f"Error processing polygon string: {str(e)}")
-        return []
-
 def fetch_district_boundaries():
-    """Create district boundaries from CSV data"""
+    """Create district boundaries from CSV data using WKT parsing"""
     try:
         # Create assets directory if it doesn't exist
         Path('assets').mkdir(exist_ok=True)
@@ -57,6 +18,7 @@ def fetch_district_boundaries():
             print("District data CSV file not found")
             return False
 
+        # Read CSV and convert WKT strings to geometry objects
         df = pd.read_csv(csv_path)
         features = []
 
@@ -64,14 +26,16 @@ def fetch_district_boundaries():
             try:
                 district_name = row['District Name']
                 district_num = district_name.replace('District ', '')
-                polygon_coords = convert_polygon_string_to_coords(row['polygon'])
 
-                if not polygon_coords:
-                    print(f"Failed to process coordinates for {district_name}")
+                # Parse polygon using WKT
+                geometry = wkt.loads(row['polygon'])
+
+                if not geometry.is_valid:
+                    print(f"Invalid geometry for {district_name}")
                     continue
 
                 # Create GeoJSON feature
-                features.append({
+                feature = {
                     'type': 'Feature',
                     'properties': {
                         'district': district_num,
@@ -84,11 +48,10 @@ def fetch_district_boundaries():
                             'percent_other': float(row['Percent Other'])
                         }
                     },
-                    'geometry': {
-                        'type': 'Polygon',
-                        'coordinates': [polygon_coords]
-                    }
-                })
+                    'geometry': mapping(geometry)
+                }
+
+                features.append(feature)
                 print(f"Successfully processed {district_name}")
 
             except Exception as e:
@@ -108,7 +71,7 @@ def fetch_district_boundaries():
         # Save to file
         output_path = Path('assets') / 'district_boundaries.json'
         with output_path.open('w') as f:
-            json.dump(district_geojson, f)
+            json.dump(district_geojson, f, indent=2)
 
         print(f"Successfully saved {len(features)} district boundaries")
         return True

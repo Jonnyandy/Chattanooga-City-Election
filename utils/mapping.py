@@ -10,7 +10,7 @@ def create_base_district_map() -> folium.Map:
     # Create base map centered on Chattanooga
     m = folium.Map(
         location=[35.0456, -85.2672],  # Chattanooga center coordinates
-        zoom_start=12,
+        zoom_start=11,  # Adjusted zoom to show all districts
         tiles="cartodbpositron",
         zoom_control=True
     )
@@ -21,9 +21,9 @@ def create_base_district_map() -> folium.Map:
     # Get all district boundaries
     district_boundaries = get_district_boundaries()
 
-    # Color palette for districts
-    colors = ['#1E88E5', '#42A5F5', '#64B5F6', '#90CAF9', '#BBDEFB', 
-              '#0D47A1', '#1565C0', '#1976D2', '#1E88E5']
+    # Color palette matching the reference code
+    colors = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', 
+              '#911eb4', '#42d4f4', '#f032e6', '#bfef45']
 
     # Add districts with different colors
     for i, (district_name, district_geojson) in enumerate(district_boundaries.items()):
@@ -31,11 +31,10 @@ def create_base_district_map() -> folium.Map:
 
         style_function = lambda x, color=color: {
             'fillColor': color,
-            'color': '#1565C0',
+            'color': 'white',
             'weight': 2,
-            'fillOpacity': 0.4,
-            'opacity': 0.8,
-            'dashArray': '5, 5'
+            'fillOpacity': 0.5,
+            'opacity': 1
         }
 
         # Create tooltip with district information
@@ -58,164 +57,51 @@ def create_base_district_map() -> folium.Map:
         folium.GeoJson(
             district_geojson,
             style_function=style_function,
-            tooltip=folium.GeoJsonTooltip(
-                fields=['district', 'description'],
-                aliases=['District:', 'Area:'],
-                style="""
-                    background-color: white;
-                    color: #333333;
-                    font-family: arial;
-                    font-size: 12px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                """
-            )
+            tooltip=tooltip_html,
+            popup=folium.Popup(tooltip_html, max_width=300)
         ).add_to(m)
+
+        # Add district label at the center of each district
+        if 'geometry' in district_geojson:
+            try:
+                # Calculate centroid for label placement
+                coordinates = district_geojson['geometry']['coordinates'][0]
+                center_lat = sum(coord[1] for coord in coordinates) / len(coordinates)
+                center_lon = sum(coord[0] for coord in coordinates) / len(coordinates)
+
+                # Add district number label
+                folium.Popup(
+                    f"District {district_name}",
+                    permanent=True
+                ).add_to(folium.CircleMarker(
+                    location=[center_lat, center_lon],
+                    radius=0,
+                    popup=f"District {district_name}",
+                    tooltip=f"District {district_name}",
+                    color="none",
+                    fill=False
+                ).add_to(m))
+            except Exception as e:
+                print(f"Error adding label for district {district_name}: {str(e)}")
 
     return m
 
-def create_district_map(lat: float, lon: float, district_info: dict, opacity: float = 1.0) -> folium.Map:
+def create_district_map(lat: float, lon: float, district_info: dict) -> folium.Map:
     """
-    Create an interactive map with district boundaries and markers
+    Create an interactive map highlighting the user's district
     """
-    # Create base map centered on location with zoom controls
-    m = folium.Map(
-        location=[lat, lon],
-        zoom_start=13,
-        tiles="cartodbpositron",
-        zoom_control=True
-    )
+    # Start with the base map
+    m = create_base_district_map()
 
-    # Add fullscreen option
-    plugins.Fullscreen().add_to(m)
-
-    # Add custom home button using JavaScript
-    home_button_js = """
-        function goHome() {
-            var map = document.querySelector('#map');
-            map.setView([%s, %s], 13);
-        }
-
-        // Create custom home button
-        var homeButton = L.control({position: 'topleft'});
-        homeButton.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-            div.innerHTML = '<a href="#" onclick="goHome(); return false;" title="Return to starting view">🏠</a>';
-            return div;
-        };
-        homeButton.addTo(map);
-    """ % (lat, lon)
-
-    # Add the JavaScript to the map
-    m.get_root().script.add_child(folium.Element(home_button_js))
-
-    # Create feature groups for better organization
-    markers_group = folium.FeatureGroup(name="Locations")
-    district_group = folium.FeatureGroup(name="District Boundaries")
-
-    # Add user location marker
+    # Add marker for the entered address
     folium.Marker(
         [lat, lon],
         popup="Your Location",
         icon=folium.Icon(color="red", icon="info-sign")
-    ).add_to(markers_group)
+    ).add_to(m)
 
-    # Get polling place coordinates
-    polling_coords = geocode_address(district_info['polling_address'])
-    if polling_coords:
-        polling_lat, polling_lon = polling_coords
-        folium.Marker(
-            [polling_lat, polling_lon],
-            popup=f"""
-            <div style='width: 200px'>
-                <b>Polling Place:</b><br>
-                {district_info['polling_place']}<br>
-                {district_info['polling_address']}<br>
-                <b>Hours:</b> 7:00 AM - 7:00 PM
-            </div>
-            """,
-            icon=folium.Icon(color="blue", icon="info-sign")
-        ).add_to(markers_group)
-
-    # Get all district boundaries for visualization
-    district_boundaries = get_district_boundaries()
-
-    # Add all districts with interactive styling and opacity control
-    for district_name, district_geojson in district_boundaries.items():
-        # Enhanced styling for the user's district
-        is_user_district = district_name == district_info['district_number']
-
-        style_function = lambda x, is_user_district=is_user_district, opacity=opacity: {
-            'fillColor': '#1E88E5' if is_user_district else '#64B5F6',
-            'color': '#1565C0' if is_user_district else '#2196F3',
-            'weight': 3 if is_user_district else 2,
-            'fillOpacity': (0.5 if is_user_district else 0.3) * opacity,
-            'opacity': opacity,
-            'dashArray': None if is_user_district else '5, 5'
-        }
-
-        highlight_function = lambda x: {
-            'fillColor': '#3949AB',
-            'color': '#283593',
-            'weight': 4,
-            'fillOpacity': 0.7
-        }
-
-        # Create tooltip with district information
-        tooltip_html = f"""
-        <div style="
-            background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            font-family: Arial;
-            font-size: 12px;
-            min-width: 150px;
-        ">
-            <strong>{district_name}</strong><br>
-            {district_geojson['properties'].get('description', '')}
-        </div>
-        """
-
-        # Add district boundary with interactive features
-        folium.GeoJson(
-            district_geojson,
-            style_function=style_function,
-            highlight_function=highlight_function,
-            tooltip=folium.GeoJsonTooltip(
-                fields=['district', 'description'],
-                aliases=['District:', 'Area:'],
-                style="""
-                    background-color: white;
-                    color: #333333;
-                    font-family: arial;
-                    font-size: 12px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                """
-            ),
-            popup=folium.GeoJsonPopup(
-                fields=['district', 'description'],
-                aliases=['District:', 'Area:'],
-                style="""
-                    background-color: white;
-                    color: #333333;
-                    font-family: arial;
-                    font-size: 12px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    max-width: 200px;
-                """
-            )
-        ).add_to(district_group)
-
-    # Add all feature groups to the map
-    markers_group.add_to(m)
-    district_group.add_to(m)
-
-    # Add layer control with collapsed option
-    folium.LayerControl(collapsed=False).add_to(m)
+    # Center the map on the entered address
+    m.location = [lat, lon]
+    m.zoom_start = 13
 
     return m
