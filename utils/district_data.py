@@ -222,27 +222,27 @@ def get_council_member(district: str) -> dict:
     Get council member information for a district
     """
     try:
-        council_members_path = Path('assets/council_members.csv')
+        council_members_path = Path('attached_assets/City_Council__old__20250115.csv')
         if not council_members_path.exists():
             raise FileNotFoundError("Council members data file not found")
 
         df = pd.read_csv(council_members_path)
-        member = df[df['district'] == district].iloc[0]
+        member = df[df['District'] == int(district)]
+        if member.empty:
+            raise ValueError(f"No council member found for district {district}")
 
         return {
-            "name": member['name'],
-            "email": member['email'],
-            "phone": member['phone']
+            "name": member.iloc[0]['City Rep'],
+            "district": str(district)
         }
     except FileNotFoundError:
         st.error("Council members data file not found")
-    except IndexError:
-        st.error(f"No council member found for district {district}")
+    except (ValueError, IndexError) as e:
+        st.error(f"Error retrieving council member: {str(e)}")
     except Exception as e:
         st.error(f"Error retrieving council member information: {str(e)}")
 
     return {
         "name": "Information unavailable",
-        "email": "Please contact the City Council office",
-        "phone": "(423) 643-7170"
+        "district": str(district)
     }

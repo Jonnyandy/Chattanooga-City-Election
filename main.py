@@ -57,9 +57,14 @@ with col1:
 
                     # Display district information in a more compact format for mobile
                     st.subheader("Your District Information")
+
+                    # Get council member information
+                    council_info = get_council_member(district_info["district_number"])
+
                     info_col1, info_col2 = st.columns(2)
                     with info_col1:
                         st.markdown(f"**District:** {district_info['district_number']}")
+                        st.markdown(f"**Council Member:** {council_info['name']}")
                     with info_col2:
                         if district_info.get('district_description'):
                             st.markdown(f"**Area:** {district_info['district_description']}")
@@ -119,3 +124,14 @@ st.markdown(
     "For official information, visit the [Election Commission website](https://elect.hamiltontn.gov/).",
     unsafe_allow_html=True
 )
+
+
+def get_council_member(district_number):
+    # Replace this with actual data retrieval logic
+    council_members = {
+        "1": {"name": "Council Member 1"},
+        "2": {"name": "Council Member 2"},
+        "3": {"name": "Council Member 3"},
+        # Add more districts as needed
+    }
+    return council_members.get(district_number, {"name": "Unknown"})

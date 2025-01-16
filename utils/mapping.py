@@ -1,6 +1,6 @@
 import folium
 from folium import plugins
-from utils.district_data import get_district_boundaries
+from utils.district_data import get_district_boundaries, get_council_member
 from utils.geocoding import geocode_address
 
 def create_base_district_map() -> folium.Map:
@@ -29,6 +29,9 @@ def create_base_district_map() -> folium.Map:
     for i, (district_name, district_geojson) in enumerate(district_boundaries.items()):
         color = colors[i % len(colors)]  # Cycle through colors if more districts than colors
 
+        # Get council member information
+        council_info = get_council_member(district_name)
+
         style_function = lambda x, color=color: {
             'fillColor': color,
             'color': 'white',
@@ -47,7 +50,7 @@ def create_base_district_map() -> folium.Map:
             'opacity': 1
         }
 
-        # Create tooltip with district information
+        # Create tooltip with district and council member information
         tooltip_html = f"""
         <div style="
             background-color: white;
@@ -56,9 +59,10 @@ def create_base_district_map() -> folium.Map:
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             font-family: Arial;
             font-size: 12px;
-            min-width: 150px;
+            min-width: 200px;
         ">
             <strong>District {district_name}</strong><br>
+            <strong>Council Member:</strong> {council_info['name']}<br>
             {district_geojson['properties'].get('description', '')}
         </div>
         """
@@ -75,31 +79,6 @@ def create_base_district_map() -> folium.Map:
             show=True
         )
         g.add_to(m)
-        # Disable click event to prevent selection rectangle
-        g._name = 'geojson_' + district_name
-
-        # Add district label at the center of each district
-        if 'geometry' in district_geojson:
-            try:
-                # Calculate centroid for label placement
-                coordinates = district_geojson['geometry']['coordinates'][0]
-                center_lat = sum(coord[1] for coord in coordinates) / len(coordinates)
-                center_lon = sum(coord[0] for coord in coordinates) / len(coordinates)
-
-                # Add district number label
-                folium.Popup(
-                    f"District {district_name}",
-                    permanent=True
-                ).add_to(folium.CircleMarker(
-                    location=[center_lat, center_lon],
-                    radius=0,
-                    popup=f"District {district_name}",
-                    tooltip=f"District {district_name}",
-                    color="none",
-                    fill=False
-                ).add_to(m))
-            except Exception as e:
-                print(f"Error adding label for district {district_name}: {str(e)}")
 
     return m
 
