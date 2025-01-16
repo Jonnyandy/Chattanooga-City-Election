@@ -4,6 +4,7 @@
 .stTitle {
     color: #1E88E5 !important;
     font-weight: 600 !important;
+    font-size: clamp(1.5rem, 4vw, 2rem) !important;
 }
 
 /* Subheaders */
@@ -11,12 +12,17 @@
     color: #424242 !important;
     font-weight: 500 !important;
     margin-top: 1rem !important;
+    font-size: clamp(1.1rem, 3vw, 1.3rem) !important;
 }
 
 /* Text input */
 .stTextInput input {
     border-radius: 5px !important;
     border: 1px solid #E0E0E0 !important;
+    padding: 0.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 16px !important; /* Prevents zoom on mobile */
 }
 
 /* Buttons */
@@ -25,6 +31,9 @@
     color: white !important;
     font-weight: 500 !important;
     border-radius: 5px !important;
+    width: 100% !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0.5rem 0 !important;
 }
 
 /* Error messages */
@@ -33,6 +42,8 @@
     color: #c62828 !important;
     padding: 0.75rem !important;
     border-radius: 5px !important;
+    margin: 0.5rem 0 !important;
+    font-size: 0.9rem !important;
 }
 
 /* Information sections */
@@ -43,10 +54,44 @@
     margin: 0.5rem 0 !important;
 }
 
+/* Markdown text */
+.stMarkdown {
+    font-size: clamp(0.9rem, 2.5vw, 1rem) !important;
+}
+
+/* Map container */
+.element-container iframe {
+    width: 100% !important;
+    min-height: 300px !important;
+    height: 50vh !important;
+    max-height: 500px !important;
+}
+
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
+    .stColumns {
+        flex-direction: column !important;
+    }
+
     .stColumn {
         flex: 1 1 100% !important;
         max-width: 100% !important;
+        padding: 0.5rem !important;
+    }
+
+    .row-widget.stButton {
+        margin: 0.5rem 0 !important;
+    }
+
+    /* Adjust spacing for mobile */
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    /* Make tooltips more readable on mobile */
+    .leaflet-tooltip {
+        font-size: 14px !important;
+        padding: 0.5rem !important;
     }
 }
