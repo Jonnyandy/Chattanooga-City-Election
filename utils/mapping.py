@@ -148,8 +148,8 @@ def create_base_district_map() -> folium.Map:
     # Add fullscreen option
     plugins.Fullscreen().add_to(m)
 
-    # Add layer control
-    folium.LayerControl().add_to(m)
+    # Create feature groups for layers
+    districts_group = folium.FeatureGroup(name='Districts', show=True)
 
     # Get all district boundaries
     district_boundaries = get_district_boundaries()
@@ -227,14 +227,18 @@ def create_base_district_map() -> folium.Map:
             highlight_function=highlight_function,
             tooltip=folium.Tooltip(tooltip_html),
             popup=folium.Popup(popup_html, max_width=300),
-            control=False,
-            overlay=True,
-            show=True
+            name=f'District {district_name}'
         )
-        g.add_to(m)
+        g.add_to(districts_group)
+
+    # Add districts group to map
+    districts_group.add_to(m)
 
     # Add polling location markers
     create_polling_markers(m)
+
+    # Add layer control after all layers are added
+    folium.LayerControl().add_to(m)
 
     # Add custom CSS for animations
     custom_css = """
@@ -266,7 +270,7 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
     # Start with the base map
     m = create_base_district_map()
 
-    # Add marker for the entered address with bounce animation
+    # Add marker for the entered address
     marker = folium.Marker(
         [lat, lon],
         popup="Your Location",
@@ -274,7 +278,7 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
     )
     marker.add_to(m)
 
-    # Center the map on the entered address with smooth animation
+    # Center the map on the entered address
     m.location = [lat, lon]
     m.zoom_start = 13
 
