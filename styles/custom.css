@@ -2,7 +2,7 @@
 
 /* Main header */
 .stTitle {
-    color: #1E88E5 !important;
+    color: #00BCD4 !important;
     font-weight: 600 !important;
     font-size: clamp(1.5rem, 4vw, 2rem) !important;
 }
@@ -27,7 +27,7 @@
 
 /* Buttons */
 .stButton button {
-    background-color: #1E88E5 !important;
+    background-color: #4CAF50 !important;
     color: white !important;
     font-weight: 500 !important;
     border-radius: 5px !important;
