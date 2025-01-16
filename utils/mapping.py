@@ -35,6 +35,7 @@ def create_base_district_map() -> folium.Map:
             'weight': 1,
             'fillOpacity': 0.5,
             'opacity': 1,
+            'dashArray': None,
             'interactive': True
         }
 
@@ -43,7 +44,8 @@ def create_base_district_map() -> folium.Map:
             'color': '#000000',
             'weight': 2,
             'fillOpacity': 0.7,
-            'opacity': 1
+            'opacity': 1,
+            'dashArray': None
         }
 
         # Create tooltip with district information
@@ -68,7 +70,10 @@ def create_base_district_map() -> folium.Map:
             style_function=style_function,
             highlight_function=highlight_function,
             tooltip=tooltip_html,
-            popup=folium.Popup(tooltip_html, max_width=300)
+            popup=folium.Popup(tooltip_html, max_width=300),
+            control=False,  # Prevents selection rectangle
+            overlay=True,   # Ensures proper layering
+            show=True      # Always visible
         ).add_to(m)
 
         # Add district label at the center of each district
