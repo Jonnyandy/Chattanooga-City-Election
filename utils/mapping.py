@@ -68,7 +68,7 @@ def create_base_district_map() -> folium.Map:
             district_geojson,
             style_function=style_function,
             highlight_function=highlight_function,
-            tooltip=tooltip_html,
+            tooltip=folium.Tooltip(tooltip_html),
             popup=folium.Popup(tooltip_html, max_width=300),
             control=False,
             overlay=True,
