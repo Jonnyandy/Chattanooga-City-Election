@@ -27,7 +27,7 @@ def create_base_district_map() -> folium.Map:
 
     # Add districts with different colors
     for i, (district_name, district_geojson) in enumerate(district_boundaries.items()):
-        color = colors[i % len(colors)]
+        color = colors[i % len(colors)]  # Cycle through colors if more districts than colors
 
         style_function = lambda x, color=color: {
             'fillColor': color,
@@ -37,8 +37,8 @@ def create_base_district_map() -> folium.Map:
             'opacity': 1
         }
 
-        highlight_function = lambda x: {
-            'fillColor': x['properties']['fillColor'],
+        highlight_function = lambda x, color=color: {
+            'fillColor': color,
             'color': '#000000',
             'weight': 3,
             'fillOpacity': 0.7,
