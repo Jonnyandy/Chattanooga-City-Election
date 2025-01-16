@@ -36,34 +36,6 @@ with col1:
         key="address_input"
     )
 
-    # Early Voting Information - Always visible
-    st.subheader("📋 Early Voting Information")
-    st.markdown("""
-    **Early Voting Period:** February 12 – February 27, 2025  
-    *ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*
-
-    **Early Voting Locations:**
-
-    1. **Election Commission**  
-       700 River Terminal Rd, Chattanooga, TN 37406  
-       *Monday - Friday: 8:00 am – 7:00 pm*  
-       *Saturday: 8:00 am – 4:00 pm*
-
-    2. **Hixson Community Center**  
-       5401 School Dr, Hixson, TN 37343  
-       *Monday - Friday: 10:00 am – 6:00 pm*  
-       *Saturday: 10:00 am – 4:00 pm*
-
-    3. **Chris L. Ramsey Sr. Community Center**  
-       1010 N Moore Rd, Chattanooga, TN 37411  
-       *Monday - Friday: 10:00 am – 6:00 pm*  
-       *Saturday: 10:00 am – 4:00 pm*
-
-    **Important Notes:**
-    - Only eligible voters who reside in the City of Chattanooga may participate
-    - PHOTO ID ISSUED BY STATE OF TN OR FEDERAL GOVT REQUIRED TO VOTE
-    """)
-
     # Always show the base district map
     if not address:
         st.subheader("Chattanooga City Council Districts")
@@ -110,7 +82,6 @@ with col1:
                         "outside the Chattanooga city limits. Please verify your address "
                         "or contact the Election Commission for assistance."
                     )
-                    st.subheader("Chattanooga City Council Districts")
                     m = create_base_district_map()
                     map_data = st_folium(m, width=None, height=500)
             else:
@@ -135,13 +106,30 @@ with col2:
     # Early Voting Info in sidebar
     with st.expander("🗳️ Early Voting Details", expanded=True):
         st.markdown("""
-        **Early Voting: February 12 – 27, 2025**  
+        **Early Voting Period:** February 12 – February 27, 2025  
+        *ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*
 
-        Visit any early voting location during the dates and times listed in the main section.
-        Remember to bring a valid PHOTO ID issued by the State of TN or Federal Government.
+        **Early Voting Locations:**
 
-        **Need to update your information?**  
-        Visit [govotetn.gov](http://govotetn.gov)
+        1. **Election Commission**  
+           700 River Terminal Rd, Chattanooga, TN 37406  
+           *Monday - Friday: 8:00 am – 7:00 pm*  
+           *Saturday: 8:00 am – 4:00 pm*
+
+        2. **Hixson Community Center**  
+           5401 School Dr, Hixson, TN 37343  
+           *Monday - Friday: 10:00 am – 6:00 pm*  
+           *Saturday: 10:00 am – 4:00 pm*
+
+        3. **Chris L. Ramsey Sr. Community Center**  
+           1010 N Moore Rd, Chattanooga, TN 37411  
+           *Monday - Friday: 10:00 am – 6:00 pm*  
+           *Saturday: 10:00 am – 4:00 pm*
+
+        **Important Notes:**
+        - Only eligible voters who reside in the City of Chattanooga may participate
+        - PHOTO ID ISSUED BY STATE OF TN OR FEDERAL GOVT REQUIRED TO VOTE
+        - Visit [govotetn.gov](http://govotetn.gov) to update your information
         """)
 
     with st.expander("📝 Address Format Example", expanded=False):
