@@ -25,18 +25,44 @@ This tool uses official City of Chattanooga district boundaries.
 """)
 
 # Main content
-# Adjust column ratio based on screen size using custom CSS
 col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
     st.subheader("Find Your District")
-    # Make the input field more mobile-friendly
     address = st.text_input(
         "Enter your street address and ZIP code",
         placeholder="123 Main St 37402",
         help="Enter your complete street address including ZIP code to find your district.",
         key="address_input"
     )
+
+    # Early Voting Information - Always visible
+    st.subheader("📋 Early Voting Information")
+    st.markdown("""
+    **Early Voting Period:** February 12 – February 27, 2025  
+    *ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*
+
+    **Early Voting Locations:**
+
+    1. **Election Commission**  
+       700 River Terminal Rd, Chattanooga, TN 37406  
+       *Monday - Friday: 8:00 am – 7:00 pm*  
+       *Saturday: 8:00 am – 4:00 pm*
+
+    2. **Hixson Community Center**  
+       5401 School Dr, Hixson, TN 37343  
+       *Monday - Friday: 10:00 am – 6:00 pm*  
+       *Saturday: 10:00 am – 4:00 pm*
+
+    3. **Chris L. Ramsey Sr. Community Center**  
+       1010 N Moore Rd, Chattanooga, TN 37411  
+       *Monday - Friday: 10:00 am – 6:00 pm*  
+       *Saturday: 10:00 am – 4:00 pm*
+
+    **Important Notes:**
+    - Only eligible voters who reside in the City of Chattanooga may participate
+    - PHOTO ID ISSUED BY STATE OF TN OR FEDERAL GOVT REQUIRED TO VOTE
+    """)
 
     # Always show the base district map
     if not address:
@@ -55,10 +81,8 @@ with col1:
                     m = create_district_map(lat, lon, district_info)
                     map_data = st_folium(m, width=None, height=500)
 
-                    # Display district information in a more compact format for mobile
+                    # Display district information
                     st.subheader("Your District Information")
-
-                    # Get council member information
                     council_info = get_council_member(district_info["district_number"])
 
                     info_col1, info_col2 = st.columns(2)
@@ -69,7 +93,7 @@ with col1:
                         if district_info.get('district_description'):
                             st.markdown(f"**Area:** {district_info['district_description']}")
 
-                    # Add polling location information in a new section
+                    # Add polling location information
                     st.subheader("Your Polling Location")
                     if district_info["polling_place"] != "Not found":
                         st.markdown(f"""
@@ -79,34 +103,6 @@ with col1:
                         """)
                     else:
                         st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
-
-                    # Add early voting information section
-                    st.subheader("📋 Early Voting Information")
-                    st.markdown("""
-                    **Early Voting Period:** February 12 – February 27, 2025  
-                    *ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*
-
-                    **Early Voting Locations:**
-
-                    1. **Election Commission**  
-                       700 River Terminal Rd, Chattanooga, TN 37406  
-                       *Monday - Friday: 8:00 am – 7:00 pm*  
-                       *Saturday: 8:00 am – 4:00 pm*
-
-                    2. **Hixson Community Center**  
-                       5401 School Dr, Hixson, TN 37343  
-                       *Monday - Friday: 10:00 am – 6:00 pm*  
-                       *Saturday: 10:00 am – 4:00 pm*
-
-                    3. **Chris L. Ramsey Sr. Community Center**  
-                       1010 N Moore Rd, Chattanooga, TN 37411  
-                       *Monday - Friday: 10:00 am – 6:00 pm*  
-                       *Saturday: 10:00 am – 4:00 pm*
-
-                    **Important Notes:**
-                    - Only eligible voters who reside in the City of Chattanooga may participate
-                    - PHOTO ID ISSUED BY STATE OF TN OR FEDERAL GOVT REQUIRED TO VOTE
-                    """)
 
                 else:
                     st.error(
@@ -119,7 +115,6 @@ with col1:
                     map_data = st_folium(m, width=None, height=500)
             else:
                 st.error("Unable to locate your address. Please check the format and try again.")
-                st.subheader("Chattanooga City Council Districts")
                 m = create_base_district_map()
                 map_data = st_folium(m, width=None, height=500)
         else:
@@ -131,7 +126,6 @@ with col1:
                 "- Street name\n"
                 "- ZIP code"
             )
-            st.subheader("Chattanooga City Council Districts")
             m = create_base_district_map()
             map_data = st_folium(m, width=None, height=500)
 
@@ -142,13 +136,14 @@ with col2:
     with st.expander("🗳️ Early Voting Details", expanded=True):
         st.markdown("""
         **Early Voting: February 12 – 27, 2025**  
-        [Click here for full schedule and locations](#early-voting-information)
+
+        Visit any early voting location during the dates and times listed in the main section.
+        Remember to bring a valid PHOTO ID issued by the State of TN or Federal Government.
 
         **Need to update your information?**  
         Visit [govotetn.gov](http://govotetn.gov)
         """)
 
-    # Use expandable sections to save space on mobile
     with st.expander("📝 Address Format Example", expanded=False):
         st.code("123 Main St 37402", language="text")
 
