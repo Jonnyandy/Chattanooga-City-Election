@@ -2,7 +2,7 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
-from utils.district_data import get_district_info
+from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
 
 # Page configuration
@@ -124,14 +124,3 @@ st.markdown(
     "For official information, visit the [Election Commission website](https://elect.hamiltontn.gov/).",
     unsafe_allow_html=True
 )
-
-
-def get_council_member(district_number):
-    # Replace this with actual data retrieval logic
-    council_members = {
-        "1": {"name": "Council Member 1"},
-        "2": {"name": "Council Member 2"},
-        "3": {"name": "Council Member 3"},
-        # Add more districts as needed
-    }
-    return council_members.get(district_number, {"name": "Unknown"})
