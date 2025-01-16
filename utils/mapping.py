@@ -64,16 +64,19 @@ def create_base_district_map() -> folium.Map:
         """
 
         # Add district boundary with interactive features
-        folium.GeoJson(
+        g = folium.GeoJson(
             district_geojson,
             style_function=style_function,
             highlight_function=highlight_function,
             tooltip=tooltip_html,
             popup=folium.Popup(tooltip_html, max_width=300),
-            control=False,  # Prevents selection rectangle
-            overlay=True,   # Ensures proper layering
-            show=True      # Always visible
-        ).add_to(m)
+            control=False,
+            overlay=True,
+            show=True
+        )
+        g.add_to(m)
+        # Disable click event to prevent selection rectangle
+        g._name = 'geojson_' + district_name
 
         # Add district label at the center of each district
         if 'geometry' in district_geojson:
