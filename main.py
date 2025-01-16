@@ -80,6 +80,34 @@ with col1:
                     else:
                         st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
 
+                    # Add early voting information section
+                    st.subheader("📋 Early Voting Information")
+                    st.markdown("""
+                    **Early Voting Period:** February 12 – February 27, 2025  
+                    *ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*
+
+                    **Early Voting Locations:**
+
+                    1. **Election Commission**  
+                       700 River Terminal Rd, Chattanooga, TN 37406  
+                       *Monday - Friday: 8:00 am – 7:00 pm*  
+                       *Saturday: 8:00 am – 4:00 pm*
+
+                    2. **Hixson Community Center**  
+                       5401 School Dr, Hixson, TN 37343  
+                       *Monday - Friday: 10:00 am – 6:00 pm*  
+                       *Saturday: 10:00 am – 4:00 pm*
+
+                    3. **Chris L. Ramsey Sr. Community Center**  
+                       1010 N Moore Rd, Chattanooga, TN 37411  
+                       *Monday - Friday: 10:00 am – 6:00 pm*  
+                       *Saturday: 10:00 am – 4:00 pm*
+
+                    **Important Notes:**
+                    - Only eligible voters who reside in the City of Chattanooga may participate
+                    - PHOTO ID ISSUED BY STATE OF TN OR FEDERAL GOVT REQUIRED TO VOTE
+                    """)
+
                 else:
                     st.error(
                         "Unable to determine your district. This may mean your address is "
@@ -109,8 +137,19 @@ with col1:
 
 with col2:
     st.subheader("Helpful Information")
+
+    # Early Voting Info in sidebar
+    with st.expander("🗳️ Early Voting Details", expanded=True):
+        st.markdown("""
+        **Early Voting: February 12 – 27, 2025**  
+        [Click here for full schedule and locations](#early-voting-information)
+
+        **Need to update your information?**  
+        Visit [govotetn.gov](http://govotetn.gov)
+        """)
+
     # Use expandable sections to save space on mobile
-    with st.expander("📝 Address Format Example", expanded=True):
+    with st.expander("📝 Address Format Example", expanded=False):
         st.code("123 Main St 37402", language="text")
 
     with st.expander("📮 Valid ZIP Codes", expanded=False):
@@ -120,6 +159,12 @@ with col2:
         - 37415, 37416
         - 37419, 37421
         - 37450, 37351
+        """)
+
+    with st.expander("🤝 Become a Poll Worker", expanded=False):
+        st.markdown("""
+        Poll officials get a stipend of $135 - $175 per election.  
+        Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
         """)
 
     with st.expander("❓ Need Help?", expanded=False):
