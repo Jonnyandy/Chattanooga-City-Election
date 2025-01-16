@@ -13,8 +13,8 @@ def fetch_district_boundaries():
         # Create assets directory if it doesn't exist
         Path('assets').mkdir(exist_ok=True)
 
-        # Read the CSV file
-        csv_path = Path('attached_assets') / 'Chattanooga_Redistricting_-_New_Districts_20250113.csv'
+        # Read the CSV file with current districts (valid until April 13th, 2025)
+        csv_path = Path('attached_assets') / 'Current_City_Council_Districts_20250115.csv'
         if not csv_path.exists():
             print("District data CSV file not found")
             return False
@@ -25,21 +25,20 @@ def fetch_district_boundaries():
 
         for _, row in df.iterrows():
             try:
-                district_name = row['District Name']
-                district_num = district_name.replace('District ', '')
+                district_num = str(row['citydst'])  # Use citydst column for district number
 
-                # Parse polygon using WKT
-                geometry = wkt.loads(row['polygon'])
+                # Parse polygon using WKT from the_geom column
+                geometry = wkt.loads(row['the_geom'])
 
                 # If geometry is not valid, try to fix it
                 if not geometry.is_valid:
                     try:
                         geometry = make_valid(geometry)
                         if not geometry.is_valid:
-                            print(f"Could not fix invalid geometry for {district_name}")
+                            print(f"Could not fix invalid geometry for District {district_num}")
                             continue
                     except Exception as e:
-                        print(f"Error fixing geometry for {district_name}: {str(e)}")
+                        print(f"Error fixing geometry for District {district_num}: {str(e)}")
                         continue
 
                 # Create GeoJSON feature
@@ -48,19 +47,13 @@ def fetch_district_boundaries():
                     'properties': {
                         'district': district_num,
                         'description': f'City Council District {district_num}',
-                        'demographics': {
-                            'total_population': int(row['Total Population']),
-                            'percent_white': float(row['Percent White']),
-                            'percent_black': float(row['Percent Black']),
-                            'percent_hispanic': float(row['Percent Hispanic']),
-                            'percent_other': float(row['Percent Other'])
-                        }
+                        'representative': row.get('cityrep', 'Information not available')
                     },
                     'geometry': mapping(geometry)
                 }
 
                 features.append(feature)
-                print(f"Successfully processed {district_name}")
+                print(f"Successfully processed District {district_num}")
 
             except Exception as e:
                 print(f"Error processing district: {str(e)}")
