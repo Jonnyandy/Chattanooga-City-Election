@@ -41,11 +41,10 @@ def create_base_district_map() -> folium.Map:
 
         highlight_function = lambda x, color=color: {
             'fillColor': color,
-            'color': '#000000',
-            'weight': 2,
+            'color': 'white',
+            'weight': 1,
             'fillOpacity': 0.7,
-            'opacity': 1,
-            'dashArray': None
+            'opacity': 1
         }
 
         # Create tooltip with district information
