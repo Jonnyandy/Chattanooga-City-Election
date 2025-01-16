@@ -1,4 +1,3 @@
-
 [server]
 headless = true
 address = "0.0.0.0"
@@ -12,12 +11,6 @@ primaryColor = "#00BCD4"
 backgroundColor = "#FFFFFF"
 secondaryBackgroundColor = "#F0F5F5"
 textColor = "#004B54"
-
-[theme.dark]
-primaryColor = "#00BCD4"
-backgroundColor = "#004B54"
-secondaryBackgroundColor = "#003940"
-textColor = "#FFFFFF"
 
 [theme.dark]
 primaryColor = "#00BCD4"
