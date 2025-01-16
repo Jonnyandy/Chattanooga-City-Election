@@ -18,3 +18,9 @@ primaryColor = "#00BCD4"
 backgroundColor = "#004B54"
 secondaryBackgroundColor = "#003940"
 textColor = "#FFFFFF"
+
+[theme.dark]
+primaryColor = "#00BCD4"
+backgroundColor = "#004B54"
+secondaryBackgroundColor = "#003940"
+textColor = "#FFFFFF"
