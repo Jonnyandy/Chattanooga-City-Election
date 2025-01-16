@@ -37,6 +37,14 @@ def create_base_district_map() -> folium.Map:
             'opacity': 1
         }
 
+        highlight_function = lambda x: {
+            'fillColor': x['properties']['fillColor'],
+            'color': '#000000',
+            'weight': 3,
+            'fillOpacity': 0.7,
+            'opacity': 1
+        }
+
         # Create tooltip with district information
         tooltip_html = f"""
         <div style="
@@ -57,6 +65,7 @@ def create_base_district_map() -> folium.Map:
         folium.GeoJson(
             district_geojson,
             style_function=style_function,
+            highlight_function=highlight_function,
             tooltip=tooltip_html,
             popup=folium.Popup(tooltip_html, max_width=300)
         ).add_to(m)
