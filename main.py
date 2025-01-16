@@ -68,6 +68,18 @@ with col1:
                     with info_col2:
                         if district_info.get('district_description'):
                             st.markdown(f"**Area:** {district_info['district_description']}")
+
+                    # Add polling location information in a new section
+                    st.subheader("Your Polling Location")
+                    if district_info["polling_place"] != "Not found":
+                        st.markdown(f"""
+                        **Location:** {district_info["polling_place"]}  
+                        **Address:** {district_info["polling_address"]}  
+                        **Precinct:** {district_info["precinct"]}
+                        """)
+                    else:
+                        st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
+
                 else:
                     st.error(
                         "Unable to determine your district. This may mean your address is "

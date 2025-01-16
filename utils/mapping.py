@@ -64,12 +64,35 @@ def create_base_district_map() -> folium.Map:
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             font-family: Arial;
             font-size: 12px;
-            min-width: 200px;
+            min-width: 250px;
             transition: opacity 0.3s ease-in-out;
         ">
             <strong>District {district_name}</strong><br>
             <strong>Council Member:</strong> {council_info['name']}<br>
-            {district_geojson['properties'].get('description', '')}
+            {district_geojson['properties'].get('description', '')}<br>
+            <div style="margin-top: 5px; font-size: 11px;">
+                <em>Click for polling location information</em>
+            </div>
+        </div>
+        """
+
+        # Create popup with more detailed information including polling locations
+        popup_html = f"""
+        <div style="
+            min-width: 200px;
+            max-width: 300px;
+            padding: 10px;
+            font-family: Arial;
+            font-size: 12px;
+        ">
+            <h4 style="margin: 0 0 8px 0;">District {district_name}</h4>
+            <strong>Council Member:</strong> {council_info['name']}<br>
+            <strong>Description:</strong> {district_geojson['properties'].get('description', '')}<br>
+            <hr style="margin: 8px 0;">
+            <strong>Voting Information:</strong><br>
+            Contact the Hamilton County Election Commission for polling location details:<br>
+            Phone: (423) 493-5100<br>
+            Email: vote@hamiltontn.gov
         </div>
         """
 
@@ -79,7 +102,7 @@ def create_base_district_map() -> folium.Map:
             style_function=style_function,
             highlight_function=highlight_function,
             tooltip=folium.Tooltip(tooltip_html),
-            popup=folium.Popup(tooltip_html, max_width=300),
+            popup=folium.Popup(popup_html, max_width=300),
             control=False,
             overlay=True,
             show=True
