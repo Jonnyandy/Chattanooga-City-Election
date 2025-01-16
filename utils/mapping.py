@@ -12,14 +12,12 @@ def create_base_district_map() -> folium.Map:
         location=[35.0456, -85.2672],  # Chattanooga center coordinates
         zoom_start=11,  # Adjusted zoom to show all districts
         tiles="cartodbpositron",
-        zoom_control=True
+        zoom_control=True,
+        smooth_factor=3.0  # Add native smooth factor for better animations
     )
 
     # Add fullscreen option
     plugins.Fullscreen().add_to(m)
-
-    # Add smooth zoom animation
-    plugins.Smooth_Factor().add_to(m)
 
     # Get all district boundaries
     district_boundaries = get_district_boundaries()
