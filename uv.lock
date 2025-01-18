@@ -105,19 +105,6 @@ wheels = [
 ]
 
 [[package]]
-name = "censusgeocode"
-version = "0.5.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "requests" },
-    { name = "requests-toolbelt" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f2/f5/83c9a6aead949cfda4d21f7fed673f8a40d859a4e4c05e3ff30a8f021b08/censusgeocode-0.5.2.tar.gz", hash = "sha256:ee590d1b7806c630b4a6e60adfa572abf502c95fb2d9489ac045bdda46edde38", size = 20898 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a8/f7/eba876fa146e434ab29b295213ca3357d8708f8e4e730453096d5d63b151/censusgeocode-0.5.2-py3-none-any.whl", hash = "sha256:fa2a9e0d44a7216fb5c3d031fc09d6c2008de28cec45495aaad5d309ef06b98b", size = 9178 },
-]
-
-[[package]]
 name = "certifi"
 version = "2024.12.14"
 source = { registry = "https://pypi.org/simple" }
@@ -1082,7 +1069,6 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "beautifulsoup4" },
-    { name = "censusgeocode" },
     { name = "folium" },
     { name = "geopandas" },
     { name = "geopy" },
@@ -1098,7 +1084,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.12.3" },
-    { name = "censusgeocode", specifier = ">=0.5.2" },
     { name = "folium", specifier = ">=0.19.4" },
     { name = "geopandas", specifier = ">=1.0.1" },
     { name = "geopy", specifier = ">=2.4.1" },
@@ -1124,18 +1109,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/63/70/2bf7780ad2d390a8d301ad0b550f1581eadbd9a20f896afe06353c2a2913/requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760", size = 131218 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f9/9b/335f9764261e915ed497fcdeb11df5dfd6f7bf257d4a6a2a686d80da4d54/requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6", size = 64928 },
-]
-
-[[package]]
-name = "requests-toolbelt"
-version = "0.10.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "requests" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/4c/07f01c6ac44f7784fa399137fbc8d0cdc1b5d35304e8c0f278ad82105b58/requests-toolbelt-0.10.1.tar.gz", hash = "sha256:62e09f7ff5ccbda92772a29f394a49c3ad6cb181d568b1337626b2abb628a63d", size = 208956 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/05/d3/bf87a36bff1cb88fd30a509fd366c70ec30676517ee791b2f77e0e29817a/requests_toolbelt-0.10.1-py2.py3-none-any.whl", hash = "sha256:18565aa58116d9951ac39baa288d3adb5b3ff975c4f25eee78555d89e8f247f7", size = 54525 },
 ]
 
 [[package]]

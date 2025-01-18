@@ -1,37 +1,40 @@
 import re
+from functools import lru_cache
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 import streamlit as st
+from typing import List, Optional, Tuple
+from time import sleep
 
-from censusgeocode import CensusGeocode
-from typing import List
-
+@lru_cache(maxsize=1000)
 def get_address_suggestions(partial_address: str) -> List[str]:
-    """Get address suggestions for Hamilton County addresses"""
+    """Get address suggestions for Hamilton County addresses with caching"""
     try:
-        cg = CensusGeocode()
         # Add Hamilton County, TN if not present
         if 'hamilton' not in partial_address.lower():
             partial_address += ' Hamilton County TN'
-            
-        results = cg.addressbatch([{'address': partial_address}])
-        
-        if not results or not isinstance(results, list):
+
+        geolocator = Nominatim(user_agent="chattanooga_voting_info")
+        locations = geolocator.geocode(
+            partial_address,
+            exactly_one=False,
+            country_codes=['us'],
+            viewbox=(-85.4, 34.9, -85.1, 35.2),  # Chattanooga area bounding box
+            bounded=True
+        )
+
+        if not locations:
             return []
-            
+
         suggestions = []
-        for result in results:
-            if result.get('match') == 'Match':
-                addr = f"{result.get('address')} {result.get('zip')}"
-                suggestions.append(addr)
-                
+        for location in locations:
+            if location.address:
+                suggestions.append(location.address)
+
         return suggestions[:5]  # Limit to 5 suggestions
     except Exception as e:
-        print(f"Error getting address suggestions: {str(e)}")
+        st.error(f"Error getting address suggestions: {str(e)}")
         return []
-
-from time import sleep
-from typing import Optional, Tuple
 
 def validate_address(address: str) -> bool:
     """
@@ -47,14 +50,14 @@ def validate_address(address: str) -> bool:
     zip_match = re.search(r'\b\d{5}\b', address)
     if not zip_match:
         return False
-    
+
     zip_code = zip_match.group()
-    
+
     # Check for street number at the start of any part
     has_street_number = bool(re.search(r'\b\d+\s+[A-Za-z]', address))
     if not has_street_number:
         return False
-    
+
     # Verify it's a Chattanooga ZIP
     chattanooga_zips = {'37401', '37402', '37403', '37404', '37405', '37406', 
                        '37407', '37408', '37409', '37410', '37411', '37412', 
@@ -65,9 +68,10 @@ def validate_address(address: str) -> bool:
 
     return True
 
+@lru_cache(maxsize=1000)
 def geocode_address(address: str) -> Optional[Tuple[float, float]]:
     """
-    Convert address to coordinates with retry mechanism and improved error handling
+    Convert address to coordinates with retry mechanism, caching, and improved error handling
     Returns tuple of (latitude, longitude) or None if geocoding fails
     """
     # Clean and format the address
