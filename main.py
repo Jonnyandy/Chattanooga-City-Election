@@ -33,8 +33,7 @@ if time_until_election.total_seconds() > 0:
 
     st.markdown("""
     <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
-        <h3 style='text-align: center; margin: 0;'>⏱️ Election Day Countdown</h3>
-        <p style='text-align: center; font-size: 1.5rem; margin: 0.5rem 0;'>
+        <p style='text-align: center; font-size: 1.5rem; margin: 0.5rem 0;'>⏱️
             <strong>{} days, {} hours, {} minutes</strong><br>
             <span style='font-size: 1rem;'>until March 4th, 2025 Election Day</span>
         </p>
