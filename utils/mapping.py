@@ -69,9 +69,33 @@ def create_base_district_map() -> folium.Map:
         ">
             <h4 style="margin: 0 0 8px 0; color: #1976D2;">District {district_name}</h4>
             <strong>Council Member:</strong> {council_info['name']}<br>
-            {district_geojson['properties'].get('description', '')}<br>
             <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                <em>Click to zoom in</em>
+                <em>Click for more information</em>
+            </div>
+        </div>
+        """
+
+        # Enhanced popup with detailed information
+        popup_html = f"""
+        <div style="
+            min-width: 200px;
+            max-width: 300px;
+            padding: 15px;
+            font-family: Arial;
+            font-size: 14px;
+        ">
+            <h3 style="margin: 0 0 10px 0; color: #1976D2;">District {district_name}</h3>
+            <div style="margin-bottom: 10px;">
+                <strong>Council Member:</strong> {council_info['name']}<br>
+                <strong>Area Description:</strong><br>
+                {district_geojson['properties'].get('description', '')}
+            </div>
+            <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+            <div style="font-size: 13px; color: #666;">
+                <strong>District Information:</strong><br>
+                • Use mouse wheel to zoom in/out<br>
+                • Drag to pan the map<br>
+                • Click 'Reset View' to see all districts
             </div>
         </div>
         """
@@ -82,10 +106,11 @@ def create_base_district_map() -> folium.Map:
             style_function=style_function,
             highlight_function=highlight_function,
             tooltip=folium.Tooltip(tooltip_html),
+            popup=folium.Popup(popup_html, max_width=300),
             name=f'District {district_name}'
         )
 
-        # Add click event for zooming to district
+        # Add click event for zooming to district and hiding tooltip
         g.add_child(folium.Element(f"""
             <script>
                 (function() {{
@@ -94,6 +119,13 @@ def create_base_district_map() -> folium.Map:
                         districtLayer.addEventListener('click', function(e) {{
                             var map = document.querySelector('#map');
                             if (map && map._leaflet_map) {{
+                                // Hide tooltip after click
+                                var tooltip = document.querySelector('.district-tooltip');
+                                if (tooltip) {{
+                                    tooltip.style.display = 'none';
+                                }}
+
+                                // Zoom to district bounds
                                 var bounds = e.target.getBounds();
                                 map._leaflet_map.fitBounds(bounds, {{
                                     padding: [50, 50],
@@ -158,6 +190,14 @@ def create_base_district_map() -> folium.Map:
         }
         path:hover {
             transform: scale(1.01);
+        }
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+        }
+        .leaflet-popup-content {
+            margin: 0;
+            padding: 0;
         }
     </style>
     """
