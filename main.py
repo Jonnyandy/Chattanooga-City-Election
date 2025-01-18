@@ -29,12 +29,25 @@ col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
     st.subheader("Find Your District")
-    address = st.text_input(
+    partial_address = st.text_input(
         "Enter your street address and ZIP code",
         placeholder="123 Main St 37402",
         help="Enter your complete street address including ZIP code to find your district.",
         key="address_input"
     )
+    
+    if partial_address:
+        suggestions = get_address_suggestions(partial_address)
+        if suggestions:
+            address = st.selectbox(
+                "Select your address",
+                options=suggestions,
+                key="address_select"
+            )
+        else:
+            address = partial_address
+    else:
+        address = ""
 
     # Always show the base district map
     if not address:

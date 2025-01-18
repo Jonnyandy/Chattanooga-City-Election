@@ -2,6 +2,34 @@ import re
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 import streamlit as st
+
+from censusgeocode import CensusGeocode
+from typing import List
+
+def get_address_suggestions(partial_address: str) -> List[str]:
+    """Get address suggestions for Hamilton County addresses"""
+    try:
+        cg = CensusGeocode()
+        # Add Hamilton County, TN if not present
+        if 'hamilton' not in partial_address.lower():
+            partial_address += ' Hamilton County TN'
+            
+        results = cg.addressbatch([{'address': partial_address}])
+        
+        if not results or not isinstance(results, list):
+            return []
+            
+        suggestions = []
+        for result in results:
+            if result.get('match') == 'Match':
+                addr = f"{result.get('address')} {result.get('zip')}"
+                suggestions.append(addr)
+                
+        return suggestions[:5]  # Limit to 5 suggestions
+    except Exception as e:
+        print(f"Error getting address suggestions: {str(e)}")
+        return []
+
 from time import sleep
 from typing import Optional, Tuple
 
