@@ -14,19 +14,20 @@ def validate_address(address: str) -> bool:
     if not address or not isinstance(address, str):
         return False
 
-    # Basic pattern for street address with ZIP code
-    # Matches patterns like "123 Main St 37402" or "456 Market Street 37403"
-    address_pattern = r'^\d+\s+[A-Za-z0-9\s\.]+\s+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Circle|Cir|Court|Ct|Way|Place|Pl|Trail|Tr)?\s*\d{5}$'
-
-    # Clean the address string
-    cleaned_address = address.strip()
-
-    # Check if the address matches the pattern
-    if not re.match(address_pattern, cleaned_address, re.IGNORECASE):
+    # Extract components from the address
+    # Look for 5-digit ZIP code anywhere in the address
+    zip_match = re.search(r'\b\d{5}\b', address)
+    if not zip_match:
         return False
-
-    # Extract ZIP code and verify it's a Chattanooga ZIP
-    zip_code = cleaned_address[-5:]
+    
+    zip_code = zip_match.group()
+    
+    # Check for street number at the start of any part
+    has_street_number = bool(re.search(r'\b\d+\s+[A-Za-z]', address))
+    if not has_street_number:
+        return False
+    
+    # Verify it's a Chattanooga ZIP
     chattanooga_zips = {'37401', '37402', '37403', '37404', '37405', '37406', 
                        '37407', '37408', '37409', '37410', '37411', '37412', 
                        '37415', '37416', '37419', '37421', '37450', '37351'}
