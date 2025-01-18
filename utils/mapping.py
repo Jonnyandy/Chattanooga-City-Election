@@ -5,135 +5,6 @@ from utils.geocoding import geocode_address
 import pandas as pd
 from pathlib import Path
 
-def create_polling_markers(m: folium.Map):
-    """Add polling location markers to the map with interactive tooltips"""
-    try:
-        polling_places_path = Path('assets/polling_places.csv')
-        if not polling_places_path.exists():
-            return
-
-        df = pd.read_csv(polling_places_path)
-
-        # Create a marker cluster group for polling locations
-        marker_cluster = plugins.MarkerCluster(
-            name='Polling Locations',
-            overlay=True,
-            control=True,
-            icon_create_function='''
-                function(cluster) {
-                    return L.divIcon({
-                        html: '<div class="polling-cluster">' + cluster.getChildCount() + '</div>',
-                        className: 'marker-cluster marker-cluster-large',
-                        iconSize: new L.Point(40, 40)
-                    });
-                }
-            '''
-        )
-
-        # Add markers for each polling location
-        for _, place in df.iterrows():
-            address = f"{place['address']}, {place['city']}, {place['state']} {place['zip']}"
-            coords = geocode_address(address)
-
-            if coords:
-                lat, lon = coords
-
-                # Create detailed HTML for the tooltip
-                tooltip_html = f"""
-                <div class="polling-tooltip" style="
-                    background-color: white;
-                    padding: 12px;
-                    border-radius: 6px;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                    font-family: Arial, sans-serif;
-                    font-size: 13px;
-                    min-width: 200px;
-                ">
-                    <h4 style="margin: 0 0 8px 0; color: #1976D2;">{place['location_name']}</h4>
-                    <strong>Address:</strong><br>
-                    {place['address']}<br>
-                    {place['city']}, {place['state']} {place['zip']}<br>
-                    <strong>Precinct:</strong> {place['precinct']}<br>
-                    <div style="margin-top: 8px; font-size: 12px; color: #666;">
-                        Click for more information
-                    </div>
-                </div>
-                """
-
-                # Create detailed HTML for the popup
-                popup_html = f"""
-                <div style="
-                    min-width: 200px;
-                    max-width: 300px;
-                    padding: 15px;
-                    font-family: Arial, sans-serif;
-                    font-size: 14px;
-                ">
-                    <h3 style="margin: 0 0 10px 0; color: #1976D2;">{place['location_name']}</h3>
-                    <div style="margin-bottom: 10px;">
-                        <strong>Address:</strong><br>
-                        {place['address']}<br>
-                        {place['city']}, {place['state']} {place['zip']}
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <strong>Precinct:</strong> {place['precinct']}<br>
-                        <strong>Hours:</strong> See early voting section for details
-                    </div>
-                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
-                    <div style="font-size: 13px; color: #666;">
-                        <strong>Important:</strong><br>
-                        • Bring valid PHOTO ID<br>
-                        • Check eligibility requirements<br>
-                        • Confirm your registration status
-                    </div>
-                </div>
-                """
-
-                # Create marker with custom icon
-                icon = folium.Icon(
-                    color='red',
-                    icon='info-sign',
-                    prefix='fa'
-                )
-
-                marker = folium.Marker(
-                    location=[lat, lon],
-                    tooltip=folium.Tooltip(tooltip_html),
-                    popup=folium.Popup(popup_html, max_width=300),
-                    icon=icon
-                )
-                marker.add_to(marker_cluster)
-
-        marker_cluster.add_to(m)
-
-        # Add custom CSS for marker clusters
-        custom_css = """
-        <style>
-            .polling-cluster {
-                background-color: #1976D2;
-                color: white;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 40px;
-                font-weight: bold;
-                font-family: Arial, sans-serif;
-            }
-            .polling-tooltip {
-                opacity: 0;
-                transform: translateY(10px);
-                transition: all 0.3s ease-in-out;
-            }
-            .polling-tooltip:hover {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        </style>
-        """
-        m.get_root().html.add_child(folium.Element(custom_css))
-
-    except Exception as e:
-        print(f"Error adding polling markers: {str(e)}")
-
 def create_base_district_map() -> folium.Map:
     """Create a base map showing all Chattanooga districts with animated transitions"""
     # Create base map centered on Chattanooga
@@ -147,13 +18,6 @@ def create_base_district_map() -> folium.Map:
 
     # Add fullscreen option
     plugins.Fullscreen().add_to(m)
-
-    # Add zoom home button
-    plugins.Home(
-        position='topleft',
-        home_coordinates=[35.0456, -85.2672],
-        home_zoom=11
-    ).add_to(m)
 
     # Add mouse position coordinates
     plugins.MousePosition().add_to(m)
@@ -173,23 +37,23 @@ def create_base_district_map() -> folium.Map:
         color = colors[i % len(colors)]
         council_info = get_council_member(district_name)
 
+        # Style function for normal state
         style_function = lambda x, color=color: {
             'fillColor': color,
             'color': 'white',
             'weight': 1,
             'fillOpacity': 0.5,
             'opacity': 1,
-            'dashArray': None,
-            'className': 'district-polygon'
+            'dashArray': None
         }
 
+        # Style function for hover state
         highlight_function = lambda x, color=color: {
             'fillColor': color,
             'color': 'white',
             'weight': 2,
             'fillOpacity': 0.7,
-            'opacity': 1,
-            'className': 'district-polygon-highlight'
+            'opacity': 1
         }
 
         # Enhanced tooltip with more information
@@ -202,38 +66,12 @@ def create_base_district_map() -> folium.Map:
             font-family: Arial;
             font-size: 12px;
             min-width: 250px;
-            transition: opacity 0.3s ease-in-out;
         ">
             <h4 style="margin: 0 0 8px 0; color: #1976D2;">District {district_name}</h4>
             <strong>Council Member:</strong> {council_info['name']}<br>
             {district_geojson['properties'].get('description', '')}<br>
             <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                <em>Click to zoom to district</em>
-            </div>
-        </div>
-        """
-
-        # Enhanced popup with more detailed information
-        popup_html = f"""
-        <div style="
-            min-width: 200px;
-            max-width: 300px;
-            padding: 15px;
-            font-family: Arial;
-            font-size: 14px;
-        ">
-            <h3 style="margin: 0 0 10px 0; color: #1976D2;">District {district_name}</h3>
-            <div style="margin-bottom: 10px;">
-                <strong>Council Member:</strong> {council_info['name']}<br>
-                <strong>Area Description:</strong><br>
-                {district_geojson['properties'].get('description', '')}
-            </div>
-            <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
-            <div style="font-size: 13px; color: #666;">
-                <strong>District Information:</strong><br>
-                • Click anywhere to return to full map<br>
-                • Use mouse wheel to zoom in/out<br>
-                • Drag to pan the map
+                <em>Click to zoom in</em>
             </div>
         </div>
         """
@@ -244,23 +82,28 @@ def create_base_district_map() -> folium.Map:
             style_function=style_function,
             highlight_function=highlight_function,
             tooltip=folium.Tooltip(tooltip_html),
-            popup=folium.Popup(popup_html, max_width=300),
             name=f'District {district_name}'
         )
 
         # Add click event for zooming to district
         g.add_child(folium.Element(f"""
             <script>
-                var layer = document.querySelector('path.district-polygon:last-child');
-                layer.addEventListener('click', function (e) {{
-                    var bounds = e.target._bounds;
-                    map.fitBounds(bounds, {{
-                        padding: [50, 50],
-                        maxZoom: 14,
-                        animation: true,
-                        duration: 1
-                    }});
-                }});
+                (function() {{
+                    var districtLayer = document.querySelector('path:last-child');
+                    if (districtLayer) {{
+                        districtLayer.addEventListener('click', function(e) {{
+                            var map = document.querySelector('#map');
+                            if (map && map._leaflet_map) {{
+                                var bounds = e.target.getBounds();
+                                map._leaflet_map.fitBounds(bounds, {{
+                                    padding: [50, 50],
+                                    maxZoom: 14,
+                                    duration: 1
+                                }});
+                            }}
+                        }});
+                    }}
+                }})();
             </script>
         """))
 
@@ -269,8 +112,27 @@ def create_base_district_map() -> folium.Map:
     # Add districts group to map
     districts_group.add_to(m)
 
-    # Add polling location markers
-    create_polling_markers(m)
+    # Add reset view button
+    reset_button_html = '''
+        <button 
+            onclick="document.querySelector('#map')._leaflet_map.setView([35.0456, -85.2672], 11);"
+            style="
+                position: absolute;
+                top: 80px;
+                left: 10px;
+                z-index: 1000;
+                background: white;
+                border: 2px solid rgba(0,0,0,0.2);
+                border-radius: 4px;
+                padding: 5px 10px;
+                cursor: pointer;
+            "
+            title="Reset view"
+        >
+            <i class="fa fa-home"></i>
+        </button>
+    '''
+    m.get_root().html.add_child(folium.Element(reset_button_html))
 
     # Add custom layer control
     folium.LayerControl(
@@ -278,39 +140,24 @@ def create_base_district_map() -> folium.Map:
         collapsed=False
     ).add_to(m)
 
-    # Add custom CSS for animations and interactivity
+    # Add custom CSS for animations
     custom_css = """
     <style>
-        .district-polygon {
-            transition: all 0.3s ease-in-out !important;
-            cursor: pointer;
-        }
-        .district-polygon:hover {
-            transform: scale(1.01);
-            transition: all 0.3s ease-in-out !important;
-        }
         .district-tooltip {
             opacity: 0;
             transform: translateY(10px);
-            transition: all 0.3s ease-in-out !important;
+            transition: all 0.3s ease-in-out;
         }
         .district-tooltip:hover {
             opacity: 1;
             transform: translateY(0);
         }
-        .leaflet-popup-content-wrapper {
-            border-radius: 8px;
-            box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+        path {
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
         }
-        .leaflet-popup-content {
-            margin: 0;
-            padding: 0;
-        }
-        .home {
-            background-color: white;
-            border: 2px solid rgba(0,0,0,0.2);
-            border-radius: 4px;
-            padding: 5px;
+        path:hover {
+            transform: scale(1.01);
         }
     </style>
     """
@@ -319,7 +166,7 @@ def create_base_district_map() -> folium.Map:
     return m
 
 def create_district_map(lat: float, lon: float, district_info: dict) -> folium.Map:
-    """Create an interactive map highlighting the user's district with animations"""
+    """Create an interactive map highlighting the user's district"""
     # Start with the base map
     m = create_base_district_map()
 
