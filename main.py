@@ -171,6 +171,22 @@ with col2:
         - Visit [govotetn.gov](http://govotetn.gov) to update your information
         """)
 
+    with st.expander("📋 View Sample Ballot", expanded=True):
+        st.markdown("""
+        Preview the March 4th, 2025 City Council Election ballot below.
+        """)
+        with open("attached_assets/cha-sample-ballot-2025.pdf", "rb") as pdf_file:
+            PDFbyte = pdf_file.read()
+        st.download_button(
+            label="📥 Download Sample Ballot PDF",
+            data=PDFbyte,
+            file_name="chattanooga-sample-ballot-2025.pdf",
+            mime="application/pdf"
+        )
+        st.markdown("""
+        *Note: This is a sample ballot for reference. Your actual ballot may vary based on your district.*
+        """)
+
     with st.expander("📮 Valid ZIP Codes", expanded=False):
         st.markdown("""
         Chattanooga ZIP codes include:
