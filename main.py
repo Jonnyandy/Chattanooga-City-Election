@@ -132,9 +132,6 @@ with col2:
         - Visit [govotetn.gov](http://govotetn.gov) to update your information
         """)
 
-    with st.expander("📝 Address Format Example", expanded=False):
-        st.code("123 Main St 37402", language="text")
-
     with st.expander("📮 Valid ZIP Codes", expanded=False):
         st.markdown("""
         Chattanooga ZIP codes include:
