@@ -21,7 +21,8 @@ def get_address_suggestions(partial_address: str) -> List[str]:
             partial_address,
             exactly_one=False,
             country_codes=['us'],
-            viewbox=(-85.4, 34.9, -85.1, 35.2),  # Chattanooga area bounding box
+            # Bounding box for Chattanooga area (West, South, East, North)
+            viewbox="-85.4,34.9,-85.1,35.2",
             bounded=True
         )
 
