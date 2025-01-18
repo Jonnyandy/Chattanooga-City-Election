@@ -68,7 +68,7 @@ with col1:
     if not address:
         st.subheader("Chattanooga City Council Districts")
         m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=500)
+        map_data = st_folium(m, width=None, height=500, returned_objects=[])
     else:
         # Process address if entered
         if validate_address(address):
@@ -79,7 +79,7 @@ with col1:
 
                 if district_info["district_number"] != "District not found":
                     m = create_district_map(lat, lon, district_info)
-                    map_data = st_folium(m, width=None, height=500)
+                    map_data = st_folium(m, width=None, height=500, returned_objects=[])
 
                     # Display district information
                     st.subheader("Your District Information")
@@ -122,11 +122,11 @@ with col1:
                         "or contact the Election Commission for assistance."
                     )
                     m = create_base_district_map()
-                    map_data = st_folium(m, width=None, height=500)
+                    map_data = st_folium(m, width=None, height=500, returned_objects=[])
             else:
                 st.error("Unable to locate your address. Please check the format and try again.")
                 m = create_base_district_map()
-                map_data = st_folium(m, width=None, height=500)
+                map_data = st_folium(m, width=None, height=500, returned_objects=[])
         else:
             st.error(
                 "Please enter a valid Chattanooga address in the format:\n"
@@ -137,7 +137,7 @@ with col1:
                 "- ZIP code"
             )
             m = create_base_district_map()
-            map_data = st_folium(m, width=None, height=500)
+            map_data = st_folium(m, width=None, height=500, returned_objects=[])
 
 with col2:
     st.subheader("Helpful Information")
