@@ -60,7 +60,18 @@ with col1:
                     info_col1, info_col2 = st.columns(2)
                     with info_col1:
                         st.markdown(f"**District:** {district_info['district_number']}")
-                        st.markdown(f"**Council Member:** {council_info['name']}")
+                        st.markdown(f"**Current Council Member:** {council_info['name']}")
+
+                        # Add March 4th Election Candidates
+                        if district_info.get('candidates'):
+                            st.markdown("---")
+                            st.markdown("**March 4th, 2025 Election Candidates:**")
+                            for candidate in district_info['candidates']:
+                                st.markdown(f"• {candidate}")
+                        else:
+                            st.markdown("---")
+                            st.markdown("*No candidate information available for this district*")
+
                     with info_col2:
                         if district_info.get('district_description'):
                             st.markdown(f"**Area:** {district_info['district_description']}")

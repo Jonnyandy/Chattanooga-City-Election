@@ -168,6 +168,24 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
         st.error(f"Error in district matching: {str(e)}")
         return "District not found"
 
+def get_district_candidates(district: str) -> list:
+    """
+    Get list of candidates running in the March 4th, 2025 election for a given district
+    """
+    candidates_2025 = {
+        "1": ["Roger Tuder", "Tim Gorman"],
+        "2": ["Thomas Lee"],  # Unopposed
+        "3": ["Ken Smith", "Tom Kunesh", "Sandy Grumbley Smith"],
+        "4": ["Darrin Ledford"],  # Unopposed
+        "5": ["Chuck Harris", "Charles A. Wood Jr.", "Dennis Clark"],
+        "6": ["Raquetta Dotley", "Ruth Thompson"],
+        "7": ["Marvene Noel", "Quenston Coleman"],
+        "8": ["Marie Mott", "Michael L. Morrison"],
+        "9": ["Demetrus Coonrod", "Pat Benson Jr."]
+    }
+
+    return candidates_2025.get(district, [])
+
 def get_district_info(lat: float, lon: float) -> dict:
     """
     Get comprehensive district information based on coordinates
@@ -181,11 +199,13 @@ def get_district_info(lat: float, lon: float) -> dict:
             "polling_place": "Not found",
             "polling_address": "Not found",
             "distance": "N/A",
-            "error": "Location outside city limits"
+            "error": "Location outside city limits",
+            "candidates": []
         }
 
     boundaries = get_district_boundaries()
     district_data = boundaries.get(district, {}).get('properties', {})
+    candidates = get_district_candidates(district)
 
     try:
         polling_places_path = Path('assets/polling_places.csv')
@@ -203,7 +223,8 @@ def get_district_info(lat: float, lon: float) -> dict:
                 "precinct": precinct,
                 "polling_place": location_name,
                 "polling_address": address,
-                "distance": "Based on your location"
+                "distance": "Based on your location",
+                "candidates": candidates
             }
     except Exception as e:
         st.error(f"Error retrieving polling place information: {str(e)}")
@@ -214,7 +235,8 @@ def get_district_info(lat: float, lon: float) -> dict:
         "precinct": "Not found",
         "polling_place": "Not found",
         "polling_address": "Not found",
-        "distance": "N/A"
+        "distance": "N/A",
+        "candidates": candidates
     }
 
 def get_council_member(district: str) -> dict:
