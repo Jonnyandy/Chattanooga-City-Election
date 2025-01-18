@@ -2,9 +2,14 @@
 
 /* Main header */
 .stTitle {
-    color: #00BCD4 !important;
+    color: #004B54 !important;
     font-weight: 600 !important;
     font-size: clamp(1.5rem, 4vw, 2rem) !important;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .stTitle {
+    color: #00BCD4 !important;
 }
 
 /* Subheaders */
