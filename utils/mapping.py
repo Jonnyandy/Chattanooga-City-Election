@@ -148,6 +148,16 @@ def create_base_district_map() -> folium.Map:
     # Add fullscreen option
     plugins.Fullscreen().add_to(m)
 
+    # Add zoom home button
+    plugins.Home(
+        position='topleft',
+        home_coordinates=[35.0456, -85.2672],
+        home_zoom=11
+    ).add_to(m)
+
+    # Add mouse position coordinates
+    plugins.MousePosition().add_to(m)
+
     # Create feature groups for layers
     districts_group = folium.FeatureGroup(name='Districts', show=True)
 
@@ -182,6 +192,7 @@ def create_base_district_map() -> folium.Map:
             'className': 'district-polygon-highlight'
         }
 
+        # Enhanced tooltip with more information
         tooltip_html = f"""
         <div class="district-tooltip" style="
             background-color: white;
@@ -193,34 +204,41 @@ def create_base_district_map() -> folium.Map:
             min-width: 250px;
             transition: opacity 0.3s ease-in-out;
         ">
-            <strong>District {district_name}</strong><br>
+            <h4 style="margin: 0 0 8px 0; color: #1976D2;">District {district_name}</h4>
             <strong>Council Member:</strong> {council_info['name']}<br>
             {district_geojson['properties'].get('description', '')}<br>
-            <div style="margin-top: 5px; font-size: 11px;">
-                <em>Click for polling location information</em>
+            <div style="margin-top: 5px; font-size: 11px; color: #666;">
+                <em>Click to zoom to district</em>
             </div>
         </div>
         """
 
+        # Enhanced popup with more detailed information
         popup_html = f"""
         <div style="
             min-width: 200px;
             max-width: 300px;
-            padding: 10px;
+            padding: 15px;
             font-family: Arial;
-            font-size: 12px;
+            font-size: 14px;
         ">
-            <h4 style="margin: 0 0 8px 0;">District {district_name}</h4>
-            <strong>Council Member:</strong> {council_info['name']}<br>
-            <strong>Description:</strong> {district_geojson['properties'].get('description', '')}<br>
-            <hr style="margin: 8px 0;">
-            <strong>Voting Information:</strong><br>
-            Contact the Hamilton County Election Commission for polling location details:<br>
-            Phone: (423) 493-5100<br>
-            Email: vote@hamiltontn.gov
+            <h3 style="margin: 0 0 10px 0; color: #1976D2;">District {district_name}</h3>
+            <div style="margin-bottom: 10px;">
+                <strong>Council Member:</strong> {council_info['name']}<br>
+                <strong>Area Description:</strong><br>
+                {district_geojson['properties'].get('description', '')}
+            </div>
+            <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+            <div style="font-size: 13px; color: #666;">
+                <strong>District Information:</strong><br>
+                • Click anywhere to return to full map<br>
+                • Use mouse wheel to zoom in/out<br>
+                • Drag to pan the map
+            </div>
         </div>
         """
 
+        # Create GeoJson layer with enhanced interactivity
         g = folium.GeoJson(
             district_geojson,
             style_function=style_function,
@@ -229,6 +247,23 @@ def create_base_district_map() -> folium.Map:
             popup=folium.Popup(popup_html, max_width=300),
             name=f'District {district_name}'
         )
+
+        # Add click event for zooming to district
+        g.add_child(folium.Element(f"""
+            <script>
+                var layer = document.querySelector('path.district-polygon:last-child');
+                layer.addEventListener('click', function (e) {{
+                    var bounds = e.target._bounds;
+                    map.fitBounds(bounds, {{
+                        padding: [50, 50],
+                        maxZoom: 14,
+                        animation: true,
+                        duration: 1
+                    }});
+                }});
+            </script>
+        """))
+
         g.add_to(districts_group)
 
     # Add districts group to map
@@ -237,14 +272,18 @@ def create_base_district_map() -> folium.Map:
     # Add polling location markers
     create_polling_markers(m)
 
-    # Add layer control after all layers are added
-    folium.LayerControl().add_to(m)
+    # Add custom layer control
+    folium.LayerControl(
+        position='topright',
+        collapsed=False
+    ).add_to(m)
 
-    # Add custom CSS for animations
+    # Add custom CSS for animations and interactivity
     custom_css = """
     <style>
         .district-polygon {
             transition: all 0.3s ease-in-out !important;
+            cursor: pointer;
         }
         .district-polygon:hover {
             transform: scale(1.01);
@@ -258,6 +297,20 @@ def create_base_district_map() -> folium.Map:
         .district-tooltip:hover {
             opacity: 1;
             transform: translateY(0);
+        }
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+        }
+        .leaflet-popup-content {
+            margin: 0;
+            padding: 0;
+        }
+        .home {
+            background-color: white;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-radius: 4px;
+            padding: 5px;
         }
     </style>
     """
