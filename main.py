@@ -1,7 +1,7 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-from utils.geocoding import validate_address, geocode_address, get_address_suggestions
+from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
 
@@ -29,32 +29,19 @@ col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
     st.subheader("Find Your District")
-    partial_address = st.text_input(
+    address = st.text_input(
         "Enter your street address and ZIP code",
         placeholder="123 Main St 37402",
         help="Enter your complete street address including ZIP code to find your district.",
         key="address_input"
     )
-    
-    if partial_address:
-        suggestions = get_address_suggestions(partial_address)
-        if suggestions:
-            address = st.selectbox(
-                "Select your address",
-                options=suggestions,
-                key="address_select"
-            )
-        else:
-            address = partial_address
-    else:
-        address = ""
 
     # Always show the base district map
     if not address:
         st.subheader("Chattanooga City Council Districts")
         m = create_base_district_map()
         map_data = st_folium(m, width=None, height=500)
-    elif address:
+    else:
         # Process address if entered
         if validate_address(address):
             coords = geocode_address(address)

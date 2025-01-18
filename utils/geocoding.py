@@ -6,47 +6,6 @@ import streamlit as st
 from typing import List, Optional, Tuple
 from time import sleep
 
-def get_address_suggestions(partial_address: str) -> List[str]:
-    """Get address suggestions for Hamilton County addresses"""
-    if not partial_address or len(partial_address.strip()) < 3:
-        return []
-
-    try:
-        # Add Hamilton County, TN if not present
-        search_address = partial_address.strip()
-        if 'chattanooga' not in search_address.lower():
-            search_address += ' Chattanooga'
-        if 'tennessee' not in search_address.lower() and 'tn' not in search_address.lower():
-            search_address += ' TN'
-
-        geolocator = Nominatim(user_agent="chattanooga_voting_info")
-        locations = geolocator.geocode(
-            search_address,
-            exactly_one=False,
-            country_codes=['us'],
-        )
-
-        if not locations:
-            return []
-
-        suggestions = []
-        seen_addresses = set()  # To avoid duplicates
-
-        for location in locations:
-            if location.address:
-                # Filter for Chattanooga addresses only
-                if 'Chattanooga' in location.address and 'Tennessee' in location.address:
-                    # Clean up the address format
-                    clean_address = location.address.split(', United States')[0]
-                    if clean_address not in seen_addresses:
-                        suggestions.append(clean_address)
-                        seen_addresses.add(clean_address)
-
-        return suggestions[:5]  # Limit to 5 suggestions
-    except Exception as e:
-        st.error(f"Error in address lookup: {str(e)}")
-        return []
-
 def validate_address(address: str) -> bool:
     """
     Validate if the input address follows the expected format for Chattanooga
