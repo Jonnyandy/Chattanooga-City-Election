@@ -171,20 +171,38 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
 def get_district_candidates(district: str) -> list:
     """
     Get list of candidates running in the March 4th, 2025 election for a given district
+    Returns list of candidate names with optional website links
     """
-    candidates_2025 = {
-        "1": ["James \"Skip\" Burnette", "Chip Henderson"],
-        "2": ["Jenny Hill"],  # Unopposed
-        "3": ["Jeff Davis", "Tom Marshall"],
-        "4": ["Cody Harvey"],  # Unopposed
-        "5": ["Dennis Clark", "Cory Hall", "Isiah (Ike) Hester", "Samantha Reid-Hawkins"],
-        "6": ["Jenni Berz", "Jennifer Gregory", "Mark Holland", "Christian Siler", "Robert C Wilson"],
-        "7": ["Raquetta Dotley"],  # Unopposed
-        "8": ["Anna Golladay", "Marvene Noel", "Doll Sandridge", "Kelvin Scott"],
-        "9": ["Ron Elliott", "Letechia Ellis", "Evelina Irén Kertay"]
-    }
+    try:
+        from utils.candidate_scraper import get_candidate_info
 
-    return candidates_2025.get(district, [])
+        candidates_info = get_candidate_info()
+        district_info = candidates_info.get(district, {})
+
+        formatted_candidates = []
+        for candidate_name, info in district_info.items():
+            if 'website' in info:
+                formatted_candidates.append(f"{candidate_name} ([Campaign Website]({info['website']}))")
+            else:
+                formatted_candidates.append(candidate_name)
+
+        return formatted_candidates if formatted_candidates else []
+
+    except Exception as e:
+        st.error(f"Error getting candidate information: {str(e)}")
+        # Fallback to basic candidate list if there's an error
+        candidates_2025 = {
+            "1": ["James \"Skip\" Burnette", "Chip Henderson"],
+            "2": ["Jenny Hill"],  # Unopposed
+            "3": ["Jeff Davis", "Tom Marshall"],
+            "4": ["Cody Harvey"],  # Unopposed
+            "5": ["Dennis Clark", "Cory Hall", "Isiah (Ike) Hester", "Samantha Reid-Hawkins"],
+            "6": ["Jenni Berz", "Jennifer Gregory", "Mark Holland", "Christian Siler", "Robert C Wilson"],
+            "7": ["Raquetta Dotley"],  # Unopposed
+            "8": ["Anna Golladay", "Marvene Noel", "Doll Sandridge", "Kelvin Scott"],
+            "9": ["Ron Elliott", "Letechia Ellis", "Evelina Irén Kertay"]
+        }
+        return candidates_2025.get(district, [])
 
 def get_district_info(lat: float, lon: float) -> dict:
     """
