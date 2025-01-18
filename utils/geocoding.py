@@ -6,9 +6,11 @@ import streamlit as st
 from typing import List, Optional, Tuple
 from time import sleep
 
-@lru_cache(maxsize=1000)
 def get_address_suggestions(partial_address: str) -> List[str]:
-    """Get address suggestions for Hamilton County addresses with caching"""
+    """Get address suggestions for Hamilton County addresses"""
+    if not partial_address or len(partial_address.strip()) < 3:
+        return []
+
     try:
         # Add Hamilton County, TN if not present
         if 'hamilton' not in partial_address.lower():
@@ -29,7 +31,9 @@ def get_address_suggestions(partial_address: str) -> List[str]:
         suggestions = []
         for location in locations:
             if location.address:
-                suggestions.append(location.address)
+                # Only include addresses in Chattanooga area
+                if 'Chattanooga' in location.address:
+                    suggestions.append(location.address)
 
         return suggestions[:5]  # Limit to 5 suggestions
     except Exception as e:
@@ -68,10 +72,9 @@ def validate_address(address: str) -> bool:
 
     return True
 
-@lru_cache(maxsize=1000)
 def geocode_address(address: str) -> Optional[Tuple[float, float]]:
     """
-    Convert address to coordinates with retry mechanism, caching, and improved error handling
+    Convert address to coordinates with retry mechanism and improved error handling
     Returns tuple of (latitude, longitude) or None if geocoding fails
     """
     # Clean and format the address
