@@ -37,6 +37,10 @@ def create_base_district_map() -> folium.Map:
         color = colors[i % len(colors)]
         council_info = get_council_member(district_name)
 
+        # Get candidates for this district
+        from utils.district_data import get_district_candidates
+        candidates = get_district_candidates(district_name)
+
         # Style function for normal state
         style_function = lambda x, color=color: {
             'fillColor': color,
@@ -68,14 +72,22 @@ def create_base_district_map() -> folium.Map:
             min-width: 250px;
         ">
             <h4 style="margin: 0 0 8px 0; color: #1976D2;">District {district_name}</h4>
-            <strong>Council Member:</strong> {council_info['name']}<br>
+            <strong>Current Council Member:</strong> {council_info['name']}<br>
             <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                <em>Click for more information</em>
+                <em>Click for candidate information</em>
             </div>
         </div>
         """
 
-        # Enhanced popup with detailed information
+        # Create candidate information HTML
+        candidates_html = ""
+        if candidates:
+            if len(candidates) == 1:
+                candidates_html = f"<strong>{candidates[0]}</strong> (running unopposed)"
+            else:
+                candidates_html = "<br>".join([f"• {candidate}" for candidate in candidates])
+
+        # Enhanced popup with candidate information
         popup_html = f"""
         <div style="
             min-width: 200px;
@@ -86,16 +98,12 @@ def create_base_district_map() -> folium.Map:
         ">
             <h3 style="margin: 0 0 10px 0; color: #1976D2;">District {district_name}</h3>
             <div style="margin-bottom: 10px;">
-                <strong>Council Member:</strong> {council_info['name']}<br>
-                <strong>Area Description:</strong><br>
-                {district_geojson['properties'].get('description', '')}
+                <strong>Current Council Member:</strong> {council_info['name']}<br>
             </div>
             <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
-            <div style="font-size: 13px; color: #666;">
-                <strong>District Information:</strong><br>
-                • Use mouse wheel to zoom in/out<br>
-                • Drag to pan the map<br>
-                • Click 'Reset View' to see all districts
+            <div style="margin-bottom: 10px;">
+                <strong>March 4th, 2025 Election Candidates:</strong><br>
+                {candidates_html}
             </div>
         </div>
         """
