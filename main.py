@@ -4,6 +4,7 @@ from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
+from utils.voter_verification import verify_voter_registration
 from datetime import datetime, timezone
 
 # Page configuration
@@ -142,7 +143,56 @@ with col1:
 with col2:
     st.subheader("Helpful Information")
 
-    # Early Voting Info in sidebar
+    # Add Voter Registration Check
+    with st.expander("✓ Check Voter Registration", expanded=True):
+        st.markdown("""
+        Verify your voter registration status for the March 4th, 2025 election.
+        """)
+
+        with st.form("voter_check_form"):
+            first_name = st.text_input("First Name")
+            last_name = st.text_input("Last Name")
+            dob = st.date_input(
+                "Date of Birth",
+                min_value=datetime(1900, 1, 1),
+                max_value=datetime.now(),
+                help="Select your date of birth"
+            )
+
+            submitted = st.form_submit_button("Check Registration")
+
+            if submitted:
+                if all([first_name, last_name, dob]):
+                    result = verify_voter_registration(
+                        first_name=first_name,
+                        last_name=last_name,
+                        date_of_birth=dob.strftime("%Y-%m-%d")
+                    )
+
+                    if result["status"] == "success":
+                        if result["registered"] == "active":
+                            st.success(result["message"])
+                            st.markdown(f"""
+                            **Additional Information:**
+                            - {result['precinct']}
+                            - {result['district']}
+                            - {result['additional_info']}
+                            """)
+                        else:
+                            st.warning("""
+                            We couldn't find your voter registration.
+                            Register to vote at [GoVoteTN.gov](https://govotetn.gov)
+                            """)
+                    else:
+                        st.error(result["message"])
+                else:
+                    st.error("Please fill in all required fields")
+
+        st.markdown("""
+        **Need to register or update your information?**  
+        Visit [GoVoteTN.gov](https://govotetn.gov)
+        """)
+
     with st.expander("🗳️ Early Voting Details", expanded=True):
         st.markdown("""
         **Early Voting Period:** February 12 – February 27, 2025  
