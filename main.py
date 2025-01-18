@@ -1,7 +1,7 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-from utils.geocoding import validate_address, geocode_address
+from utils.geocoding import validate_address, geocode_address, get_address_suggestions
 from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
 
