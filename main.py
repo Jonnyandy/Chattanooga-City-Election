@@ -4,6 +4,7 @@ from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
+from datetime import datetime, timezone
 
 # Page configuration
 st.set_page_config(
@@ -19,6 +20,34 @@ with open('styles/custom.css') as f:
 
 # Header
 st.title("🗳️ Chattanooga Voting Information")
+
+# Election Day Countdown
+election_date = datetime(2025, 3, 4, 19, 0, 0, tzinfo=timezone.utc)  # 7 PM UTC (2 PM EST)
+now = datetime.now(timezone.utc)
+time_until_election = election_date - now
+
+if time_until_election.total_seconds() > 0:
+    days = time_until_election.days
+    hours = time_until_election.seconds // 3600
+    minutes = (time_until_election.seconds % 3600) // 60
+
+    st.markdown("""
+    <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
+        <h3 style='text-align: center; margin: 0;'>⏱️ Election Day Countdown</h3>
+        <p style='text-align: center; font-size: 1.5rem; margin: 0.5rem 0;'>
+            <strong>{} days, {} hours, {} minutes</strong><br>
+            <span style='font-size: 1rem;'>until March 4th, 2025 Election Day</span>
+        </p>
+    </div>
+    """.format(days, hours, minutes), unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
+        <h3 style='text-align: center; color: #ff4b4b;'>🗳️ Election Day is Here!</h3>
+        <p style='text-align: center;'>Polls are open until 7:00 PM EST</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 st.markdown("""
 Find your voting district by entering your address below. 
 This tool uses official City of Chattanooga district boundaries.
