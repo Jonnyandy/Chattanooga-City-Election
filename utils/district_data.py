@@ -173,15 +173,15 @@ def get_district_candidates(district: str) -> list:
     Get list of candidates running in the March 4th, 2025 election for a given district
     """
     candidates_2025 = {
-        "1": ["Roger Tuder", "Tim Gorman"],
-        "2": ["Thomas Lee"],  # Unopposed
-        "3": ["Ken Smith", "Tom Kunesh", "Sandy Grumbley Smith"],
-        "4": ["Darrin Ledford"],  # Unopposed
-        "5": ["Chuck Harris", "Charles A. Wood Jr.", "Dennis Clark"],
-        "6": ["Raquetta Dotley", "Ruth Thompson"],
-        "7": ["Marvene Noel", "Quenston Coleman"],
-        "8": ["Marie Mott", "Michael L. Morrison"],
-        "9": ["Demetrus Coonrod", "Pat Benson Jr."]
+        "1": ["James \"Skip\" Burnette", "Chip Henderson"],
+        "2": ["Jenny Hill"],  # Unopposed
+        "3": ["Jeff Davis", "Tom Marshall"],
+        "4": ["Cody Harvey"],  # Unopposed
+        "5": ["Dennis Clark", "Cory Hall", "Isiah (Ike) Hester", "Samantha Reid-Hawkins"],
+        "6": ["Jenni Berz", "Jennifer Gregory", "Mark Holland", "Christian Siler", "Robert C Wilson"],
+        "7": ["Raquetta Dotley"],  # Unopposed
+        "8": ["Anna Golladay", "Marvene Noel", "Doll Sandridge", "Kelvin Scott"],
+        "9": ["Ron Elliott", "Letechia Ellis", "Evelina Irén Kertay"]
     }
 
     return candidates_2025.get(district, [])
