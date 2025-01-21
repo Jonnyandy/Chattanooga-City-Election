@@ -1,15 +1,71 @@
 /* Modern styling for Streamlit */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Global styles */
+:root {
+    /* Light theme variables */
+    --light-bg: #ffffff;
+    --light-text: #2c3e50;
+    --light-primary: #1976D2;
+    --light-secondary: #f8f9fa;
+    --light-border: #e9ecef;
+    --light-hover: #f0f2f6;
+
+    /* Dark theme variables */
+    --dark-bg: #1a1a1a;
+    --dark-text: #ffffff;
+    --dark-primary: #4dabf7;
+    --dark-secondary: #2d2d2d;
+    --dark-border: #404040;
+    --dark-hover: #333333;
+}
+
+/* Base styles */
 .stApp {
     font-family: 'Inter', sans-serif;
+}
+
+[data-theme="light"] {
+    --bg-color: var(--light-bg);
+    --text-color: var(--light-text);
+    --primary-color: var(--light-primary);
+    --secondary-color: var(--light-secondary);
+    --border-color: var(--light-border);
+    --hover-color: var(--light-hover);
+}
+
+[data-theme="dark"] {
+    --bg-color: var(--dark-bg);
+    --text-color: var(--dark-text);
+    --primary-color: var(--dark-primary);
+    --secondary-color: var(--dark-secondary);
+    --border-color: var(--dark-border);
+    --hover-color: var(--dark-hover);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--hover-color);
 }
 
 /* Main header */
 .stTitle {
     color: var(--text-color) !important;
-    font-family: 'Inter', sans-serif !important;
     font-weight: 700 !important;
     font-size: clamp(2rem, 4vw, 2.5rem) !important;
     letter-spacing: -0.02em !important;
@@ -19,7 +75,6 @@
 /* Subheaders */
 .stSubheader {
     color: var(--text-color) !important;
-    font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
     font-size: clamp(1.25rem, 3vw, 1.5rem) !important;
     letter-spacing: -0.01em !important;
@@ -28,11 +83,11 @@
 
 /* Cards and containers */
 div[data-testid="stExpander"] {
-    background-color: var(--background-color) !important;
+    background-color: var(--bg-color) !important;
     padding: 1.5rem !important;
     border-radius: 12px !important;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-    border: 1px solid var(--secondary-background-color) !important;
+    border: 1px solid var(--border-color) !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
@@ -44,11 +99,11 @@ div[data-testid="stExpander"]:hover {
 /* Input fields */
 .stTextInput input, .stDateInput input {
     border-radius: 8px !important;
-    border: 2px solid var(--secondary-background-color) !important;
+    border: 2px solid var(--border-color) !important;
     padding: 0.75rem !important;
     font-size: 1rem !important;
     transition: border-color 0.2s ease !important;
-    background-color: var(--background-color) !important;
+    background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
 }
 
@@ -66,7 +121,7 @@ div[data-testid="stExpander"]:hover {
     font-weight: 500 !important;
     letter-spacing: 0.01em !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-    color: white !important;
+    color: var(--bg-color) !important;
 }
 
 .stButton button:hover {
@@ -82,46 +137,17 @@ div[data-testid="stExpander"]:hover {
     animation: slideIn 0.3s ease-out !important;
 }
 
-.stSuccess {
-    background-color: #e6f7f1 !important;
-    color: #0c6b58 !important;
-    border-left: 4px solid #0c6b58 !important;
-}
-
-.stError {
-    background-color: #fde8e8 !important;
-    color: #c81e1e !important;
-    border-left: 4px solid #c81e1e !important;
-}
-
-.stWarning {
-    background-color: #fff8e6 !important;
-    color: #975810 !important;
-    border-left: 4px solid #975810 !important;
-}
-
-/* Map container */
-.element-container iframe {
-    border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-    border: 1px solid var(--secondary-background-color) !important;
-}
-
 /* Animations */
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Form fields in dark mode */
-[data-testid="stForm"] {
-    background-color: var(--background-color) !important;
-    border-color: var(--secondary-background-color) !important;
-}
-
-/* Markdown text */
-.stMarkdown {
-    color: var(--text-color) !important;
+/* Map container */
+.element-container iframe {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
 /* Mobile responsiveness */
@@ -129,26 +155,13 @@ div[data-testid="stExpander"]:hover {
     .stColumns {
         gap: 1rem !important;
     }
-    
+
     div[data-testid="stExpander"] {
         padding: 1rem !important;
     }
-}
 
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-    .stTitle, .stSubheader, .stMarkdown {
-        color: #ffffff !important;
-    }
-    
-    div[data-testid="stExpander"], [data-testid="stForm"] {
-        background-color: #1e1e1e !important;
-        border-color: rgba(255,255,255,0.1) !important;
-    }
-    
-    .stTextInput input, .stDateInput input {
-        background-color: #2d2d2d !important;
-        border-color: #3d3d3d !important;
-        color: white !important;
+    .theme-toggle {
+        top: 0.5rem;
+        right: 0.5rem;
     }
 }
