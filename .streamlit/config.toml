@@ -13,8 +13,10 @@ backgroundColor = "#FFFFFF"
 secondaryBackgroundColor = "#F0F5F5"
 textColor = "#004B54"
 
-[theme.dark]
-primaryColor = "#00BCD4"
-backgroundColor = "#004B54"
-secondaryBackgroundColor = "#003940"
-textColor = "#FFFFFF"
+[ui]
+hideTopBar = true
+hideSidebarNav = true
+
+[client]
+toolbarMode = "minimal"
+showErrorDetails = false
