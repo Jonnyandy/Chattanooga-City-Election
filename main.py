@@ -24,7 +24,7 @@ col_space, col_toggle = st.columns([6, 1])
 with col_toggle:
     if st.button('🌓 Toggle Theme'):
         st.session_state.theme = 'dark' if st.session_state.theme == 'light' else 'light'
-        st.experimental_rerun()
+        st.rerun()
 
 # Custom CSS with theme support
 with open('styles/custom.css') as f:
