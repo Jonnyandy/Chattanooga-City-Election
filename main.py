@@ -29,49 +29,13 @@ with col_toggle:
 # Add custom CSS with theme support
 with open('styles/custom.css') as f:
     css = f.read()
-    # Add theme attribute to body and ensure all components follow theme
-    theme_css = f"""
+
+st.markdown(f"""
     <style>
         {css}
-        section[data-testid="stSidebar"] > div {{
-            background-color: var(--bg-color) !important;
-        }}
-        .stApp {{
-            background-color: var(--bg-color) !important;
-            color: var(--text-color) !important;
-        }}
-        .stMarkdown {{
-            color: var(--text-color) !important;
-        }}
-        div[data-testid="stToolbar"] {{
-            background-color: var(--bg-color) !important;
-        }}
-        div[data-testid="stDecoration"] {{
-            background-color: var(--bg-color) !important;
-        }}
-        .stAlert {{
-            background-color: var(--secondary-color) !important;
-            color: var(--text-color) !important;
-        }}
-        p {{
-            color: var(--text-color) !important;
-        }}
-        h1, h2, h3, h4, h5, h6 {{
-            color: var(--text-color) !important;
-        }}
-        div.stMarkdown.css-1r6slb0.e1f1d6gn0 {{
-            color: var(--text-color) !important;
-        }}
-        div[data-baseweb="select"] {{
-            background-color: var(--bg-color) !important;
-        }}
-        div[role="listbox"] {{
-            background-color: var(--bg-color) !important;
-        }}
     </style>
     <div data-theme="{st.session_state.theme}">
-    """
-    st.markdown(theme_css, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # Header
 st.title("🗳️ Chattanooga Voting Information")

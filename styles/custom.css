@@ -1,46 +1,31 @@
 /* Modern styling for Streamlit */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-:root {
-    /* Light theme variables */
-    --light-bg: #ffffff;
-    --light-text: #2c3e50;
-    --light-primary: #1976D2;
-    --light-secondary: #f8f9fa;
-    --light-border: #e9ecef;
-    --light-hover: #f0f2f6;
-
-    /* Dark theme variables */
-    --dark-bg: #1a1a1a;
-    --dark-text: #e9ecef;
-    --dark-primary: #4dabf7;
-    --dark-secondary: #2d2d2d;
-    --dark-border: #404040;
-    --dark-hover: #333333;
+/* Theme variables */
+:root[data-theme="light"] {
+    --bg-color: #ffffff;
+    --text-color: #2c3e50;
+    --primary-color: #1976D2;
+    --secondary-color: #f8f9fa;
+    --border-color: #e9ecef;
+    --hover-color: #f0f2f6;
 }
 
-[data-theme="light"] {
-    --bg-color: var(--light-bg);
-    --text-color: var(--light-text);
-    --primary-color: var(--light-primary);
-    --secondary-color: var(--light-secondary);
-    --border-color: var(--light-border);
-    --hover-color: var(--light-hover);
-}
-
-[data-theme="dark"] {
-    --bg-color: var(--dark-bg);
-    --text-color: var(--dark-text);
-    --primary-color: var(--dark-primary);
-    --secondary-color: var(--dark-secondary);
-    --border-color: var(--dark-border);
-    --hover-color: var(--dark-hover);
+:root[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --primary-color: #4dabf7;
+    --secondary-color: #2d2d2d;
+    --border-color: #404040;
+    --hover-color: #333333;
 }
 
 /* Base styles */
 .stApp {
     font-family: 'Inter', sans-serif !important;
     transition: all 0.3s ease-in-out !important;
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
 }
 
 /* Theme toggle button */
@@ -140,6 +125,21 @@ a {
 
 a:hover {
     text-decoration: underline !important;
+}
+
+/* Text elements */
+p, h1, h2, h3, h4, h5, h6, span, div {
+    color: var(--text-color) !important;
+}
+
+/* Sidebar and other components */
+section[data-testid="stSidebar"] > div,
+div[data-testid="stToolbar"],
+div[data-testid="stDecoration"],
+div[data-baseweb="select"],
+div[role="listbox"] {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
 }
 
 /* Animations */
