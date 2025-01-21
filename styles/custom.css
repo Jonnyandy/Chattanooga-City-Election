@@ -19,12 +19,6 @@
     --dark-hover: #333333;
 }
 
-/* Base styles */
-.stApp {
-    font-family: 'Inter', sans-serif;
-    transition: all 0.3s ease-in-out;
-}
-
 [data-theme="light"] {
     --bg-color: var(--light-bg);
     --text-color: var(--light-text);
@@ -43,12 +37,17 @@
     --hover-color: var(--dark-hover);
 }
 
+/* Base styles */
+.stApp {
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
 /* Theme toggle button */
 button[data-testid="baseButton-secondary"] {
     background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
     border: 1px solid var(--border-color) !important;
-    transition: all 0.2s ease-in-out;
 }
 
 button[data-testid="baseButton-secondary"]:hover {
