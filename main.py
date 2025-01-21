@@ -7,10 +7,6 @@ from utils.mapping import create_district_map, create_base_district_map
 from utils.voter_verification import verify_voter_registration
 from datetime import datetime, timezone
 
-# Initialize theme in session state if not present
-if 'theme' not in st.session_state:
-    st.session_state.theme = 'light'
-
 # Page configuration
 st.set_page_config(
     page_title="Chattanooga Voting Information",
@@ -19,14 +15,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Theme toggle
-col_space, col_toggle = st.columns([6, 1])
-with col_toggle:
-    if st.button('🌓 Toggle Theme', key='theme_toggle'):
-        st.session_state.theme = 'dark' if st.session_state.theme == 'light' else 'light'
-        st.rerun()
-
-# Add custom CSS with theme support
+# Add custom CSS
 with open('styles/custom.css') as f:
     css = f.read()
 
@@ -34,7 +23,6 @@ st.markdown(f"""
     <style>
         {css}
     </style>
-    <div data-theme="{st.session_state.theme}">
 """, unsafe_allow_html=True)
 
 # Header
@@ -284,6 +272,3 @@ st.markdown(
     "For official information, visit the [Election Commission website](https://elect.hamiltontn.gov/).",
     unsafe_allow_html=True
 )
-
-# Close the theme div wrapper
-st.markdown("</div>", unsafe_allow_html=True)

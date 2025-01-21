@@ -1,8 +1,8 @@
 /* Modern styling for Streamlit */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Theme variables */
-:root[data-theme="light"] {
+/* Base variables */
+:root {
     --bg-color: #ffffff;
     --text-color: #2c3e50;
     --primary-color: #1976D2;
@@ -11,51 +11,12 @@
     --hover-color: #f0f2f6;
 }
 
-:root[data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --text-color: #e9ecef;
-    --primary-color: #4dabf7;
-    --secondary-color: #2d2d2d;
-    --border-color: #404040;
-    --hover-color: #333333;
-}
-
 /* Base styles */
 .stApp {
     font-family: 'Inter', sans-serif !important;
     transition: all 0.3s ease-in-out !important;
     background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
-}
-
-/* Theme toggle button */
-button[data-testid="baseButton-secondary"] {
-    background-color: var(--bg-color) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
-}
-
-button[data-testid="baseButton-secondary"]:hover {
-    background-color: var(--hover-color) !important;
-    border-color: var(--primary-color) !important;
-}
-
-/* Main header */
-.stTitle {
-    color: var(--text-color) !important;
-    font-weight: 700 !important;
-    font-size: clamp(2rem, 4vw, 2.5rem) !important;
-    letter-spacing: -0.02em !important;
-    margin-bottom: 2rem !important;
-}
-
-/* Subheaders */
-.stSubheader {
-    color: var(--text-color) !important;
-    font-weight: 600 !important;
-    font-size: clamp(1.25rem, 3vw, 1.5rem) !important;
-    letter-spacing: -0.01em !important;
-    margin: 1.5rem 0 1rem !important;
 }
 
 /* Cards and containers */
@@ -98,7 +59,7 @@ div[data-testid="stExpander"]:hover {
     font-weight: 500 !important;
     letter-spacing: 0.01em !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-    color: var(--bg-color) !important;
+    color: white !important;
 }
 
 .stButton button:hover {
@@ -127,32 +88,17 @@ a:hover {
     text-decoration: underline !important;
 }
 
-/* Text elements */
-p, h1, h2, h3, h4, h5, h6, span, div {
-    color: var(--text-color) !important;
-}
-
-/* Sidebar and other components */
-section[data-testid="stSidebar"] > div,
-div[data-testid="stToolbar"],
-div[data-testid="stDecoration"],
-div[data-baseweb="select"],
-div[role="listbox"] {
-    background-color: var(--bg-color) !important;
-    color: var(--text-color) !important;
+/* Map container */
+.element-container iframe {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
 /* Animations */
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
-}
-
-/* Map container */
-.element-container iframe {
-    border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-    border: 1px solid var(--border-color) !important;
 }
 
 /* Mobile responsiveness */
