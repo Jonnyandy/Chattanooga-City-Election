@@ -206,8 +206,8 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
     )
     marker.add_to(m)
 
-    # Center the map on the entered address
+    # Center the map on the entered address with closer zoom
     m.location = [lat, lon]
-    m.zoom_start = 13
+    m.zoom_start = 15
 
     return m
