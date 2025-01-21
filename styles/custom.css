@@ -1,4 +1,3 @@
-
 /* Modern styling for Streamlit */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -9,7 +8,7 @@
 
 /* Main header */
 .stTitle {
-    color: #1a1a1a !important;
+    color: var(--text-color) !important;
     font-family: 'Inter', sans-serif !important;
     font-weight: 700 !important;
     font-size: clamp(2rem, 4vw, 2.5rem) !important;
@@ -19,7 +18,7 @@
 
 /* Subheaders */
 .stSubheader {
-    color: #1a1a1a !important;
+    color: var(--text-color) !important;
     font-family: 'Inter', sans-serif !important;
     font-weight: 600 !important;
     font-size: clamp(1.25rem, 3vw, 1.5rem) !important;
@@ -28,12 +27,12 @@
 }
 
 /* Cards and containers */
-.css-1d391kg, div[data-testid="stExpander"] {
-    background-color: white !important;
+div[data-testid="stExpander"] {
+    background-color: var(--background-color) !important;
     padding: 1.5rem !important;
     border-radius: 12px !important;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-    border: 1px solid rgba(0,0,0,0.05) !important;
+    border: 1px solid var(--secondary-background-color) !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
@@ -43,28 +42,31 @@ div[data-testid="stExpander"]:hover {
 }
 
 /* Input fields */
-.stTextInput input {
+.stTextInput input, .stDateInput input {
     border-radius: 8px !important;
-    border: 2px solid #e0e0e0 !important;
+    border: 2px solid var(--secondary-background-color) !important;
     padding: 0.75rem !important;
     font-size: 1rem !important;
     transition: border-color 0.2s ease !important;
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
 }
 
-.stTextInput input:focus {
-    border-color: #00A7E1 !important;
+.stTextInput input:focus, .stDateInput input:focus {
+    border-color: var(--primary-color) !important;
     box-shadow: 0 0 0 3px rgba(0,167,225,0.1) !important;
 }
 
 /* Buttons */
 .stButton button {
-    background: linear-gradient(45deg, #00A7E1, #0081b8) !important;
+    background: var(--primary-color) !important;
     border: none !important;
     border-radius: 8px !important;
     padding: 0.75rem 1.5rem !important;
     font-weight: 500 !important;
     letter-spacing: 0.01em !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    color: white !important;
 }
 
 .stButton button:hover {
@@ -102,7 +104,7 @@ div[data-testid="stExpander"]:hover {
 .element-container iframe {
     border-radius: 12px !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-    border: 1px solid rgba(0,0,0,0.05) !important;
+    border: 1px solid var(--secondary-background-color) !important;
 }
 
 /* Animations */
@@ -111,22 +113,15 @@ div[data-testid="stExpander"]:hover {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-    .stTitle, .stSubheader {
-        color: #ffffff !important;
-    }
-    
-    .css-1d391kg, div[data-testid="stExpander"] {
-        background-color: #1e1e1e !important;
-        border-color: rgba(255,255,255,0.1) !important;
-    }
-    
-    .stTextInput input {
-        background-color: #2d2d2d !important;
-        border-color: #3d3d3d !important;
-        color: white !important;
-    }
+/* Form fields in dark mode */
+[data-testid="stForm"] {
+    background-color: var(--background-color) !important;
+    border-color: var(--secondary-background-color) !important;
+}
+
+/* Markdown text */
+.stMarkdown {
+    color: var(--text-color) !important;
 }
 
 /* Mobile responsiveness */
@@ -135,7 +130,25 @@ div[data-testid="stExpander"]:hover {
         gap: 1rem !important;
     }
     
-    .css-1d391kg, div[data-testid="stExpander"] {
+    div[data-testid="stExpander"] {
         padding: 1rem !important;
+    }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .stTitle, .stSubheader, .stMarkdown {
+        color: #ffffff !important;
+    }
+    
+    div[data-testid="stExpander"], [data-testid="stForm"] {
+        background-color: #1e1e1e !important;
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+    
+    .stTextInput input, .stDateInput input {
+        background-color: #2d2d2d !important;
+        border-color: #3d3d3d !important;
+        color: white !important;
     }
 }
