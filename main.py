@@ -29,8 +29,8 @@ time_until_election = election_date - now
 
 if time_until_election.total_seconds() > 0:
     days = time_until_election.days
-    # hours = time_until_election.seconds // 3600
-    # minutes = (time_until_election.seconds % 3600) // 60
+    hours = time_until_election.seconds // 3600
+    minutes = (time_until_election.seconds % 3600) // 60
 
     st.markdown("""
     <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
