@@ -60,25 +60,6 @@ def create_base_district_map() -> folium.Map:
             'opacity': 1
         }
 
-        # Enhanced tooltip with more information
-        tooltip_html = f"""
-        <div class="district-tooltip" style="
-            background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            font-family: Arial;
-            font-size: 12px;
-            min-width: 250px;
-        ">
-            <h4 style="margin: 0 0 8px 0; color: #1976D2;">District {district_name}</h4>
-            <strong>Current Council Member:</strong> {council_info['name']}<br>
-            <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                <em>Click for candidate information</em>
-            </div>
-        </div>
-        """
-
         # Create candidate information HTML
         candidates_html = ""
         if candidates:
@@ -113,7 +94,6 @@ def create_base_district_map() -> folium.Map:
             district_geojson,
             style_function=style_function,
             highlight_function=highlight_function,
-            tooltip=folium.Tooltip(tooltip_html),
             popup=folium.Popup(popup_html, max_width=300),
             name=f'District {district_name}'
         )
