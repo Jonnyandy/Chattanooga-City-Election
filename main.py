@@ -53,6 +53,21 @@ with open('styles/custom.css') as f:
             background-color: var(--secondary-color) !important;
             color: var(--text-color) !important;
         }}
+        p {{
+            color: var(--text-color) !important;
+        }}
+        h1, h2, h3, h4, h5, h6 {{
+            color: var(--text-color) !important;
+        }}
+        div.stMarkdown.css-1r6slb0.e1f1d6gn0 {{
+            color: var(--text-color) !important;
+        }}
+        div[data-baseweb="select"] {{
+            background-color: var(--bg-color) !important;
+        }}
+        div[role="listbox"] {{
+            background-color: var(--bg-color) !important;
+        }}
     </style>
     <div data-theme="{st.session_state.theme}">
     """

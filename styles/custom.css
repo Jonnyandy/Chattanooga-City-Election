@@ -39,8 +39,8 @@
 
 /* Base styles */
 .stApp {
-    font-family: 'Inter', sans-serif;
-    transition: all 0.3s ease-in-out;
+    font-family: 'Inter', sans-serif !important;
+    transition: all 0.3s ease-in-out !important;
 }
 
 /* Theme toggle button */
@@ -130,6 +130,16 @@ div[data-testid="stExpander"]:hover {
     background-color: var(--secondary-color) !important;
     color: var(--text-color) !important;
     border-left: 4px solid var(--primary-color) !important;
+}
+
+/* Links */
+a {
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+}
+
+a:hover {
+    text-decoration: underline !important;
 }
 
 /* Animations */
