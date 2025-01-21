@@ -1,117 +1,145 @@
-/* Custom styles based on chattanooga.gov */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
 
-/* Main layout */
-.stApp {
-    background-color: #ffffff !important;
-    color: #333333 !important;
-    font-family: 'Source Sans Pro', sans-serif !important;
-}
+/* Custom styles based on visitchattanooga.com */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=DM+Serif+Display&display=swap');
 
 /* Main header */
 .stTitle {
-    color: #003C71 !important;
-    font-family: 'Open Sans', sans-serif !important;
-    font-weight: 700 !important;
-    font-size: clamp(1.75rem, 4vw, 2.25rem) !important;
-    margin-bottom: 2rem !important;
+    color: #004566 !important;
+    font-family: 'DM Serif Display', serif !important;
+    font-weight: 600 !important;
+    font-size: clamp(1.5rem, 4vw, 2rem) !important;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .stTitle {
+    color: #00A7E1 !important;
 }
 
 /* Subheaders */
 .stSubheader {
-    color: #003C71 !important;
-    font-family: 'Open Sans', sans-serif !important;
-    font-weight: 600 !important;
-    font-size: clamp(1.2rem, 3vw, 1.5rem) !important;
-    margin: 1.5rem 0 1rem !important;
+    color: #333333 !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: 500 !important;
+    margin-top: 1rem !important;
+    font-size: clamp(1.1rem, 3vw, 1.3rem) !important;
 }
 
 /* Text input */
 .stTextInput input {
-    border-radius: 4px !important;
-    border: 2px solid #E5E5E5 !important;
-    padding: 0.75rem !important;
+    border-radius: 5px !important;
+    border: 1px solid #E0E0E0 !important;
+    padding: 0.5rem !important;
     width: 100% !important;
-    font-size: 1rem !important;
-    font-family: 'Source Sans Pro', sans-serif !important;
-    transition: border-color 0.3s ease !important;
-}
-
-.stTextInput input:focus {
-    border-color: #003C71 !important;
-    box-shadow: none !important;
+    max-width: 100% !important;
+    font-size: 16px !important;
+    font-family: 'Roboto', sans-serif !important;
 }
 
 /* Buttons */
 .stButton button {
-    background-color: #003C71 !important;
+    background-color: #00A7E1 !important;
     color: white !important;
-    font-family: 'Source Sans Pro', sans-serif !important;
-    font-weight: 600 !important;
-    border-radius: 4px !important;
-    padding: 0.75rem 1.5rem !important;
-    border: none !important;
-    transition: background-color 0.3s ease !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-weight: 500 !important;
+    border-radius: 5px !important;
+    width: 100% !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0.5rem 0 !important;
+    transition: all 0.3s ease-in-out !important;
 }
 
 .stButton button:hover {
-    background-color: #002B52 !important;
+    background-color: #004566 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
 }
 
 /* Error messages */
 .stError {
-    background-color: #FFF5F5 !important;
-    color: #DC2626 !important;
-    padding: 1rem !important;
-    border-radius: 4px !important;
-    font-family: 'Source Sans Pro', sans-serif !important;
-}
-
-/* Success messages */
-.stSuccess {
-    background-color: #F0FDF4 !important;
-    color: #166534 !important;
-    font-family: 'Source Sans Pro', sans-serif !important;
-}
-
-/* Warning messages */
-.stWarning {
-    background-color: #FFFBEB !important;
-    color: #92400E !important;
-    font-family: 'Source Sans Pro', sans-serif !important;
-}
-
-/* Expander sections */
-.streamlit-expanderHeader {
-    background-color: #F8F9FA !important;
-    color: #003C71 !important;
-    font-family: 'Open Sans', sans-serif !important;
-    font-weight: 600 !important;
-    border-radius: 4px !important;
+    background-color: #FFE8E8 !important;
+    color: #D64045 !important;
+    padding: 0.75rem !important;
+    border-radius: 5px !important;
+    margin: 0.5rem 0 !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 0.9rem !important;
+    animation: slideIn 0.3s ease-out !important;
 }
 
 /* Information sections */
 .css-1d391kg {
-    background-color: #F8F9FA !important;
-    padding: 1.5rem !important;
-    border-radius: 4px !important;
-    border: 1px solid #E5E5E5 !important;
+    background-color: #F6F9FC !important;
+    padding: 1rem !important;
+    border-radius: 5px !important;
+    margin: 0.5rem 0 !important;
+    font-family: 'Roboto', sans-serif !important;
+    transition: all 0.3s ease-in-out !important;
+}
+
+/* Markdown text */
+.stMarkdown {
+    font-family: 'Roboto', sans-serif !important;
+    font-size: clamp(0.9rem, 2.5vw, 1rem) !important;
+    color: #333333 !important;
 }
 
 /* Map container */
 .element-container iframe {
-    border-radius: 4px !important;
-    border: 1px solid #E5E5E5 !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+    width: 100% !important;
+    min-height: 300px !important;
+    height: 50vh !important;
+    max-height: 500px !important;
+    transition: all 0.3s ease-in-out !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+/* Expandable sections */
+.streamlit-expanderHeader {
+    font-family: 'Roboto', sans-serif !important;
+    color: #004566 !important;
+}
+
+/* Success messages */
+.stSuccess {
+    background-color: #E8F6EF !important;
+    color: #1B998B !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+/* Warning messages */
+.stWarning {
+    background-color: #FFF8E8 !important;
+    color: #E9B44C !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
-    .block-container {
-        padding: 1rem !important;
+    .stColumns { flex-direction: column !important; }
+    .stColumn {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        padding: 0.5rem !important;
     }
-
-    .stButton button {
-        width: 100% !important;
+    .row-widget.stButton { margin: 0.5rem 0 !important; }
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    .leaflet-tooltip {
+        font-size: 14px !important;
+        padding: 0.5rem !important;
     }
 }
