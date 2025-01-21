@@ -1,145 +1,141 @@
 
-/* Custom styles based on visitchattanooga.com */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=DM+Serif+Display&display=swap');
+/* Modern styling for Streamlit */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Global styles */
+.stApp {
+    font-family: 'Inter', sans-serif;
+}
 
 /* Main header */
 .stTitle {
-    color: #004566 !important;
-    font-family: 'DM Serif Display', serif !important;
-    font-weight: 600 !important;
-    font-size: clamp(1.5rem, 4vw, 2rem) !important;
-}
-
-/* Dark mode adjustments */
-[data-theme="dark"] .stTitle {
-    color: #00A7E1 !important;
+    color: #1a1a1a !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: clamp(2rem, 4vw, 2.5rem) !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 2rem !important;
 }
 
 /* Subheaders */
 .stSubheader {
-    color: #333333 !important;
-    font-family: 'Roboto', sans-serif !important;
-    font-weight: 500 !important;
-    margin-top: 1rem !important;
-    font-size: clamp(1.1rem, 3vw, 1.3rem) !important;
+    color: #1a1a1a !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: clamp(1.25rem, 3vw, 1.5rem) !important;
+    letter-spacing: -0.01em !important;
+    margin: 1.5rem 0 1rem !important;
 }
 
-/* Text input */
+/* Cards and containers */
+.css-1d391kg, div[data-testid="stExpander"] {
+    background-color: white !important;
+    padding: 1.5rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+div[data-testid="stExpander"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+}
+
+/* Input fields */
 .stTextInput input {
-    border-radius: 5px !important;
-    border: 1px solid #E0E0E0 !important;
-    padding: 0.5rem !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    font-size: 16px !important;
-    font-family: 'Roboto', sans-serif !important;
+    border-radius: 8px !important;
+    border: 2px solid #e0e0e0 !important;
+    padding: 0.75rem !important;
+    font-size: 1rem !important;
+    transition: border-color 0.2s ease !important;
+}
+
+.stTextInput input:focus {
+    border-color: #00A7E1 !important;
+    box-shadow: 0 0 0 3px rgba(0,167,225,0.1) !important;
 }
 
 /* Buttons */
 .stButton button {
-    background-color: #00A7E1 !important;
-    color: white !important;
-    font-family: 'Roboto', sans-serif !important;
+    background: linear-gradient(45deg, #00A7E1, #0081b8) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1.5rem !important;
     font-weight: 500 !important;
-    border-radius: 5px !important;
-    width: 100% !important;
-    padding: 0.5rem 1rem !important;
-    margin: 0.5rem 0 !important;
-    transition: all 0.3s ease-in-out !important;
+    letter-spacing: 0.01em !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .stButton button:hover {
-    background-color: #004566 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0,167,225,0.2) !important;
 }
 
-/* Error messages */
-.stError {
-    background-color: #FFE8E8 !important;
-    color: #D64045 !important;
-    padding: 0.75rem !important;
-    border-radius: 5px !important;
-    margin: 0.5rem 0 !important;
-    font-family: 'Roboto', sans-serif !important;
-    font-size: 0.9rem !important;
+/* Status messages */
+.stSuccess, .stError, .stWarning {
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    font-weight: 500 !important;
     animation: slideIn 0.3s ease-out !important;
 }
 
-/* Information sections */
-.css-1d391kg {
-    background-color: #F6F9FC !important;
-    padding: 1rem !important;
-    border-radius: 5px !important;
-    margin: 0.5rem 0 !important;
-    font-family: 'Roboto', sans-serif !important;
-    transition: all 0.3s ease-in-out !important;
+.stSuccess {
+    background-color: #e6f7f1 !important;
+    color: #0c6b58 !important;
+    border-left: 4px solid #0c6b58 !important;
 }
 
-/* Markdown text */
-.stMarkdown {
-    font-family: 'Roboto', sans-serif !important;
-    font-size: clamp(0.9rem, 2.5vw, 1rem) !important;
-    color: #333333 !important;
+.stError {
+    background-color: #fde8e8 !important;
+    color: #c81e1e !important;
+    border-left: 4px solid #c81e1e !important;
+}
+
+.stWarning {
+    background-color: #fff8e6 !important;
+    color: #975810 !important;
+    border-left: 4px solid #975810 !important;
 }
 
 /* Map container */
 .element-container iframe {
-    width: 100% !important;
-    min-height: 300px !important;
-    height: 50vh !important;
-    max-height: 500px !important;
-    transition: all 0.3s ease-in-out !important;
-    border-radius: 8px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
 }
 
-/* Expandable sections */
-.streamlit-expanderHeader {
-    font-family: 'Roboto', sans-serif !important;
-    color: #004566 !important;
-}
-
-/* Success messages */
-.stSuccess {
-    background-color: #E8F6EF !important;
-    color: #1B998B !important;
-    font-family: 'Roboto', sans-serif !important;
-}
-
-/* Warning messages */
-.stWarning {
-    background-color: #FFF8E8 !important;
-    color: #E9B44C !important;
-    font-family: 'Roboto', sans-serif !important;
-}
-
-/* Animation keyframes */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+/* Animations */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .stTitle, .stSubheader {
+        color: #ffffff !important;
+    }
+    
+    .css-1d391kg, div[data-testid="stExpander"] {
+        background-color: #1e1e1e !important;
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+    
+    .stTextInput input {
+        background-color: #2d2d2d !important;
+        border-color: #3d3d3d !important;
+        color: white !important;
+    }
 }
 
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
-    .stColumns { flex-direction: column !important; }
-    .stColumn {
-        flex: 1 1 100% !important;
-        max-width: 100% !important;
-        padding: 0.5rem !important;
+    .stColumns {
+        gap: 1rem !important;
     }
-    .row-widget.stButton { margin: 0.5rem 0 !important; }
-    .block-container {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-    .leaflet-tooltip {
-        font-size: 14px !important;
-        padding: 0.5rem !important;
+    
+    .css-1d391kg, div[data-testid="stExpander"] {
+        padding: 1rem !important;
     }
 }
