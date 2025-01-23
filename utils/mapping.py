@@ -202,8 +202,23 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
     )
     marker.add_to(m)
 
-    # Center the map on the entered address with much closer zoom
+    # Center the map on the entered address with closer zoom
     m.location = [lat, lon]
-    m.zoom_start = 17
+    m.zoom_start = 15
+
+    # Add JavaScript to zoom to marker after the map loads
+    m.get_root().html.add_child(folium.Element(f"""
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {{
+                setTimeout(function() {{
+                    var map = document.querySelector('#map')._leaflet_map;
+                    map.setView([{lat}, {lon}], 17, {{
+                        animate: true,
+                        duration: 1
+                    }});
+                }}, 1000);
+            }});
+        </script>
+    """))
 
     return m
