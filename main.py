@@ -71,11 +71,20 @@ with col1:
         zip_code = st.text_input(
             "ZIP Code",
             placeholder="37402",
-            help="Enter your ZIP code",
-            key="zip_input"
+            help="Enter your ZIP code (5 digits)",
+            key="zip_input",
+            max_chars=5
         )
     
-    search_button = st.button("Find District", type="primary")
+    # Validate inputs
+    is_valid_street = bool(street_address.strip())
+    is_valid_zip = zip_code.isdigit() and len(zip_code) == 5
+    
+    search_button = st.button(
+        "Find District",
+        type="primary",
+        disabled=not (is_valid_street and is_valid_zip)
+    )
     address = f"{street_address} {zip_code}" if search_button else ""
 
     # Always show the base district map
