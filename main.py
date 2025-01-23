@@ -37,11 +37,8 @@ else:
     countdown_text = "🗳️ Election Day - Polls open until 7:00 PM EST"
 
 # Header with countdown
-cols = st.columns([2, 1])
-with cols[0]:
-    st.title("🗳️ Chattanooga Voting Information")
-with cols[1]:
-    st.markdown(f'<p style="text-align: right; padding-top: 1rem; font-size: 1.1rem;">{countdown_text}</p>', unsafe_allow_html=True)
+st.title("🗳️ Chattanooga Voting Information")
+st.markdown(f'<p class="header-countdown">{countdown_text}</p>', unsafe_allow_html=True)
 
 st.markdown("""
 Find your voting district by entering your address below. 
