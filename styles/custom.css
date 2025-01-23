@@ -37,9 +37,11 @@ header {
     color: var(--text-white) !important;
     font-size: 1.1rem !important;
     opacity: 0.9 !important;
-    position: absolute !important;
+    position: fixed !important;
     right: 2rem !important;
-    top: 1rem !important;
+    top: 0 !important;
+    z-index: 1000000 !important;
+    padding: 0.5rem !important;
 }
 
 .stTitle {
