@@ -37,8 +37,18 @@ else:
     countdown_text = "🗳️ Election Day - Polls open until 7:00 PM EST"
 
 # Header with countdown
-st.title("🗳️ Chattanooga Voting Information")
+st.set_page_config.set_page_config = """
+    <style>
+        [data-testid="stHeader"] {
+            background-color: var(--primary-teal);
+            padding-bottom: 1rem;
+        }
+    </style>
+"""
+st.markdown(st.set_page_config.set_page_config, unsafe_allow_html=True)
+
 st.markdown(f'<p class="header-countdown">{countdown_text}</p>', unsafe_allow_html=True)
+st.title("🗳️ Chattanooga Voting Information")
 
 st.markdown("""
 Find your voting district by entering your address below. 
