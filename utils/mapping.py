@@ -154,12 +154,6 @@ def create_base_district_map() -> folium.Map:
     '''
     m.get_root().html.add_child(folium.Element(reset_button_html))
 
-    # Add custom layer control
-    folium.LayerControl(
-        position='topright',
-        collapsed=False
-    ).add_to(m)
-
     # Add custom CSS for animations
     custom_css = """
     <style>
