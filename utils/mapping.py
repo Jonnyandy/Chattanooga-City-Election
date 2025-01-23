@@ -63,10 +63,12 @@ def create_base_district_map() -> folium.Map:
         # Create candidate information HTML
         candidates_html = ""
         if candidates:
-            if len(candidates) == 1:
-                candidates_html = f"<strong>{candidates[0]}</strong> (running unopposed)"
+            # Strip markdown links for map display
+            clean_candidates = [candidate.split('[')[0].strip() for candidate in candidates]
+            if len(clean_candidates) == 1:
+                candidates_html = f"<strong>{clean_candidates[0]}</strong> (running unopposed)"
             else:
-                candidates_html = "<br>".join([f"• {candidate}" for candidate in candidates])
+                candidates_html = "<br>".join([f"• {candidate}" for candidate in clean_candidates])
 
         # Enhanced popup with candidate information
         popup_html = f"""
