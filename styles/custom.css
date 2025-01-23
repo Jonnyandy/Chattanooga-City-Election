@@ -1,112 +1,101 @@
+
 /* Modern styling for Streamlit */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Base variables */
 :root {
-    --bg-color: #ffffff;
-    --text-color: #2c3e50;
-    --primary-color: #1976D2;
-    --secondary-color: #f8f9fa;
-    --border-color: #e9ecef;
-    --hover-color: #f0f2f6;
+    --primary-teal: #1B4E5D;
+    --secondary-teal: #235E70;
+    --text-white: #FFFFFF;
+    --text-dark: #333333;
+    --light-gray: #F5F5F5;
+    --border-color: #E0E0E0;
 }
 
 /* Base styles */
 .stApp {
     font-family: 'Inter', sans-serif !important;
-    transition: all 0.3s ease-in-out !important;
-    background-color: var(--bg-color) !important;
-    color: var(--text-color) !important;
+    background-color: var(--light-gray) !important;
+    color: var(--text-dark) !important;
+}
+
+/* Header styling */
+header {
+    background-color: var(--primary-teal) !important;
+    padding: 2rem 0 !important;
+}
+
+.stTitle {
+    color: var(--text-white) !important;
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    padding: 1rem 0 !important;
+}
+
+/* Main content */
+.stMarkdown {
+    color: var(--text-dark) !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
 }
 
 /* Cards and containers */
 div[data-testid="stExpander"] {
-    background-color: var(--bg-color) !important;
-    padding: 1.5rem !important;
-    border-radius: 12px !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    background-color: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
     border: 1px solid var(--border-color) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-div[data-testid="stExpander"]:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+    margin-bottom: 1rem !important;
 }
 
 /* Input fields */
 .stTextInput input, .stDateInput input {
-    border-radius: 8px !important;
-    border: 2px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    border: 1px solid var(--border-color) !important;
     padding: 0.75rem !important;
-    font-size: 1rem !important;
-    transition: border-color 0.2s ease !important;
-    background-color: var(--bg-color) !important;
-    color: var(--text-color) !important;
-}
-
-.stTextInput input:focus, .stDateInput input:focus {
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(0,167,225,0.1) !important;
+    background-color: white !important;
 }
 
 /* Buttons */
 .stButton button {
-    background: var(--primary-color) !important;
+    background-color: var(--secondary-teal) !important;
+    color: white !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: 4px !important;
     padding: 0.75rem 1.5rem !important;
     font-weight: 500 !important;
-    letter-spacing: 0.01em !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-    color: white !important;
+    transition: background-color 0.2s ease !important;
 }
 
 .stButton button:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(0,167,225,0.2) !important;
+    background-color: var(--primary-teal) !important;
 }
 
 /* Status messages */
-.stSuccess, .stError, .stWarning {
-    border-radius: 8px !important;
+.stSuccess, .stInfo {
+    background-color: var(--light-gray) !important;
+    border-left: 4px solid var(--secondary-teal) !important;
     padding: 1rem !important;
-    font-weight: 500 !important;
-    animation: slideIn 0.3s ease-out !important;
-    background-color: var(--secondary-color) !important;
-    color: var(--text-color) !important;
-    border-left: 4px solid var(--primary-color) !important;
 }
 
-/* Links */
-a {
-    color: var(--primary-color) !important;
-    text-decoration: none !important;
-}
-
-a:hover {
-    text-decoration: underline !important;
+.stError {
+    background-color: var(--light-gray) !important;
+    border-left: 4px solid #dc3545 !important;
+    padding: 1rem !important;
 }
 
 /* Map container */
 .element-container iframe {
-    border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
     border: 1px solid var(--border-color) !important;
-}
-
-/* Animations */
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
-    .stColumns {
-        gap: 1rem !important;
+    .stTitle {
+        font-size: 2rem !important;
     }
-
+    
     div[data-testid="stExpander"] {
         padding: 1rem !important;
     }
