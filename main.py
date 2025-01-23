@@ -25,9 +25,6 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
-# Header
-st.title("🗳️ Chattanooga Voting Information")
-
 # Election Day Countdown
 election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
 now = datetime.now(timezone(timedelta(hours=-5)))  # Eastern time
@@ -35,18 +32,16 @@ time_until_election = election_date - now
 
 if time_until_election.total_seconds() > 0:
     days = time_until_election.days
-    st.markdown("""
-    <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
-        <p style='text-align: center; font-size: 1.5rem; margin: 0.5rem 0;'>⏱️ <strong>{} days</strong> until March 4th, 2025 Election Day</p>
-    </div>
-    """.format(days), unsafe_allow_html=True)
+    countdown_text = f"⏱️ {days} days until Election Day"
 else:
-    st.markdown("""
-    <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
-        <h3 style='text-align: center; color: #ff4b4b;'>🗳️ Election Day is Here!</h3>
-        <p style='text-align: center;'>Polls are open until 7:00 PM EST</p>
-    </div>
-    """, unsafe_allow_html=True)
+    countdown_text = "🗳️ Election Day - Polls open until 7:00 PM EST"
+
+# Header with countdown
+cols = st.columns([2, 1])
+with cols[0]:
+    st.title("🗳️ Chattanooga Voting Information")
+with cols[1]:
+    st.markdown(f'<p style="text-align: right; padding-top: 1rem; font-size: 1.1rem;">{countdown_text}</p>', unsafe_allow_html=True)
 
 st.markdown("""
 Find your voting district by entering your address below. 
