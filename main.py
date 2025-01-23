@@ -29,23 +29,17 @@ st.markdown(f"""
 st.title("🗳️ Chattanooga Voting Information")
 
 # Election Day Countdown
-election_date = datetime(2025, 3, 4, 19, 0, 0, tzinfo=timezone.utc)  # 7 PM UTC (2 PM EST)
-now = datetime.now(timezone.utc)
+election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
+now = datetime.now(timezone(timedelta(hours=-5)))  # Eastern time
 time_until_election = election_date - now
 
 if time_until_election.total_seconds() > 0:
     days = time_until_election.days
-    hours = time_until_election.seconds // 3600
-    minutes = (time_until_election.seconds % 3600) // 60
-
     st.markdown("""
     <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
-        <p style='text-align: center; font-size: 1.5rem; margin: 0.5rem 0;'>⏱️
-            <strong>{} days, {} hours, {} minutes</strong><br>
-            <span style='font-size: 1rem;'>until March 4th, 2025 Election Day</span>
-        </p>
+        <p style='text-align: center; font-size: 1.5rem; margin: 0.5rem 0;'>⏱️ <strong>{} days</strong> until March 4th, 2025 Election Day</p>
     </div>
-    """.format(days, hours, minutes), unsafe_allow_html=True)
+    """.format(days), unsafe_allow_html=True)
 else:
     st.markdown("""
     <div style='padding: 1rem; background-color: #f0f2f6; border-radius: 0.5rem; margin-bottom: 1rem;'>
