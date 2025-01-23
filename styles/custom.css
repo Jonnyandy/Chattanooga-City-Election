@@ -21,7 +21,25 @@
 /* Header styling */
 header {
     background-color: var(--primary-teal) !important;
-    padding: 2rem 0 !important;
+    padding: 1rem 0 !important;
+}
+
+[data-testid="stHeader"] {
+    background-color: var(--primary-teal) !important;
+    padding-bottom: 1rem !important;
+}
+
+[data-testid="stToolbar"] {
+    display: none !important;
+}
+
+.header-countdown {
+    color: var(--text-white) !important;
+    font-size: 1.1rem !important;
+    opacity: 0.9 !important;
+    position: absolute !important;
+    right: 2rem !important;
+    top: 1rem !important;
 }
 
 .stTitle {
@@ -30,14 +48,6 @@ header {
     font-weight: 700 !important;
     padding: 1rem 0 !important;
     margin-bottom: 0 !important;
-}
-
-.header-countdown {
-    color: var(--text-white) !important;
-    font-size: 1.2rem !important;
-    opacity: 0.9 !important;
-    margin-top: -0.5rem !important;
-    text-align: center !important;
 }
 
 /* Main content */
