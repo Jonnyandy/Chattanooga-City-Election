@@ -58,15 +58,28 @@ col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
     st.subheader("Find Your District")
-    address = st.text_input(
-        "Enter your street address and ZIP code",
-        placeholder="123 Main St 37402",
-        help="Enter your complete street address including ZIP code to find your district.",
-        key="address_input"
-    )
+    
+    col_addr, col_zip = st.columns([2, 1])
+    with col_addr:
+        street_address = st.text_input(
+            "Street Address",
+            placeholder="123 Main St",
+            help="Enter your street address",
+            key="street_input"
+        )
+    with col_zip:
+        zip_code = st.text_input(
+            "ZIP Code",
+            placeholder="37402",
+            help="Enter your ZIP code",
+            key="zip_input"
+        )
+    
+    search_button = st.button("Find District", type="primary")
+    address = f"{street_address} {zip_code}" if search_button else ""
 
     # Always show the base district map
-    if not address:
+    if not address or not search_button:
         st.subheader("Chattanooga City Council Districts")
         m = create_base_district_map()
         map_data = st_folium(m, width=None, height=500, returned_objects=[])
