@@ -5,7 +5,7 @@ from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
 from utils.voter_verification import verify_voter_registration
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 # Page configuration
 st.set_page_config(
