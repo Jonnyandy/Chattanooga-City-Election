@@ -239,10 +239,11 @@ div[data-testid="column"] > div:has(.map-container) {
 /* Mobile adjustments */
 @media screen and (max-width: 768px) {
     .stTitle {
-        font-size: 1.8rem !important;
+        font-size: 2rem !important;
     }
     .header-countdown {
         font-size: 0.9rem !important;
+        white-space: nowrap !important;
     }
     .menu-toggle {
         top: 10px;
@@ -250,6 +251,29 @@ div[data-testid="column"] > div:has(.map-container) {
         padding: 8px 16px;
         font-size: 12px;
     }
+}
+
+/* Map container fixes */
+[data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+}
+
+.map-container {
+    position: relative !important;
+    width: 100% !important;
+    height: 600px !important;
+    padding-top: 0 !important;
+}
+
+.map-container > div {
+    position: relative !important;
+    height: 100% !important;
+}
+
+.map-container iframe {
+    position: relative !important;
+    height: 100% !important;
+    min-height: 600px !important;
 }
 
 .element-container iframe {
