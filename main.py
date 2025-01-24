@@ -158,7 +158,7 @@ with col2:
     st.subheader("Helpful Information")
 
     # Add Voter Registration Check
-    with st.expander("✓ Check Voter Registration", expanded=True):
+    with st.expander("✓ Check Voter Registration", expanded=False):
         st.markdown("""
         Verify your voter registration status for the March 4th, 2025 election.
         """)
@@ -207,7 +207,7 @@ with col2:
         Visit [GoVoteTN.gov](https://govotetn.gov)
         """)
 
-    with st.expander("🗳️ Early Voting Details", expanded=True):
+    with st.expander("🗳️ Early Voting Details", expanded=False):
         st.markdown("""
         **Early Voting Period:** February 12 – February 27, 2025  
         *ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*
@@ -235,7 +235,7 @@ with col2:
         - Visit [govotetn.gov](http://govotetn.gov) to update your information
         """)
 
-    with st.expander("📋 View Sample Ballot", expanded=True):
+    with st.expander("📋 View Sample Ballot", expanded=False):
         st.markdown("""
         Preview the March 4th, 2025 City Council Election ballot below.
         """)
