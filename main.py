@@ -56,7 +56,7 @@ with col1:
         street_address = st.text_input(
             "Street Address",
             placeholder="123 Main St",
-            help="Enter your street address",
+            help="Enter a valid street address within the city limits of Chattanooga, TN",
             key="street_input"
         )
     with col_zip:
