@@ -38,7 +38,7 @@ else:
 
 # Header with countdown
 st.markdown(f'<div class="header-countdown">{countdown_text}</div>', unsafe_allow_html=True)
-st.markdown("<h1>🗳️ Chattanooga<br>.Vote</h1>", unsafe_allow_html=True)
+st.title("🗳️ Chattanooga.Vote")
 
 st.markdown("""
 Find your city council district by entering your address below. 
