@@ -112,40 +112,6 @@ div[data-testid="stExpander"] {
     border: 1px solid var(--border-color) !important;
 }
 
-/* Loading Animation */
-.loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: var(--primary-teal);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 999999;
-    transition: opacity 0.5s ease-out;
-    pointer-events: none;
-}
-
-.loading-content {
-    text-align: center;
-    color: var(--text-white);
-}
-
-.loading-logo {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
     .stTitle {
