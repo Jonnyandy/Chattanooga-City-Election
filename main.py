@@ -79,7 +79,7 @@ Find your city council district by entering your address below.
 This tool uses official City of Chattanooga district boundaries.
 """)
 
-# Main content columns
+# Main content
 col1, col2 = st.columns([2, 1], gap="large")
 
 with col1:
@@ -113,15 +113,16 @@ with col1:
     )
     address = f"{street_address} {zip_code}" if search_button else ""
 
-    # Map container with 1:1 aspect ratio
+    # Map container
     st.markdown('<div class="map-container">', unsafe_allow_html=True)
 
-    # Process address and show map
+    # Always show the base district map
     if not address or not search_button:
         st.subheader("Chattanooga City Council Districts")
         m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=None, returned_objects=[])
+        map_data = st_folium(m, width=None, height=500, returned_objects=[])
     else:
+        # Process address if entered
         if validate_address(address):
             coords = geocode_address(address)
             if coords:
@@ -130,9 +131,9 @@ with col1:
 
                 if district_info["district_number"] != "District not found":
                     m = create_district_map(lat, lon, district_info)
-                    map_data = st_folium(m, width=None, height=None, returned_objects=[])
+                    map_data = st_folium(m, width=None, height=500, returned_objects=[])
 
-                    # District information HTML
+                    # Prepare district information HTML
                     district_html = f"""
                     <div class="district-info">
                         <h3>Your District Information</h3>
@@ -149,6 +150,7 @@ with col1:
 
                     district_html += """
                         </ul>
+
                         <hr>
                         <h4>Your Polling Location</h4>
                     """
@@ -167,9 +169,8 @@ with col1:
 
                     district_html += "</div>"
 
-                    # Display district info
-                    with col2:
-                        st.markdown(district_html, unsafe_allow_html=True)
+                    # Insert district info into the appropriate container based on screen size
+                    st.markdown(district_html, unsafe_allow_html=True)
                 else:
                     st.error(
                         "Unable to determine your district. This may mean your address is "
@@ -190,7 +191,7 @@ with col1:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Add helpful information content that will be moved to off-canvas menu
+# Helpful Information content (will be moved to off-canvas menu via JavaScript)
 helpful_info = """
 <div id="off-canvas-content">
     <div class="info-section">
