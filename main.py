@@ -27,37 +27,23 @@ st.markdown(f"""
 
 # Loading Screen
 st.markdown("""
-    <div class="loading-spinner">
+    <div id="loading-spinner" class="loading-spinner">
         <div class="loading-content">
             <div class="loading-logo">🗳️</div>
             <h2>Loading Chattanooga.Vote...</h2>
         </div>
     </div>
     <script>
-        function hideLoadingSpinner() {
-            const spinner = document.querySelector('.loading-spinner');
+        setTimeout(function() {
+            const spinner = document.getElementById('loading-spinner');
             if (spinner) {
                 spinner.style.opacity = '0';
                 setTimeout(() => {
-                    spinner.style.display = 'none';
+                    spinner.remove();
                     document.body.style.overflow = 'auto';
                 }, 500);
             }
-        }
-        
-        // Wait for both DOMContentLoaded and load events
-        let domLoaded = false;
-        let windowLoaded = false;
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            domLoaded = true;
-            if (windowLoaded) hideLoadingSpinner();
-        });
-        
-        window.addEventListener('load', function() {
-            windowLoaded = true;
-            if (domLoaded) hideLoadingSpinner();
-        });
+        }, 1500);
     </script>
 """, unsafe_allow_html=True)
 
