@@ -25,6 +25,19 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
+# Loading Screen
+with st.spinner():
+    st.markdown("""
+        <div class="loading-spinner">
+            <div class="loading-content">
+                <div class="loading-logo">🗳️</div>
+                <h2>Loading Chattanooga.Vote...</h2>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    import time
+    time.sleep(1)  # Give time for resources to load
+
 # Election Day Countdown
 election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
 now = datetime.now(timezone(timedelta(hours=-5)))  # Eastern time
