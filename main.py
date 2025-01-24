@@ -160,51 +160,17 @@ with col2:
     # Add Voter Registration Check
     with st.expander("✓ Check Voter Registration", expanded=False):
         st.markdown("""
-        Verify your voter registration status for the March 4th, 2025 election.
-        """)
+        ### Verify Your Voter Registration
 
-        with st.form("voter_check_form"):
-            first_name = st.text_input("First Name")
-            last_name = st.text_input("Last Name")
-            dob = st.date_input(
-                "Date of Birth",
-                min_value=datetime(1900, 1, 1),
-                max_value=datetime.now(),
-                help="Select your date of birth"
-            )
+        To check if you're registered to vote in the March 4th, 2025 election, visit the official Tennessee voter lookup tool:
 
-            submitted = st.form_submit_button("Check Registration")
+        [Click here to verify your registration ↗](https://tnmap.tn.gov/voterlookup/)
 
-            if submitted:
-                if all([first_name, last_name, dob]):
-                    result = verify_voter_registration(
-                        first_name=first_name,
-                        last_name=last_name,
-                        date_of_birth=dob.strftime("%Y-%m-%d")
-                    )
+        **Need help?**
+        - Call Hamilton County Election Commission: (423) 493-5100
+        - Visit: 700 River Terminal Rd, Chattanooga, TN 37406
+        - Email: vote@hamiltontn.gov
 
-                    if result["status"] == "redirect":
-                        st.markdown(result["message"])
-                    elif result["status"] == "error":
-                        st.error(result["message"])
-                    elif result["status"] == "success":
-                        if result["registered"] == "active":
-                            st.success(result["message"])
-                            st.markdown(f"""
-                            **Additional Information:**
-                            - {result['precinct']}
-                            - {result['district']}
-                            - {result['additional_info']}
-                            """)
-                        else:
-                            st.warning("""
-                            We couldn't find your voter registration.
-                            Register to vote at [GoVoteTN.gov](https://govotetn.gov)
-                            """)
-                else:
-                    st.error("Please fill in all required fields")
-
-        st.markdown("""
         **Need to register or update your information?**  
         Visit [GoVoteTN.gov](https://govotetn.gov)
         """)
@@ -219,7 +185,7 @@ with col2:
         1. **Election Commission**  
            700 River Terminal Rd, Chattanooga, TN 37406  
            *Monday - Friday: 8:00 am – 7:00 pm*  
-           *Saturday: 8:00 am – 4:00 pm*
+           *Saturday: 8:00 am – 4:00 pm*  
 
         2. **Hixson Community Center**  
            5401 School Dr, Hixson, TN 37343  
