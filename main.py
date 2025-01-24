@@ -38,10 +38,10 @@ else:
 
 # Header with countdown
 st.markdown(f'<div class="header-countdown">{countdown_text}</div>', unsafe_allow_html=True)
-st.title("🗳️ Chattanooga Voting Information")
+st.title("🗳️ Chattanooga.Vote")
 
 st.markdown("""
-Find your voting district by entering your address below. 
+Find your city council district by entering your address below. 
 This tool uses official City of Chattanooga district boundaries.
 """)
 
