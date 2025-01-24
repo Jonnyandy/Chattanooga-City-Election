@@ -126,6 +126,11 @@ div[data-testid="stExpander"] {
     bottom: 0;
     z-index: 999999;
     transition: opacity 0.5s ease-out;
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
 }
 
 .loading-content {

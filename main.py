@@ -34,14 +34,29 @@ st.markdown("""
         </div>
     </div>
     <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                const spinner = document.querySelector('.loading-spinner');
-                if (spinner) {
-                    spinner.style.opacity = '0';
-                    setTimeout(() => spinner.style.display = 'none', 500);
-                }
-            }, 1000);
+        function hideLoadingSpinner() {
+            const spinner = document.querySelector('.loading-spinner');
+            if (spinner) {
+                spinner.style.opacity = '0';
+                setTimeout(() => {
+                    spinner.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }, 500);
+            }
+        }
+        
+        // Wait for both DOMContentLoaded and load events
+        let domLoaded = false;
+        let windowLoaded = false;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            domLoaded = true;
+            if (windowLoaded) hideLoadingSpinner();
+        });
+        
+        window.addEventListener('load', function() {
+            windowLoaded = true;
+            if (domLoaded) hideLoadingSpinner();
         });
     </script>
 """, unsafe_allow_html=True)
