@@ -266,6 +266,12 @@ with col2:
         Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
         """)
 
+    with st.expander("📺 Video Guide", expanded=False):
+        st.markdown("""
+        Watch this helpful video about voting in Chattanooga:
+        """)
+        st.video("https://youtu.be/x8wwylBLIVE")
+
     with st.expander("❓ Need Help?", expanded=False):
         st.markdown("""
         **Contact the Hamilton County Election Commission:**
