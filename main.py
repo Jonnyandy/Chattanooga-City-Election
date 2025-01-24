@@ -57,7 +57,8 @@ with col1:
             "Street Address",
             placeholder="123 Main St",
             help="Enter a valid street address within the city limits of Chattanooga, TN",
-            key="street_input"
+            key="street_input",
+            on_change=lambda: st.session_state.update({'focus_zip': True}) if st.session_state.street_input else None
         )
     with col_zip:
         zip_code = st.text_input(
@@ -65,7 +66,9 @@ with col1:
             placeholder="37402",
             help="Enter your ZIP code (5 digits)",
             key="zip_input",
-            max_chars=5
+            max_chars=5,
+            focus=st.session_state.get('focus_zip', False),
+            on_change=lambda: st.session_state.update({'focus_zip': False})
         )
     
     # Validate inputs
