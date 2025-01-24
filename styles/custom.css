@@ -1,3 +1,4 @@
+
 /* Modern styling for Streamlit */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -8,7 +9,6 @@
     --text-dark: #333333;
     --light-gray: #F5F5F5;
     --border-color: #E0E0E0;
-    --off-canvas-width: 400px;
 }
 
 /* Base styles */
@@ -16,10 +16,6 @@
     font-family: 'Inter', sans-serif !important;
     background-color: var(--light-gray) !important;
     color: var(--text-dark) !important;
-    overflow-x: hidden !important;
-    max-width: 1400px !important;
-    margin: 0 auto !important;
-    padding: 0 1rem !important;
 }
 
 /* Header styling */
@@ -37,297 +33,55 @@ header {
     display: none !important;
 }
 
-/* Off-canvas menu */
-.off-canvas-menu {
-    position: fixed;
-    top: 0;
-    right: -400px;
-    width: var(--off-canvas-width);
-    height: 100vh;
-    background: white;
-    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000;
-    overflow-y: auto;
-    padding: 2rem;
-}
-
-.off-canvas-menu h2 {
-    margin-bottom: 2rem;
-    color: var(--primary-teal);
-    font-weight: 600;
-}
-
-.info-section {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.info-section:last-child {
-    border-bottom: none;
-}
-
-.info-section h3 {
-    color: var(--primary-teal);
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.off-canvas-menu.active {
-    transform: translateX(-400px);
-}
-
-.off-canvas-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.5);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease;
-    z-index: 999;
-}
-
-.off-canvas-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Menu toggle button */
-.menu-toggle {
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    z-index: 1001;
-    background: var(--primary-teal);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.menu-toggle:hover {
-    background: var(--secondary-teal);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* Main content layout */
-div[data-testid="column"] {
-    padding: 0.5rem !important;
-}
-
-/* Input fields and buttons */
-div[data-testid="stTextInput"] > div {
-    padding: 0.25rem 0 !important;
-}
-
-div[data-testid="stTextInput"] input {
-    padding: 0.75rem !important;
-    border-radius: 8px !important;
-    border: 1px solid var(--border-color) !important;
-    background: white !important;
-    font-size: 1rem !important;
-}
-
-.stButton button {
-    width: 100% !important;
-    padding: 0.75rem !important;
-    border-radius: 8px !important;
-    background: var(--primary-teal) !important;
-    color: white !important;
-    font-weight: 500 !important;
-    transition: all 0.2s ease !important;
-    border: none !important;
-    margin-top: 0.5rem !important;
-}
-
-.stButton button:hover {
-    background: var(--secondary-teal) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
-}
-
-/* Map container */
-.map-container {
-    aspect-ratio: 1;
-    width: 100%;
-    margin: 1rem 0;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.map-container iframe {
-    width: 100% !important;
-    height: 100% !important;
-    border: none !important;
-}
-
-/* District info container */
-.district-info {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    margin: 1rem 0;
-}
-
-.district-info h3 {
-    color: var(--primary-teal);
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-}
-
-.district-info h4 {
-    color: var(--text-dark);
-    margin: 1.5rem 0 1rem;
-    font-weight: 500;
-}
-
-.district-info p {
-    margin-bottom: 0.75rem;
-    line-height: 1.6;
-}
-
-.district-info hr {
-    margin: 1.5rem 0;
-    border: none;
-    border-top: 1px solid var(--border-color);
-}
-
-.district-info ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 0.5rem;
-}
-
-.district-info li {
-    margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    position: relative;
-}
-
-.district-info li:before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: var(--primary-teal);
-}
-
-/* Header countdown and title */
 .header-countdown {
     color: var(--text-white) !important;
     font-size: 1.1rem !important;
     opacity: 0.9 !important;
-    margin-bottom: 0.5rem !important;
-    text-align: center !important;
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 0 !important;
+    z-index: 1000000 !important;
+    padding: 0.5rem !important;
+    white-space: nowrap !important;
 }
 
 .stTitle {
     color: var(--text-white) !important;
     font-size: 2.5rem !important;
     font-weight: 700 !important;
-    text-align: center !important;
-    margin-bottom: 2rem !important;
+    padding: 1rem 0 !important;
+    margin-bottom: 0 !important;
+    white-space: nowrap !important;
 }
 
-/* Responsive layout */
-@media screen and (min-width: 992px) {
-    .content-wrapper {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-        align-items: start;
-    }
-
-    .district-info {
-        margin-top: 0;
-        position: sticky;
-        top: 2rem;
-    }
-}
-
-@media screen and (max-width: 991px) {
-    .off-canvas-menu {
-        width: 100%;
-        right: -100%;
-    }
-
-    .off-canvas-menu.active {
-        transform: translateX(-100%);
-    }
-
-    .stApp {
-        padding: 0 0.5rem !important;
-    }
-
+@media screen and (max-width: 768px) {
     .stTitle {
         font-size: 1.8rem !important;
+        white-space: normal !important;
+        overflow: visible !important;
     }
-
+    .stTitle:not(:empty)::before {
+        content: "chattanooga\A.vote";
+        white-space: pre !important;
+        display: block !important;
+    }
+    .stTitle h1 {
+        display: none !important;
+    }
     .header-countdown {
         font-size: 0.9rem !important;
     }
-
-    .menu-toggle {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
 }
 
-/* Status messages */
-.stSuccess, .stInfo {
-    background-color: var(--light-gray) !important;
-    border-radius: 8px !important;
-    padding: 1rem !important;
-    margin: 1rem 0 !important;
-}
-
-.stError {
-    background-color: #fde8e8 !important;
-    border-radius: 8px !important;
-    padding: 1rem !important;
-    margin: 1rem 0 !important;
-    color: #c81e1e !important;
-}
-
-/* Footer */
-footer {
-    margin-top: 3rem !important;
-    padding: 2rem 0 !important;
-    text-align: center !important;
-    color: var(--text-dark) !important;
-    opacity: 0.8 !important;
-}
-
-/* Remove extra padding from Streamlit components */
-div[data-testid="stVerticalBlock"] > div {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-/* Existing styles from original file - integrated where logical */
-.element-container iframe {
-    border-radius: 8px !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-    border: 1px solid var(--border-color) !important;
-}
-
+/* Main content */
 .stMarkdown {
     color: var(--text-dark) !important;
     font-size: 1rem !important;
     line-height: 1.6 !important;
 }
 
+/* Cards and containers */
 div[data-testid="stExpander"] {
     background-color: white !important;
     border-radius: 8px !important;
@@ -336,16 +90,56 @@ div[data-testid="stExpander"] {
     margin-bottom: 1rem !important;
 }
 
-
-@media screen and (max-width: 768px) {
-    div[data-testid="stExpander"] {
-        padding: 1rem !important;
-    }
-}
-
+/* Input fields */
 .stTextInput input, .stDateInput input {
     border-radius: 4px !important;
     border: 1px solid var(--border-color) !important;
     padding: 0.75rem !important;
     background-color: white !important;
+}
+
+/* Buttons */
+.stButton button {
+    background-color: var(--secondary-teal) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 500 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.stButton button:hover {
+    background-color: var(--primary-teal) !important;
+}
+
+/* Status messages */
+.stSuccess, .stInfo {
+    background-color: var(--light-gray) !important;
+    border-left: 4px solid var(--secondary-teal) !important;
+    padding: 1rem !important;
+}
+
+.stError {
+    background-color: var(--light-gray) !important;
+    border-left: 4px solid #dc3545 !important;
+    padding: 1rem !important;
+}
+
+/* Map container */
+.element-container iframe {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    .stTitle {
+        font-size: 2rem !important;
+    }
+    
+    div[data-testid="stExpander"] {
+        padding: 1rem !important;
+    }
 }
