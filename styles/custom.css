@@ -61,13 +61,13 @@ header {
         white-space: normal !important;
         overflow: visible !important;
     }
-    .stTitle:not(:empty)::before {
-        content: "chattanooga\A.vote";
-        white-space: pre !important;
-        display: block !important;
-    }
     .stTitle h1 {
-        display: none !important;
+        font-size: 1.8rem !important;
+        line-height: 1.2 !important;
+    }
+    .stTitle h1::after {
+        content: '\A';
+        white-space: pre;
     }
     .header-countdown {
         font-size: 0.9rem !important;
