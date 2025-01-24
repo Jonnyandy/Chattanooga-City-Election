@@ -43,6 +43,7 @@ header {
     top: 0 !important;
     z-index: 1000000 !important;
     padding: 0.5rem !important;
+    white-space: nowrap !important;
 }
 
 .stTitle {
@@ -51,6 +52,18 @@ header {
     font-weight: 700 !important;
     padding: 1rem 0 !important;
     margin-bottom: 0 !important;
+    white-space: nowrap !important;
+}
+
+@media screen and (max-width: 768px) {
+    .stTitle {
+        font-size: 1.8rem !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+    }
+    .header-countdown {
+        font-size: 0.9rem !important;
+    }
 }
 
 /* Main content */
