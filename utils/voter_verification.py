@@ -1,10 +1,7 @@
-import trafilatura
-import requests
-from bs4 import BeautifulSoup
 import streamlit as st
-from typing import Dict, Optional
-import re
+from typing import Dict
 from datetime import datetime, date
+import re
 
 def validate_name(name: str) -> bool:
     """Validate name format"""
@@ -19,16 +16,13 @@ def validate_dob(dob_str: str) -> bool:
         dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
         today = date.today()
         age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-
-        # Check if person is at least 18 years old and not unreasonably old
         return 18 <= age <= 120
     except ValueError:
         return False
 
 def verify_voter_registration(first_name: str, last_name: str, date_of_birth: str) -> Dict[str, str]:
     """
-    Verify voter registration status using validation checks
-    Returns a dictionary with registration status and additional information
+    Redirect users to the official TN voter registration verification system
     """
     try:
         # Input validation
@@ -52,45 +46,25 @@ def verify_voter_registration(first_name: str, last_name: str, date_of_birth: st
                 "message": "Invalid date of birth. You must be at least 18 years old to register to vote"
             }
 
-        # Format names for consistency
-        first_name = first_name.strip().title()
-        last_name = last_name.strip().title()
-
-        # In a real implementation, this would make an API call to the voter registration system
-        # For this prototype, we'll implement some basic checks
-
-        # Example validation: Names shouldn't be too short
-        if len(first_name) < 2 or len(last_name) < 2:
-            return {
-                "status": "error",
-                "message": "Please enter your complete legal name"
-            }
-
-        # Example: Detect test/dummy data
-        test_names = {"test", "john", "jane", "doe", "smith"}
-        if first_name.lower() in test_names and last_name.lower() in test_names:
-            return {
-                "status": "error",
-                "message": "Unable to verify registration. Please ensure you're entering your legal name as it appears on your ID"
-            }
-
-        # For demonstration, we'll return a "not found" response
-        # In production, this would be replaced with actual API verification
         return {
-            "status": "success",
-            "registered": "not_found",
-            "message": "We couldn't find a voter registration matching this information.",
-            "additional_info": """
-            If you believe this is an error, you can:
-            1. Verify your information is entered exactly as it appears on your ID
-            2. Contact the Hamilton County Election Commission at (423) 493-5100
-            3. Visit GoVoteTN.gov to check your registration status or register to vote
+            "status": "redirect",
+            "message": """
+            To check your voter registration status, please visit the official Tennessee voter lookup tool:
+
+            [Click here to verify your registration](https://tnmap.tn.gov/voterlookup/)
+
+            This official tool provides the most accurate and up-to-date information about your voter registration status.
+
+            If you need assistance, you can:
+            1. Contact the Hamilton County Election Commission at (423) 493-5100
+            2. Visit their office at 700 River Terminal Rd, Chattanooga, TN 37406
+            3. Email them at vote@hamiltontn.gov
             """
         }
 
     except Exception as e:
-        st.error(f"Error checking voter registration: {str(e)}")
+        st.error(f"Error in voter verification process: {str(e)}")
         return {
             "status": "error",
-            "message": "Unable to verify registration. Please try again later or contact the Election Commission."
+            "message": "Unable to process your request. Please try again later or contact the Election Commission directly."
         }

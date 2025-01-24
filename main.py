@@ -183,7 +183,11 @@ with col2:
                         date_of_birth=dob.strftime("%Y-%m-%d")
                     )
 
-                    if result["status"] == "success":
+                    if result["status"] == "redirect":
+                        st.markdown(result["message"])
+                    elif result["status"] == "error":
+                        st.error(result["message"])
+                    elif result["status"] == "success":
                         if result["registered"] == "active":
                             st.success(result["message"])
                             st.markdown(f"""
@@ -197,8 +201,6 @@ with col2:
                             We couldn't find your voter registration.
                             Register to vote at [GoVoteTN.gov](https://govotetn.gov)
                             """)
-                    else:
-                        st.error(result["message"])
                 else:
                     st.error("Please fill in all required fields")
 
