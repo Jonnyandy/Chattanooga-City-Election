@@ -1,3 +1,4 @@
+
 modules = ["python-3.11"]
 
 [nix]
@@ -5,7 +6,7 @@ channel = "stable-24_05"
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["sh", "-c", "python utils/district_scraper.py && python utils/polling_scraper.py && streamlit run main.py"]
+run = ["sh", "-c", "streamlit run main.py"]
 
 [workflows]
 runButton = "Project"
@@ -31,7 +32,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python utils/district_scraper.py && streamlit run main.py"
+args = "streamlit run main.py"
 waitForPort = 5000
 
 [[ports]]
