@@ -58,8 +58,16 @@ header {
 @media screen and (max-width: 768px) {
     .stTitle {
         font-size: 1.8rem !important;
-        white-space: nowrap !important;
+        white-space: normal !important;
         overflow: visible !important;
+    }
+    .stTitle:not(:empty)::before {
+        content: "chattanooga\A.vote";
+        white-space: pre !important;
+        display: block !important;
+    }
+    .stTitle h1 {
+        display: none !important;
     }
     .header-countdown {
         font-size: 0.9rem !important;
