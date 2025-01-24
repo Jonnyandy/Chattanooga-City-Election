@@ -26,17 +26,25 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # Loading Screen
-with st.spinner():
-    st.markdown("""
-        <div class="loading-spinner">
-            <div class="loading-content">
-                <div class="loading-logo">🗳️</div>
-                <h2>Loading Chattanooga.Vote...</h2>
-            </div>
+st.markdown("""
+    <div class="loading-spinner">
+        <div class="loading-content">
+            <div class="loading-logo">🗳️</div>
+            <h2>Loading Chattanooga.Vote...</h2>
         </div>
-    """, unsafe_allow_html=True)
-    import time
-    time.sleep(1)  # Give time for resources to load
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const spinner = document.querySelector('.loading-spinner');
+                if (spinner) {
+                    spinner.style.opacity = '0';
+                    setTimeout(() => spinner.style.display = 'none', 500);
+                }
+            }, 1000);
+        });
+    </script>
+""", unsafe_allow_html=True)
 
 # Election Day Countdown
 election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
