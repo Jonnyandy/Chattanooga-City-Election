@@ -78,7 +78,7 @@ col1, col2 = st.columns([3, 1], gap="large")
 
 with col1:
     st.subheader("Find Your District")
-    
+
     col_addr, col_zip = st.columns([2, 1])
     with col_addr:
         street_address = st.text_input(
@@ -95,18 +95,18 @@ with col1:
             key="zip_input",
             max_chars=5
         )
-    
+
     # Validate inputs
     is_valid_street = bool(street_address.strip())
     is_valid_zip = zip_code.isdigit() and len(zip_code) == 5
-    
+
     search_button = st.button(
         "Find District",
         type="primary",
         disabled=not (is_valid_street and is_valid_zip)
     )
     address = f"{street_address} {zip_code}" if search_button else ""
-    
+
     # Always show the base district map
     if not address or not search_button:
         st.subheader("Chattanooga City Council Districts")
@@ -124,12 +124,11 @@ with col1:
                     m = create_district_map(lat, lon, district_info)
                     map_data = st_folium(m, width=None, height=500, returned_objects=[])
 
-                    # Display district information
-                    st.subheader("Your District Information")
-                    council_info = get_council_member(district_info["district_number"])
+                    # Move district information to col2
+                    with col2:
+                        st.subheader("Your District Information")
+                        council_info = get_council_member(district_info["district_number"])
 
-                    info_col1, info_col2 = st.columns(2)
-                    with info_col1:
                         st.markdown(f"**District:** {district_info['district_number']}")
                         st.markdown(f"**Current Council Member:** {council_info['name']}")
 
@@ -142,20 +141,19 @@ with col1:
                             st.markdown("---")
                             st.markdown("*No candidate information available for this district*")
 
-                    with info_col2:
                         if district_info.get('district_description'):
                             st.markdown(f"**Area:** {district_info['district_description']}")
 
-                    # Add polling location information
-                    st.subheader("Your Polling Location")
-                    if district_info["polling_place"] != "Not found":
-                        st.markdown(f"""
-                        **Location:** {district_info["polling_place"]}  
-                        **Address:** {district_info["polling_address"]}  
-                        **Precinct:** {district_info["precinct"]}
-                        """)
-                    else:
-                        st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
+                        # Add polling location information
+                        st.subheader("Your Polling Location")
+                        if district_info["polling_place"] != "Not found":
+                            st.markdown(f"""
+                            **Location:** {district_info["polling_place"]}  
+                            **Address:** {district_info["polling_address"]}  
+                            **Precinct:** {district_info["precinct"]}
+                            """)
+                        else:
+                            st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
 
                 else:
                     st.error(
@@ -276,7 +274,7 @@ with col1:
         """)
 
 with col2:
-    st.subheader("Helpful Information")
+    pass #This is intentionally left blank to maintain the layout.  The district info is now in col1.
 
 
 # Footer
