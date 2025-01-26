@@ -9,7 +9,7 @@ from datetime import datetime, timezone, timedelta
 
 # Page configuration
 st.set_page_config(
-    page_title="Chattanooga Voting Information",
+    page_title="Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -38,7 +38,7 @@ else:
 
 # Header with countdown
 st.markdown(f'<div class="header-countdown">{countdown_text}</div>', unsafe_allow_html=True)
-st.title("🗳️ Chattanooga.Vote")
+st.title("🗳️ Chattanooga . Vote")
 
 st.markdown("""
 Find your city council district by entering your address below. 
