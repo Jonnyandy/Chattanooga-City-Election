@@ -11,8 +11,7 @@ from datetime import datetime, timezone, timedelta
 st.set_page_config(
     page_title="Chattanooga.Vote",
     page_icon="🗳️",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    layout="wide"
 )
 
 # Add custom CSS with sidebar animation
