@@ -15,15 +15,56 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Add custom CSS
-with open('styles/custom.css') as f:
-    css = f.read()
-
-st.markdown(f"""
+# Add custom CSS with sidebar animation
+st.markdown("""
     <style>
-        {css}
+        [data-testid="stSidebar"] {
+            transition: all 0.3s ease-in-out;
+        }
+        .stButton button {
+            width: 100%;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99999;
+            padding: 10px;
+        }
+        .st-emotion-cache-1cypcdb {
+            padding-top: 50px !important;
+        }
     </style>
 """, unsafe_allow_html=True)
+
+# Add sidebar content
+with st.sidebar:
+    st.title("Quick Links")
+    st.markdown("---")
+
+    if st.button("📍 Find My District"):
+        st.session_state.active_section = "find_district"
+
+    if st.button("📋 View Sample Ballot"):
+        st.session_state.active_section = "sample_ballot"
+
+    if st.button("🗳️ Early Voting Info"):
+        st.session_state.active_section = "early_voting"
+
+    if st.button("✓ Check Registration"):
+        st.session_state.active_section = "check_registration"
+
+    st.markdown("---")
+    st.markdown("""
+        ### Need Help?
+        Contact Election Commission:
+        - 📞 (423) 493-5100
+        - 📧 vote@hamiltontn.gov
+    """)
+
+# Add sidebar toggle button in main content
+st.button("☰ Menu", key="sidebar_toggle", help="Click to toggle navigation menu")
+
 
 # Election Day Countdown
 election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
