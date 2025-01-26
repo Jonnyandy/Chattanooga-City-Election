@@ -15,7 +15,6 @@ textColor = "#004B54"
 
 [ui]
 hideTopBar = true
-hideSidebarNav = true
 
 [client]
 toolbarMode = "minimal"
