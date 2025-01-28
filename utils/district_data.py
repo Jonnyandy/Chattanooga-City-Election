@@ -7,6 +7,7 @@ from pathlib import Path
 from utils.geocoding import geocode_address
 import streamlit as st
 
+@st.cache_data(ttl=3600)  # Cache for 1 hour
 def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
     Calculate the great circle distance between two points 
@@ -20,6 +21,7 @@ def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     r = 6371  # Radius of earth in kilometers
     return c * r
 
+@st.cache_data(ttl=3600)  # Cache district boundaries for 1 hour
 def get_district_boundaries() -> Dict[str, Any]:
     """
     Load GeoJSON boundaries for Chattanooga city council districts
@@ -33,7 +35,6 @@ def get_district_boundaries() -> Dict[str, Any]:
         with boundaries_path.open() as f:
             try:
                 geojson = json.load(f)
-                # Validate GeoJSON structure
                 if not isinstance(geojson, dict) or 'features' not in geojson:
                     st.error("Invalid GeoJSON structure")
                     return {}
@@ -44,17 +45,15 @@ def get_district_boundaries() -> Dict[str, Any]:
         districts = {}
         for feature in geojson.get('features', []):
             try:
-                # Ensure all required properties exist and are properly formatted
                 if not isinstance(feature, dict) or 'properties' not in feature:
                     continue
 
                 properties = feature.get('properties', {})
-                district = str(properties.get('district', ''))  # Convert to string to ensure consistency
+                district = str(properties.get('district', ''))
 
                 if not district:
                     continue
 
-                # Ensure geometry is valid
                 geometry = feature.get('geometry', {})
                 if not isinstance(geometry, dict) or 'type' not in geometry or 'coordinates' not in geometry:
                     continue
@@ -63,8 +62,8 @@ def get_district_boundaries() -> Dict[str, Any]:
                     "type": "Feature",
                     "properties": {
                         "district": district,
-                        "description": str(properties.get('description', '')),  # Ensure string type
-                        "demographics": properties.get('demographics', {})  # Keep demographics if present
+                        "description": str(properties.get('description', '')),
+                        "demographics": properties.get('demographics', {})
                     },
                     "geometry": geometry
                 }
@@ -82,18 +81,20 @@ def get_district_boundaries() -> Dict[str, Any]:
         st.error(f"Error loading district boundaries: {str(e)}")
         return {}
 
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def point_in_polygon(point: Point, polygon_coords: List[List[float]], buffer_distance: float = 0.0001) -> bool:
     """
     Check if a point is within a polygon with a small buffer zone for boundary cases
     """
     try:
-        polygon = Polygon(polygon_coords[0])  # Use first ring for exterior boundary
+        polygon = Polygon(polygon_coords[0])
         buffered_polygon = polygon.buffer(buffer_distance)
         return buffered_polygon.contains(point)
     except Exception as e:
         st.error(f"Error checking point in polygon: {str(e)}")
         return False
 
+@st.cache_data(ttl=3600)  # Cache polling place data for 1 hour
 def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Optional[Tuple[str, str, str]]:
     """
     Find the nearest polling place to the given coordinates using haversine distance
@@ -124,14 +125,14 @@ def find_nearest_polling_place(lat: float, lon: float, df: pd.DataFrame) -> Opti
         )
     return None
 
+@st.cache_data(ttl=300)  # Cache district results for 5 minutes
 def get_district_for_coordinates(lat: float, lon: float) -> str:
     """
     Determine which district a point falls within using GIS boundaries
     """
     try:
-        point = Point(lon, lat)  # GeoJSON uses (lon, lat) order
+        point = Point(lon, lat)
 
-        # Verify coordinates are within Chattanooga bounds
         if not (34.9 <= lat <= 35.2 and -85.4 <= lon <= -85.1):
             st.warning("Coordinates appear to be outside the expected Chattanooga area")
             return "District not found"
@@ -146,14 +147,11 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
                 if 'geometry' not in geojson:
                     continue
 
-                # Convert GeoJSON to Shapely geometry
                 district_shape = shape(geojson['geometry'])
 
-                # Try an exact match first
                 if district_shape.contains(point):
                     return district
 
-                # If no exact match, try with a small buffer
                 if district_shape.buffer(0.001).contains(point):
                     return district
 
@@ -168,10 +166,10 @@ def get_district_for_coordinates(lat: float, lon: float) -> str:
         st.error(f"Error in district matching: {str(e)}")
         return "District not found"
 
+@st.cache_data(ttl=3600)  # Cache candidate data for 1 hour
 def get_district_candidates(district: str) -> list:
     """
     Get list of candidates running in the March 4th, 2025 election for a given district
-    Returns list of candidate names with optional website links
     """
     try:
         from utils.candidate_scraper import get_candidate_info
@@ -190,20 +188,20 @@ def get_district_candidates(district: str) -> list:
 
     except Exception as e:
         st.error(f"Error getting candidate information: {str(e)}")
-        # Fallback to basic candidate list if there's an error
         candidates_2025 = {
             "1": ["James \"Skip\" Burnette", "Chip Henderson"],
-            "2": ["Jenny Hill"],  # Unopposed
+            "2": ["Jenny Hill"],
             "3": ["Jeff Davis", "Tom Marshall"],
-            "4": ["Cody Harvey"],  # Unopposed
+            "4": ["Cody Harvey"],
             "5": ["Dennis Clark", "Cory Hall", "Isiah (Ike) Hester", "Samantha Reid-Hawkins"],
             "6": ["Jenni Berz", "Jennifer Gregory", "Mark Holland", "Christian Siler", "Robert C Wilson"],
-            "7": ["Raquetta Dotley"],  # Unopposed
+            "7": ["Raquetta Dotley"],
             "8": ["Anna Golladay", "Marvene Noel", "Doll Sandridge", "Kelvin Scott"],
             "9": ["Ron Elliott", "Letechia Ellis", "Evelina Irén Kertay"]
         }
         return candidates_2025.get(district, [])
 
+@st.cache_data(ttl=300)  # Cache district info for 5 minutes
 def get_district_info(lat: float, lon: float) -> dict:
     """
     Get comprehensive district information based on coordinates
@@ -257,6 +255,7 @@ def get_district_info(lat: float, lon: float) -> dict:
         "candidates": candidates
     }
 
+@st.cache_data(ttl=3600)  # Cache council member data for 1 hour
 def get_council_member(district: str) -> dict:
     """
     Get council member information for a district

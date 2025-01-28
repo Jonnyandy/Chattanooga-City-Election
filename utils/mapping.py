@@ -4,7 +4,30 @@ from utils.district_data import get_district_boundaries, get_council_member, get
 from utils.geocoding import geocode_address
 import pandas as pd
 from pathlib import Path
+import streamlit as st
 
+def get_district_style(color: str, feature):
+    """Style function for normal state"""
+    return {
+        'fillColor': color,
+        'color': 'white',
+        'weight': 1,
+        'fillOpacity': 0.5,
+        'opacity': 1,
+        'dashArray': None
+    }
+
+def get_district_highlight_style(color: str, feature):
+    """Style function for hover state"""
+    return {
+        'fillColor': color,
+        'color': 'white',
+        'weight': 2,
+        'fillOpacity': 0.7,
+        'opacity': 1
+    }
+
+@st.cache_data(ttl=3600)  # Cache base map for 1 hour
 def create_base_district_map() -> folium.Map:
     """Create a base map showing all Chattanooga districts with animated transitions"""
     # Create base map centered on Chattanooga
@@ -41,29 +64,9 @@ def create_base_district_map() -> folium.Map:
         from utils.district_data import get_district_candidates
         candidates = get_district_candidates(district_name)
 
-        # Style function for normal state
-        style_function = lambda x, color=color: {
-            'fillColor': color,
-            'color': 'white',
-            'weight': 1,
-            'fillOpacity': 0.5,
-            'opacity': 1,
-            'dashArray': None
-        }
-
-        # Style function for hover state
-        highlight_function = lambda x, color=color: {
-            'fillColor': color,
-            'color': 'white',
-            'weight': 2,
-            'fillOpacity': 0.7,
-            'opacity': 1
-        }
-
         # Create candidate information HTML
         candidates_html = ""
         if candidates:
-            # Strip markdown links for map display
             clean_candidates = [candidate.split('[')[0].strip() for candidate in candidates]
             if len(clean_candidates) == 1:
                 candidates_html = f"<strong>{clean_candidates[0]}</strong> (running unopposed)"
@@ -94,38 +97,35 @@ def create_base_district_map() -> folium.Map:
         # Create GeoJson layer with enhanced interactivity
         g = folium.GeoJson(
             district_geojson,
-            style_function=style_function,
-            highlight_function=highlight_function,
+            style_function=lambda x: get_district_style(color, x),
+            highlight_function=lambda x: get_district_highlight_style(color, x),
             popup=folium.Popup(popup_html, max_width=300),
             name=f'District {district_name}'
         )
 
-        # Add click event for zooming to district and hiding tooltip
-        g.add_child(folium.Element(f"""
+        # Add click event for zooming
+        g.add_child(folium.Element("""
             <script>
-                (function() {{
+                (function() {
                     var districtLayer = document.querySelector('path:last-child');
-                    if (districtLayer) {{
-                        districtLayer.addEventListener('click', function(e) {{
+                    if (districtLayer) {
+                        districtLayer.addEventListener('click', function(e) {
                             var map = document.querySelector('#map');
-                            if (map && map._leaflet_map) {{
-                                // Hide tooltip after click
+                            if (map && map._leaflet_map) {
                                 var tooltip = document.querySelector('.district-tooltip');
-                                if (tooltip) {{
+                                if (tooltip) {
                                     tooltip.style.display = 'none';
-                                }}
-
-                                // Zoom to district bounds
+                                }
                                 var bounds = e.target.getBounds();
-                                map._leaflet_map.fitBounds(bounds, {{
+                                map._leaflet_map.fitBounds(bounds, {
                                     padding: [50, 50],
                                     maxZoom: 14,
                                     duration: 1
-                                }});
-                            }}
-                        }});
-                    }}
-                }})();
+                                });
+                            }
+                        });
+                    }
+                })();
             </script>
         """))
 
@@ -133,28 +133,6 @@ def create_base_district_map() -> folium.Map:
 
     # Add districts group to map
     districts_group.add_to(m)
-
-    # Add reset view button
-    reset_button_html = '''
-        <button 
-            onclick="document.querySelector('#map')._leaflet_map.setView([35.0456, -85.2672], 11);"
-            style="
-                position: absolute;
-                top: 80px;
-                left: 10px;
-                z-index: 1000;
-                background: white;
-                border: 2px solid rgba(0,0,0,0.2);
-                border-radius: 4px;
-                padding: 5px 10px;
-                cursor: pointer;
-            "
-            title="Reset view"
-        >
-            <i class="fa fa-home"></i>
-        </button>
-    '''
-    m.get_root().html.add_child(folium.Element(reset_button_html))
 
     # Add custom CSS for animations
     custom_css = """
@@ -189,6 +167,7 @@ def create_base_district_map() -> folium.Map:
 
     return m
 
+@st.cache_data(ttl=300)  # Cache district map for 5 minutes
 def create_district_map(lat: float, lon: float, district_info: dict) -> folium.Map:
     """Create an interactive map highlighting the user's district"""
     # Start with the base map
