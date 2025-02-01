@@ -95,16 +95,10 @@ def create_base_district_map() -> folium.Map:
         """
 
         # Create GeoJson layer with enhanced interactivity
-        def style_fn(x):
-            return get_district_style(color, x)
-            
-        def highlight_fn(x):
-            return get_district_highlight_style(color, x)
-            
         g = folium.GeoJson(
             district_geojson,
-            style_function=style_fn,
-            highlight_function=highlight_fn,
+            style_function=lambda x: get_district_style(color, x),
+            highlight_function=lambda x: get_district_highlight_style(color, x),
             popup=folium.Popup(popup_html, max_width=300),
             name=f'District {district_name}'
         )
