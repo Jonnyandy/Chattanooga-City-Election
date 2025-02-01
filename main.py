@@ -54,18 +54,19 @@ with st.sidebar:
     """)
 
 # Election Day Countdown
-election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
-now = datetime.now(timezone(timedelta(hours=-5)))  # Eastern time
-time_until_election = election_date - now
+@st.cache_data(ttl=3600)
+def get_election_countdown():
+    election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
+    now = datetime.now(timezone(timedelta(hours=-5)))  # Eastern time
+    time_until_election = election_date - now
 
-if time_until_election.total_seconds() > 0:
-    days = time_until_election.days
-    countdown_text = f"⏱️ {days} days until Election Day"
-else:
-    countdown_text = "🗳️ Election Day - Polls open until 7:00 PM EST"
+    if time_until_election.total_seconds() > 0:
+        days = time_until_election.days
+        return f"⏱️ {days} days until Election Day"
+    return "🗳️ Election Day - Polls open until 7:00 PM EST"
 
 # Header with countdown
-st.markdown(f'<div class="header-countdown">{countdown_text}</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="header-countdown">{get_election_countdown()}</div>', unsafe_allow_html=True)
 st.title("🗳️ Chattanooga . Vote")
 
 st.markdown("""
@@ -100,20 +101,19 @@ with col1:
     is_valid_street = bool(street_address.strip())
     is_valid_zip = zip_code.isdigit() and len(zip_code) == 5
 
-    search_button = st.button(
+    search_clicked = st.button(
         "Find District",
         type="primary",
         disabled=not (is_valid_street and is_valid_zip)
     )
-    address = f"{street_address} {zip_code}" if search_button else ""
 
-    # Always show the base district map
-    if not address or not search_button:
-        st.subheader("Chattanooga City Council Districts")
-        m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=500, returned_objects=[])
-    else:
-        # Process address if entered and show results
+    # Initialize session state for map
+    if "map_key" not in st.session_state:
+        st.session_state.map_key = 0
+
+    # Process address and show map
+    if search_clicked:
+        address = f"{street_address} {zip_code}"
         if validate_address(address):
             coords = geocode_address(address)
             if coords:
@@ -121,8 +121,10 @@ with col1:
                 district_info = get_district_info(lat, lon)
 
                 if district_info["district_number"] != "District not found":
+                    # Increment map key to force refresh only when needed
+                    st.session_state.map_key += 1
                     m = create_district_map(lat, lon, district_info)
-                    map_data = st_folium(m, width=None, height=500, returned_objects=[])
+                    map_data = st_folium(m, width=None, height=500, key=f"map_{st.session_state.map_key}")
 
                     # Move district information to col2
                     with col2:
@@ -161,12 +163,8 @@ with col1:
                         "outside the Chattanooga city limits. Please verify your address "
                         "or contact the Election Commission for assistance."
                     )
-                    m = create_base_district_map()
-                    map_data = st_folium(m, width=None, height=500, returned_objects=[])
             else:
                 st.error("Unable to locate your address. Please check the format and try again.")
-                m = create_base_district_map()
-                map_data = st_folium(m, width=None, height=500, returned_objects=[])
         else:
             st.error(
                 "Please enter a valid Chattanooga address in the format:\n"
@@ -176,8 +174,11 @@ with col1:
                 "- Street name\n"
                 "- ZIP code"
             )
-            m = create_base_district_map()
-            map_data = st_folium(m, width=None, height=500, returned_objects=[])
+    else:
+        # Show base district map when no search is performed
+        st.subheader("Chattanooga City Council Districts")
+        m = create_base_district_map()
+        map_data = st_folium(m, width=None, height=500, key="base_map")
 
     # Add Helpful Information section below the map
     st.subheader("Helpful Information")
@@ -274,8 +275,8 @@ with col1:
         """)
 
 with col2:
-    pass #This is intentionally left blank to maintain the layout.  The district info is now in col1.
-
+    # This is intentionally left blank to maintain the layout
+    pass
 
 # Footer
 st.markdown("---")
