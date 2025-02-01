@@ -6,42 +6,31 @@ import pandas as pd
 from pathlib import Path
 import streamlit as st
 
-def get_district_style(color: str) -> dict:
-    """Style function for normal state"""
-    return {
-        'fillColor': color,
-        'color': 'white',
-        'weight': 1,
-        'fillOpacity': 0.5,
-        'opacity': 1,
-        'dashArray': None
-    }
+class DistrictStyle:
+    def __init__(self, color: str):
+        self.color = color
 
-def get_district_highlight_style(color: str) -> dict:
-    """Style function for hover state"""
-    return {
-        'fillColor': color,
-        'color': 'white',
-        'weight': 2,
-        'fillOpacity': 0.7,
-        'opacity': 1
-    }
+    def style(self, feature):
+        return {
+            'fillColor': self.color,
+            'color': 'white',
+            'weight': 1,
+            'fillOpacity': 0.5,
+            'opacity': 1,
+            'dashArray': None
+        }
 
-def create_style_function(color: str):
-    """Create a style function for a specific color"""
-    def style_fn(feature):
-        return get_district_style(color)
-    return style_fn
+    def highlight(self, feature):
+        return {
+            'fillColor': self.color,
+            'color': 'white',
+            'weight': 2,
+            'fillOpacity': 0.7,
+            'opacity': 1
+        }
 
-def create_highlight_function(color: str):
-    """Create a highlight function for a specific color"""
-    def highlight_fn(feature):
-        return get_district_highlight_style(color)
-    return highlight_fn
-
-@st.cache_data(ttl=3600, show_spinner=False)  # Cache base map for 1 hour
 def create_base_district_map() -> folium.Map:
-    """Create a base map showing all Chattanooga districts with animated transitions"""
+    """Create a base map showing all Chattanooga districts"""
     # Create base map centered on Chattanooga
     m = folium.Map(
         location=[35.0456, -85.2672],
@@ -57,7 +46,7 @@ def create_base_district_map() -> folium.Map:
     # Add mouse position coordinates
     plugins.MousePosition().add_to(m)
 
-    # Create feature groups for layers
+    # Create feature group for districts
     districts_group = folium.FeatureGroup(name='Districts', show=True)
 
     # Get all district boundaries
@@ -67,12 +56,12 @@ def create_base_district_map() -> folium.Map:
     colors = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', 
               '#911eb4', '#42d4f4', '#f032e6', '#bfef45']
 
-    # Add districts with different colors and animations
+    # Add districts with different colors
     for i, (district_name, district_geojson) in enumerate(district_boundaries.items()):
         color = colors[i % len(colors)]
         council_info = get_council_member(district_name)
 
-        # Get candidates for this district
+        # Get candidates
         from utils.district_data import get_district_candidates
         candidates = get_district_candidates(district_name)
 
@@ -85,7 +74,7 @@ def create_base_district_map() -> folium.Map:
             else:
                 candidates_html = "<br>".join([f"• {candidate}" for candidate in clean_candidates])
 
-        # Enhanced popup with candidate information
+        # Enhanced popup
         popup_html = f"""
         <div style="min-width: 200px; max-width: 300px; padding: 15px; font-family: Arial; font-size: 14px;">
             <h3 style="margin: 0 0 10px 0; color: #1976D2;">District {district_name}</h3>
@@ -100,11 +89,14 @@ def create_base_district_map() -> folium.Map:
         </div>
         """
 
-        # Create GeoJson layer with enhanced interactivity
+        # Create district style
+        district_style = DistrictStyle(color)
+
+        # Create GeoJson layer
         g = folium.GeoJson(
             district_geojson,
-            style_function=create_style_function(color),
-            highlight_function=create_highlight_function(color),
+            style_function=district_style.style,
+            highlight_function=district_style.highlight,
             popup=folium.Popup(popup_html, max_width=300),
             name=f'District {district_name}'
         )
@@ -117,22 +109,6 @@ def create_base_district_map() -> folium.Map:
     # Add custom CSS for animations
     custom_css = """
     <style>
-        .district-tooltip {
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease-in-out;
-        }
-        .district-tooltip:hover {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        path {
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-        }
-        path:hover {
-            transform: scale(1.01);
-        }
         .leaflet-popup-content-wrapper {
             border-radius: 8px;
             box-shadow: 0 3px 14px rgba(0,0,0,0.2);
@@ -141,16 +117,20 @@ def create_base_district_map() -> folium.Map:
             margin: 0;
             padding: 0;
         }
+        path {
+            transition: all 0.3s ease-in-out;
+        }
+        path:hover {
+            transform: scale(1.01);
+        }
     </style>
     """
     m.get_root().html.add_child(folium.Element(custom_css))
 
     return m
 
-@st.cache_data(ttl=300, show_spinner=False)  # Cache district map for 5 minutes
 def create_district_map(lat: float, lon: float, district_info: dict) -> folium.Map:
-    """Create an interactive map highlighting the user's district"""
-    # Start with the base map
+    """Create a map highlighting the user's district"""
     m = folium.Map(
         location=[lat, lon],
         zoom_start=15,
