@@ -80,10 +80,19 @@ col1, col2 = st.columns([3, 1], gap="large")
 with col1:
     st.subheader("Find Your District")
 
+    # Initialize session state for form values
+    if 'street_address' not in st.session_state:
+        st.session_state.street_address = ''
+    if 'zip_code' not in st.session_state:
+        st.session_state.zip_code = ''
+    if 'search_performed' not in st.session_state:
+        st.session_state.search_performed = False
+
     col_addr, col_zip = st.columns([2, 1])
     with col_addr:
         street_address = st.text_input(
             "Street Address",
+            value=st.session_state.street_address,
             placeholder="123 Main St",
             help="Enter a valid street address within the city limits of Chattanooga, TN",
             key="street_input"
@@ -91,11 +100,16 @@ with col1:
     with col_zip:
         zip_code = st.text_input(
             "ZIP Code",
+            value=st.session_state.zip_code,
             placeholder="37402",
             help="Enter your ZIP code (5 digits)",
             key="zip_input",
             max_chars=5
         )
+
+    # Update session state
+    st.session_state.street_address = street_address
+    st.session_state.zip_code = zip_code
 
     # Validate inputs
     is_valid_street = bool(street_address.strip())
@@ -107,13 +121,16 @@ with col1:
         disabled=not (is_valid_street and is_valid_zip)
     )
 
+    if search_clicked:
+        st.session_state.search_performed = True
+
     # Initialize session state for map
     if "map_key" not in st.session_state:
         st.session_state.map_key = 0
 
     # Process address and show map
-    if search_clicked:
-        address = f"{street_address} {zip_code}"
+    if st.session_state.search_performed:
+        address = f"{st.session_state.street_address} {st.session_state.zip_code}"
         if validate_address(address):
             coords = geocode_address(address)
             if coords:
