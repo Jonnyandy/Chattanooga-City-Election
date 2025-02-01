@@ -132,16 +132,17 @@ with col1:
     if st.session_state.search_performed:
         address = f"{st.session_state.street_address} {st.session_state.zip_code}"
         if validate_address(address):
-            coords = geocode_address(address)
-            if coords:
-                lat, lon = coords
-                district_info = get_district_info(lat, lon)
-
-                if district_info["district_number"] != "District not found":
-                    # Increment map key to force refresh only when needed
-                    st.session_state.map_key += 1
-                    m = create_district_map(lat, lon, district_info)
-                    map_data = st_folium(m, width=None, height=500, key=f"map_{st.session_state.map_key}")
+            if 'current_address' not in st.session_state or st.session_state.current_address != address:
+                st.session_state.current_address = address
+                coords = geocode_address(address)
+                if coords:
+                    lat, lon = coords
+                    district_info = get_district_info(lat, lon)
+                    
+                    if district_info["district_number"] != "District not found":
+                        st.session_state.map_key = address  # Use address as key
+                        m = create_district_map(lat, lon, district_info)
+                        map_data = st_folium(m, width=None, height=500, key=st.session_state.map_key)
 
                     # Move district information to col2
                     with col2:
