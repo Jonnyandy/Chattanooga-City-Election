@@ -126,45 +126,47 @@ with col1:
         else:
             st.error("Please enter both street address and ZIP code")
 
-    # Display map based on session state
+    # Show initial base map in col2
+    with col2:
+        if not st.session_state.search_performed:
+            st.subheader("Chattanooga City Council Districts")
+            m = create_base_district_map()
+            map_data = st_folium(m, width=None, height=500, key="base_map")
+
+    # Display results based on session state
     if st.session_state.search_performed and st.session_state.current_coords:
         lat, lon = st.session_state.current_coords
         district_info = st.session_state.district_info
 
         if district_info and district_info["district_number"] != "District not found":
-            m = create_district_map(lat, lon, district_info)
-            # Use a stable key based on the current address
-            map_key = f"map_{st.session_state.current_address}"
-            map_data = st_folium(m, width=None, height=500, key=map_key)
-
-            # Show district information in col2
+            # Show map in col2
             with col2:
-                st.subheader("Your District Information")
-                council_info = get_council_member(district_info["district_number"])
+                m = create_district_map(lat, lon, district_info)
+                map_key = f"map_{st.session_state.current_address}"
+                map_data = st_folium(m, width=None, height=500, key=map_key)
 
-                st.markdown(f"**District:** {district_info['district_number']}")
-                st.markdown(f"**Current Council Member:** {council_info['name']}")
+            # Show district information below form in col1
+            st.subheader("Your District Information")
+            council_info = get_council_member(district_info["district_number"])
 
-                if district_info.get('candidates'):
-                    st.markdown("---")
-                    st.markdown("**March 4th, 2025 Election Candidates:**")
-                    for candidate in district_info['candidates']:
-                        st.markdown(f"• {candidate}")
+            st.markdown(f"**District:** {district_info['district_number']}")
+            st.markdown(f"**Current Council Member:** {council_info['name']}")
 
+            if district_info.get('candidates'):
                 st.markdown("---")
-                if district_info["polling_place"] != "Not found":
-                    st.markdown(f"""
-                    **Polling Location:** {district_info["polling_place"]}  
-                    **Address:** {district_info["polling_address"]}  
-                    **Precinct:** {district_info["precinct"]}
-                    """)
+                st.markdown("**March 4th, 2025 Election Candidates:**")
+                for candidate in district_info['candidates']:
+                    st.markdown(f"• {candidate}")
+
+            st.markdown("---")
+            if district_info["polling_place"] != "Not found":
+                st.markdown(f"""
+                **Polling Location:** {district_info["polling_place"]}  
+                **Address:** {district_info["polling_address"]}  
+                **Precinct:** {district_info["precinct"]}
+                """)
         else:
             st.error("Address not found in Chattanooga city limits")
-    else:
-        # Show base map when no search is performed
-        st.subheader("Chattanooga City Council Districts")
-        m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=500, key="base_map")
 
     # Rest of the content (Helpful Information sections)
     st.subheader("Helpful Information")
