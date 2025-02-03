@@ -40,7 +40,8 @@ def create_base_district_map() -> folium.Map:
         tiles="cartodbpositron",
         zoom_control=True,
         smooth_factor=3.0,
-        prefer_canvas=True  # Improves performance for animations
+        prefer_canvas=True,  # Improves performance for animations
+        zoom_animation_threshold=4  # Enable smooth zoom for more zoom levels
     )
 
     # Add fullscreen option with smooth transitions
@@ -167,11 +168,9 @@ def create_district_map(lat: float, lon: float, district_info: dict) -> folium.M
         tiles="cartodbpositron",
         zoom_control=True,
         prefer_canvas=True,  # Improves performance for animations
-        smooth_factor=3.0
+        smooth_factor=3.0,
+        zoom_animation_threshold=4  # Enable smooth zoom for more zoom levels
     )
-
-    # Add smooth zoom control
-    plugins.Smooth_ZoomControl().add_to(m)
 
     # Add marker for the entered address with animation
     icon_html = """
