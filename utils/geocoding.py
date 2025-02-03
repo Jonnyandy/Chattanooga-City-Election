@@ -13,6 +13,7 @@ def validate_address(address: str) -> bool:
     """
     # Check for empty or None input
     if not address or not isinstance(address, str):
+        st.error("Please enter an address")
         return False
 
     # Convert multiple spaces to single space and strip
@@ -27,9 +28,9 @@ def validate_address(address: str) -> bool:
 
     zip_code = zip_match.group()
 
-    # Check for street number at the start of any part
-    has_street_number = bool(re.search(r'\b\d+\s+[A-Za-z]', address))
-    if not has_street_number:
+    # Check for street number
+    street_number_match = re.search(r'\b\d+\b.*?(?=,|\d{5}|$)', address)
+    if not street_number_match:
         st.error("Please include a street number at the start of your address")
         return False
 
@@ -65,7 +66,7 @@ def geocode_address(address: str) -> Optional[Tuple[float, float]]:
         st.debug(f"Attempting to geocode address: {address}")
 
         max_retries = 3
-        timeout = 20  # Increased timeout
+        timeout = 20  # seconds
         delay_between_retries = 2  # seconds
 
         geolocator = Nominatim(user_agent="chattanooga_voting_info")
@@ -83,7 +84,6 @@ def geocode_address(address: str) -> Optional[Tuple[float, float]]:
                 if location:
                     # Verify coordinates are roughly in Chattanooga area
                     if 34.9 <= location.latitude <= 35.2 and -85.4 <= location.longitude <= -85.1:
-                        st.success("Address found successfully!")
                         return location.latitude, location.longitude
                     else:
                         st.error("The provided address appears to be outside of Chattanooga city limits.")
@@ -91,38 +91,52 @@ def geocode_address(address: str) -> Optional[Tuple[float, float]]:
 
                 # If we get here, the address wasn't found
                 if attempt == max_retries - 1:
-                    st.error(
-                        "Could not find this address. Please verify:\n"
-                        "1. Street number is correct\n"
-                        "2. Street name is spelled correctly\n"
-                        "3. ZIP code is valid for Chattanooga"
-                    )
+                    st.error("""
+                    Could not find this address. Please verify:
+                    1. Street number is correct (e.g., 700)
+                    2. Street name is spelled correctly (e.g., River Terminal Rd)
+                    3. ZIP code is valid for Chattanooga (e.g., 37406)
+
+                    Example format: 700 River Terminal Rd, 37406
+                    """)
+                    return None
                 else:
-                    # Wait before retry
                     sleep(delay_between_retries)
 
             except (GeocoderTimedOut, GeocoderUnavailable) as e:
                 if attempt == max_retries - 1:
-                    st.error(
-                        "Unable to connect to the geocoding service. Please try again in a few moments.\n"
-                        "If the problem persists:\n"
-                        "1. Check your internet connection\n"
-                        "2. Try a different address format\n"
-                        "3. Contact support if the issue continues"
-                    )
+                    st.error("""
+                    Unable to connect to the geocoding service. Please try again in a few moments.
+                    If the problem persists:
+                    1. Check your internet connection
+                    2. Try a different address format
+                    3. Contact support if the issue continues
+                    """)
                     return None
 
                 sleep(min(2 ** attempt, 8))  # Exponential backoff
                 continue
 
+            except Exception as e:
+                st.error(f"""
+                Error processing address: {str(e)}
+                Please enter your address in this format:
+                Street Number + Street Name + ZIP Code
+
+                Example: 700 River Terminal Rd, 37406
+                """)
+                return None
+
         return None
 
     except Exception as e:
-        st.error(
-            f"Error processing address: {str(e)}\n"
-            "Please make sure you've entered a valid Chattanooga address with:\n"
-            "1. Street number\n"
-            "2. Street name\n"
-            "3. ZIP code"
-        )
+        st.error(f"""
+        Error processing address: {str(e)}
+        Please make sure you've entered a valid Chattanooga address with:
+        1. Street number
+        2. Street name
+        3. ZIP code
+
+        Example: 700 River Terminal Rd, 37406
+        """)
         return None

@@ -130,11 +130,11 @@ with col1:
 
     # Process address and show map
     if st.session_state.search_performed:
-        address = f"{st.session_state.street_address}, {st.session_state.zip_code}"
+        with st.spinner("Looking up your address..."):
+            # Format address consistently
+            address = f"{st.session_state.street_address.strip()}, {st.session_state.zip_code.strip()}"
 
-        if validate_address(address):
-            if 'current_address' not in st.session_state or st.session_state.current_address != address:
-                st.session_state.current_address = address
+            if validate_address(address):
                 coords = geocode_address(address)
 
                 if coords:
@@ -146,7 +146,7 @@ with col1:
                         m = create_district_map(lat, lon, district_info)
                         map_data = st_folium(m, width=None, height=500, key=st.session_state.map_key)
 
-                        # Move district information section here
+                        # Display district information
                         with col2:
                             st.subheader("Your District Information")
                             council_info = get_council_member(district_info["district_number"])
@@ -176,25 +176,9 @@ with col1:
                                 """)
                             else:
                                 st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
-                else:
-                    st.error("""
-                    Could not locate your address. Please verify:
-                    1. Street number is correct
-                    2. Street name is spelled correctly
-                    3. ZIP code is a valid Chattanooga ZIP
-
-                    Example format: 700 River Terminal Rd, 37406
-                    """)
             else:
-                st.error("""
-                Could not process your address. Please enter your address in this format:
-                Street Number + Street Name + ZIP Code
-
-                Example: 700 River Terminal Rd, 37406
-                """)
-        else:
-            # The validate_address function will display specific error messages
-            pass
+                # validate_address will display the specific error message
+                pass
     else:
         # Show base district map when no search is performed
         st.subheader("Chattanooga City Council Districts")
