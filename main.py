@@ -72,7 +72,7 @@ if delta.days >= 0:
     days = delta.days
     hours = delta.seconds // 3600
     minutes = (delta.seconds % 3600) // 60
-    countdown_text = f"🗓️ {days} days, {hours} hours, and {minutes} minutes until Election Day"
+    countdown_text = f"🗓️ {days} days until Election Day"
     st.markdown(f'<p class="header-countdown">{countdown_text}</p>', unsafe_allow_html=True)
 
 # Header
@@ -237,15 +237,6 @@ with col1:
         )
         st.markdown("""
         *Note: This is a sample ballot for reference. Your actual ballot may vary based on your district.*
-        """)
-
-    with st.expander("📮 Valid ZIP Codes", expanded=False):
-        st.markdown("""
-        Chattanooga ZIP codes include:
-        - 37401-37412
-        - 37415, 37416
-        - 37419, 37421
-        - 37450, 37351
         """)
 
     with st.expander("🤝 Become a Poll Worker", expanded=False):
