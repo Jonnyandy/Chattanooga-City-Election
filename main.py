@@ -130,68 +130,71 @@ with col1:
 
     # Process address and show map
     if st.session_state.search_performed:
-        address = f"{st.session_state.street_address} {st.session_state.zip_code}"
+        address = f"{st.session_state.street_address}, {st.session_state.zip_code}"
+
         if validate_address(address):
             if 'current_address' not in st.session_state or st.session_state.current_address != address:
                 st.session_state.current_address = address
                 coords = geocode_address(address)
+
                 if coords:
                     lat, lon = coords
                     district_info = get_district_info(lat, lon)
-                    
+
                     if district_info["district_number"] != "District not found":
                         st.session_state.map_key = address  # Use address as key
                         m = create_district_map(lat, lon, district_info)
                         map_data = st_folium(m, width=None, height=500, key=st.session_state.map_key)
 
-                    # Move district information to col2
-                    with col2:
-                        st.subheader("Your District Information")
-                        council_info = get_council_member(district_info["district_number"])
+                        # Move district information section here
+                        with col2:
+                            st.subheader("Your District Information")
+                            council_info = get_council_member(district_info["district_number"])
 
-                        st.markdown(f"**District:** {district_info['district_number']}")
-                        st.markdown(f"**Current Council Member:** {council_info['name']}")
+                            st.markdown(f"**District:** {district_info['district_number']}")
+                            st.markdown(f"**Current Council Member:** {council_info['name']}")
 
-                        if district_info.get('candidates'):
-                            st.markdown("---")
-                            st.markdown("**March 4th, 2025 Election Candidates:**")
-                            for candidate in district_info['candidates']:
-                                st.markdown(f"• {candidate}")
-                        else:
-                            st.markdown("---")
-                            st.markdown("*No candidate information available for this district*")
+                            if district_info.get('candidates'):
+                                st.markdown("---")
+                                st.markdown("**March 4th, 2025 Election Candidates:**")
+                                for candidate in district_info['candidates']:
+                                    st.markdown(f"• {candidate}")
+                            else:
+                                st.markdown("---")
+                                st.markdown("*No candidate information available for this district*")
 
-                        if district_info.get('district_description'):
-                            st.markdown(f"**Area:** {district_info['district_description']}")
+                            if district_info.get('district_description'):
+                                st.markdown(f"**Area:** {district_info['district_description']}")
 
-                        # Add polling location information
-                        st.subheader("Your Polling Location")
-                        if district_info["polling_place"] != "Not found":
-                            st.markdown(f"""
-                            **Location:** {district_info["polling_place"]}  
-                            **Address:** {district_info["polling_address"]}  
-                            **Precinct:** {district_info["precinct"]}
-                            """)
-                        else:
-                            st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
-
+                            # Add polling location information
+                            st.subheader("Your Polling Location")
+                            if district_info["polling_place"] != "Not found":
+                                st.markdown(f"""
+                                **Location:** {district_info["polling_place"]}  
+                                **Address:** {district_info["polling_address"]}  
+                                **Precinct:** {district_info["precinct"]}
+                                """)
+                            else:
+                                st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
                 else:
-                    st.error(
-                        "Unable to determine your district. This may mean your address is "
-                        "outside the Chattanooga city limits. Please verify your address "
-                        "or contact the Election Commission for assistance."
-                    )
+                    st.error("""
+                    Could not locate your address. Please verify:
+                    1. Street number is correct
+                    2. Street name is spelled correctly
+                    3. ZIP code is a valid Chattanooga ZIP
+
+                    Example format: 700 River Terminal Rd, 37406
+                    """)
             else:
-                st.error("Unable to locate your address. Please check the format and try again.")
+                st.error("""
+                Could not process your address. Please enter your address in this format:
+                Street Number + Street Name + ZIP Code
+
+                Example: 700 River Terminal Rd, 37406
+                """)
         else:
-            st.error(
-                "Please enter a valid Chattanooga address in the format:\n"
-                "'123 Main St 37402'\n\n"
-                "Include:\n"
-                "- Street number\n"
-                "- Street name\n"
-                "- ZIP code"
-            )
+            # The validate_address function will display specific error messages
+            pass
     else:
         # Show base district map when no search is performed
         st.subheader("Chattanooga City Council Districts")
