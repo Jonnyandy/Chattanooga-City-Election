@@ -62,6 +62,18 @@ with st.sidebar:
         - 📧 vote@hamiltontn.gov
     """)
 
+# Countdown to Election Day
+election_date = datetime(2025, 3, 4)
+now = datetime.now()
+delta = election_date - now
+
+if delta.days >= 0:
+    days = delta.days
+    hours = delta.seconds // 3600
+    minutes = (delta.seconds % 3600) // 60
+    countdown_text = f"🗓️ {days} days, {hours} hours, and {minutes} minutes until Election Day"
+    st.markdown(f'<p class="header-countdown">{countdown_text}</p>', unsafe_allow_html=True)
+
 # Header
 st.title("🗳️ Chattanooga . Vote")
 

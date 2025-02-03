@@ -18,6 +18,17 @@
     color: var(--text-dark) !important;
 }
 
+/* Countdown styling */
+.header-countdown {
+    background-color: var(--secondary-teal);
+    color: var(--text-white) !important;
+    font-size: 1.1rem !important;
+    text-align: center;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+}
+
 /* Header styling */
 header {
     background-color: var(--primary-teal) !important;
