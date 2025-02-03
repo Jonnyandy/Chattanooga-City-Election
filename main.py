@@ -13,7 +13,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Add custom CSS with sidebar animation
+# Add custom CSS
 st.markdown("""
     <style>
         [data-testid="stSidebar"] {
@@ -53,20 +53,7 @@ with st.sidebar:
         - 📧 vote@hamiltontn.gov
     """)
 
-# Election Day Countdown
-@st.cache_data(ttl=3600)
-def get_election_countdown():
-    election_date = datetime(2025, 3, 4, 14, 0, 0, tzinfo=timezone(timedelta(hours=-5)))  # 2 PM Eastern
-    now = datetime.now(timezone(timedelta(hours=-5)))  # Eastern time
-    time_until_election = election_date - now
-
-    if time_until_election.total_seconds() > 0:
-        days = time_until_election.days
-        return f"⏱️ {days} days until Election Day"
-    return "🗳️ Election Day - Polls open until 7:00 PM EST"
-
-# Header with countdown
-st.markdown(f'<div class="header-countdown">{get_election_countdown()}</div>', unsafe_allow_html=True)
+# Header
 st.title("🗳️ Chattanooga . Vote")
 
 st.markdown("""
@@ -80,59 +67,24 @@ col1, col2 = st.columns([3, 1], gap="large")
 with col1:
     st.subheader("Find Your District")
 
-    # Initialize session state for form values
-    if 'street_address' not in st.session_state:
-        st.session_state.street_address = ''
-    if 'zip_code' not in st.session_state:
-        st.session_state.zip_code = ''
-    if 'search_performed' not in st.session_state:
-        st.session_state.search_performed = False
-
-    col_addr, col_zip = st.columns([2, 1])
-    with col_addr:
-        street_address = st.text_input(
-            "Street Address",
-            value=st.session_state.street_address,
-            placeholder="123 Main St",
-            help="Enter a valid street address within the city limits of Chattanooga, TN",
-            key="street_input"
-        )
-    with col_zip:
-        zip_code = st.text_input(
-            "ZIP Code",
-            value=st.session_state.zip_code,
-            placeholder="37402",
-            help="Enter your ZIP code (5 digits)",
-            key="zip_input",
-            max_chars=5
-        )
-
-    # Update session state
-    st.session_state.street_address = street_address
-    st.session_state.zip_code = zip_code
-
-    # Validate inputs
-    is_valid_street = bool(street_address.strip())
-    is_valid_zip = zip_code.isdigit() and len(zip_code) == 5
-
-    search_clicked = st.button(
-        "Find District",
-        type="primary",
-        disabled=not (is_valid_street and is_valid_zip)
+    # Address input
+    street_address = st.text_input(
+        "Street Address",
+        placeholder="123 Main St",
+        help="Enter your street address"
     )
 
-    if search_clicked:
-        st.session_state.search_performed = True
+    zip_code = st.text_input(
+        "ZIP Code",
+        placeholder="37402",
+        help="Enter your ZIP code",
+        max_chars=5
+    )
 
-    # Initialize session state for map
-    if "map_key" not in st.session_state:
-        st.session_state.map_key = 0
-
-    # Process address and show map
-    if st.session_state.search_performed:
-        with st.spinner("Looking up your address..."):
-            # Format address consistently
-            address = f"{st.session_state.street_address.strip()}, {st.session_state.zip_code.strip()}"
+    # Search button
+    if st.button("Find District", type="primary"):
+        if street_address and zip_code:
+            address = f"{street_address}, {zip_code}"
 
             if validate_address(address):
                 coords = geocode_address(address)
@@ -142,11 +94,11 @@ with col1:
                     district_info = get_district_info(lat, lon)
 
                     if district_info["district_number"] != "District not found":
-                        st.session_state.map_key = address  # Use address as key
+                        # Create and display map
                         m = create_district_map(lat, lon, district_info)
-                        map_data = st_folium(m, width=None, height=500, key=st.session_state.map_key)
+                        map_data = st_folium(m, width=None, height=500)
 
-                        # Display district information
+                        # Show district information
                         with col2:
                             st.subheader("Your District Information")
                             council_info = get_council_member(district_info["district_number"])
@@ -159,31 +111,27 @@ with col1:
                                 st.markdown("**March 4th, 2025 Election Candidates:**")
                                 for candidate in district_info['candidates']:
                                     st.markdown(f"• {candidate}")
-                            else:
-                                st.markdown("---")
-                                st.markdown("*No candidate information available for this district*")
 
-                            if district_info.get('district_description'):
-                                st.markdown(f"**Area:** {district_info['district_description']}")
-
-                            # Add polling location information
-                            st.subheader("Your Polling Location")
+                            st.markdown("---")
                             if district_info["polling_place"] != "Not found":
                                 st.markdown(f"""
-                                **Location:** {district_info["polling_place"]}  
+                                **Polling Location:** {district_info["polling_place"]}  
                                 **Address:** {district_info["polling_address"]}  
                                 **Precinct:** {district_info["precinct"]}
                                 """)
-                            else:
-                                st.warning("Polling location information not available for this address. Please contact the Election Commission for assistance.")
+                    else:
+                        st.error("Address not found in Chattanooga city limits")
+                else:
+                    st.error("Unable to locate this address. Please check the format and try again.")
             else:
-                # validate_address will display the specific error message
-                pass
+                st.error("Please enter a valid Chattanooga address with ZIP code")
+        else:
+            st.error("Please enter both street address and ZIP code")
     else:
-        # Show base district map when no search is performed
+        # Show base map
         st.subheader("Chattanooga City Council Districts")
         m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=500, key="base_map")
+        map_data = st_folium(m, width=None, height=500)
 
     # Add Helpful Information section below the map
     st.subheader("Helpful Information")
