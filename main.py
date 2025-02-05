@@ -47,15 +47,28 @@ with st.sidebar:
         if st.button("📍 Find My District"):
             st.session_state.active_section = "find_district"
         
-        if st.button("📋 View Sample Ballot"):
-            st.session_state.active_section = "sample_ballot"
-        
         st.markdown("---")
         st.markdown("**Early Voting Locations:**")
         st.markdown("""
         • Election Commission
         • Hixson Community Center
         • Chris L. Ramsey Sr. Center
+        """)
+
+    with st.expander("📋 View Sample Ballot", expanded=False):
+        st.markdown("""
+        Preview the March 4th, 2025 City Council Election ballot below.
+        """)
+        with open("attached_assets/cha-sample-ballot-2025.pdf", "rb") as pdf_file:
+            PDFbyte = pdf_file.read()
+        st.download_button(
+            label="📥 Download Sample Ballot PDF",
+            data=PDFbyte,
+            file_name="chattanooga-sample-ballot-2025.pdf",
+            mime="application/pdf"
+        )
+        st.markdown("""
+        *Note: This is a sample ballot for reference. Your actual ballot may vary based on your district.*
         """)
 
     with st.expander("✓ Registration", expanded=False):
@@ -235,22 +248,6 @@ with row2_col1[0]:
         - Only eligible voters who reside in the City of Chattanooga may participate
         - PHOTO ID ISSUED BY STATE OF TN OR FEDERAL GOVT REQUIRED TO VOTE
         - Visit [govotetn.gov](http://govotetn.gov) to update your information
-        """)
-
-    with st.expander("📋 View Sample Ballot", expanded=False):
-        st.markdown("""
-        Preview the March 4th, 2025 City Council Election ballot below.
-        """)
-        with open("attached_assets/cha-sample-ballot-2025.pdf", "rb") as pdf_file:
-            PDFbyte = pdf_file.read()
-        st.download_button(
-            label="📥 Download Sample Ballot PDF",
-            data=PDFbyte,
-            file_name="chattanooga-sample-ballot-2025.pdf",
-            mime="application/pdf"
-        )
-        st.markdown("""
-        *Note: This is a sample ballot for reference. Your actual ballot may vary based on your district.*
         """)
 
     with st.expander("🤝 Become a Poll Worker", expanded=False):
