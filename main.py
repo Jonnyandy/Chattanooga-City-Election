@@ -112,8 +112,7 @@ with st.sidebar:
 
     with st.expander("ℹ️ Helpful Information", expanded=False):
         if st.button("📺 The Chattanooga Show", key="chattanooga_show_btn"):
-            st.markdown("""
-            <script>
+            st.switch_page("pages/chattanooga_show.py")
                 document.getElementById('chattanoogaShowModal').style.display = 'flex';
             </script>
             """, unsafe_allow_html=True)
