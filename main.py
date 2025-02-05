@@ -84,9 +84,10 @@ This tool uses official City of Chattanooga district boundaries.
 """)
 
 # Main content
-col1, col2 = st.columns([1, 2], gap="large")
+row1_col1, row1_col2 = st.columns([1, 2], gap="large")
+row2_col1 = st.columns(1)
 
-with col1:
+with row1_col1:
     st.subheader("Find Your District")
 
     # Address input
@@ -126,25 +127,12 @@ with col1:
         else:
             st.error("Please enter both street address and ZIP code")
 
-    # Show initial base map in col2
-    with col2:
-        if not st.session_state.search_performed:
-            st.subheader("Chattanooga City Council Districts")
-            m = create_base_district_map()
-            map_data = st_folium(m, width=None, height=500, key="base_map")
-
     # Display results based on session state
     if st.session_state.search_performed and st.session_state.current_coords:
         lat, lon = st.session_state.current_coords
         district_info = st.session_state.district_info
 
         if district_info and district_info["district_number"] != "District not found":
-            # Show map in col2
-            with col2:
-                m = create_district_map(lat, lon, district_info)
-                map_key = f"map_{st.session_state.current_address}"
-                map_data = st_folium(m, width=None, height=500, key=map_key)
-
             # Show district information below form in col1
             st.subheader("Your District Information")
             council_info = get_council_member(district_info["district_number"])
@@ -168,7 +156,26 @@ with col1:
         else:
             st.error("Address not found in Chattanooga city limits")
 
-    # Rest of the content (Helpful Information sections)
+
+with row1_col2:
+    if not st.session_state.search_performed:
+        st.subheader("Chattanooga City Council Districts")
+        m = create_base_district_map()
+        map_data = st_folium(m, width=None, height=500, key="base_map")
+
+    # Show map in col2
+    if st.session_state.search_performed and st.session_state.current_coords:
+        lat, lon = st.session_state.current_coords
+        district_info = st.session_state.district_info
+
+        if district_info and district_info["district_number"] != "District not found":
+            m = create_district_map(lat, lon, district_info)
+            map_key = f"map_{st.session_state.current_address}"
+            map_data = st_folium(m, width=None, height=500, key=map_key)
+
+
+# Rest of the content (Helpful Information sections)
+with row2_col1[0]:
     st.subheader("Helpful Information")
 
     with st.expander("📺 Video Guide", expanded=False):
@@ -254,9 +261,6 @@ with col1:
         - Email: vote@hamiltontn.gov
         """)
 
-with col2:
-    # This is intentionally left blank to maintain the layout
-    pass
 
 # Footer
 st.markdown("---")
