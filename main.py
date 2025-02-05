@@ -108,47 +108,38 @@ with st.sidebar:
         st.subheader("City Council Districts")
         st.markdown("Click on a district to see detailed information about current council members and candidates.")
 
+        # Initialize district modal state if not exists
+        if 'show_district_info' not in st.session_state:
+            st.session_state.show_district_info = False
+
+        def toggle_district_modal(district):
+            st.session_state.selected_district = str(district)
+            st.session_state.show_district_info = not st.session_state.show_district_info
+
+        def close_district_modal():
+            st.session_state.show_district_info = False
+            st.session_state.selected_district = None
+
         # Create single column of district buttons
         for district in range(1, 10):
             if st.button(f"District {district}", key=f"district_btn_{district}", use_container_width=True):
-                st.session_state.selected_district = str(district)
+                toggle_district_modal(district)
 
         # District Information Modal
-        if st.session_state.selected_district:
+        if st.session_state.show_district_info and st.session_state.selected_district:
             district = st.session_state.selected_district
             council_info = get_council_member(district)
             candidates = get_district_candidates(district)
 
-            def convert_markdown_links(text):
-                """Convert markdown links to HTML links"""
-                import re
-                pattern = r'\[(.*?)\]\((.*?)\)'
-                return re.sub(pattern, r'<a href="\2" target="_blank">\1</a>', text)
-
-            # Create formatted candidate cards with proper HTML links
-            candidate_cards = []
-            for candidate in candidates:
-                formatted_candidate = convert_markdown_links(candidate)
-                candidate_cards.append(f'<div class="candidate-card">{formatted_candidate}</div>')
-
-            # Create a full-screen modal with better HTML structure
-            modal_content = f"""
-                <div class="fullscreen-modal">
-                    <div class="modal-content">
-                        <div class="district-info">
-                            <h1>District {district}</h1>
-                            <h2>Current Council Member</h2>
-                            <div class="candidate-card">{council_info['name']}</div>
-                            <h2>March 4th, 2025 Election Candidates</h2>
-                            {''.join(candidate_cards)}
-                        </div>
-                        <button onclick="window.location.reload();" style="position: absolute; top: 1rem; right: 1rem; padding: 0.5rem 1rem; background: #1976D2; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
-                    </div>
-                </div>
-            """
-
-            # Display modal content
-            st.markdown(modal_content, unsafe_allow_html=True)
+            with st.container():
+                st.markdown(f"### District {district}")
+                st.markdown("#### Current Council Member")
+                st.markdown(f"{council_info['name']}")
+                st.markdown("#### March 4th, 2025 Election Candidates")
+                for candidate in candidates:
+                    st.markdown(f"- {candidate}")
+                if st.button("Close", key="close_district", on_click=close_district_modal):
+                    pass
 
         st.markdown("---")
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
