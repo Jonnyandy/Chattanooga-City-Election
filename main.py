@@ -298,23 +298,24 @@ This tool uses official City of Chattanooga district boundaries.
 """)
 
 # Main content
-row1_col1 = st.columns(1)[0]
+col1, col2 = st.columns([2, 1])
 
-# Map display
-st.subheader("Chattanooga City Council Districts")
-if not st.session_state.search_performed:
-    m = create_base_district_map()
-    map_data = st_folium(m, width=None, height=500, key="base_map")
+with col1:
+    # Map display
+    st.subheader("Chattanooga City Council Districts")
+    if not st.session_state.search_performed:
+        m = create_base_district_map()
+        map_data = st_folium(m, width=None, height=500, key="base_map")
 
-# Show map if search is performed
-if st.session_state.search_performed and st.session_state.current_coords:
-    lat, lon = st.session_state.current_coords
-    district_info = st.session_state.district_info
+    # Show map if search is performed
+    if st.session_state.search_performed and st.session_state.current_coords:
+        lat, lon = st.session_state.current_coords
+        district_info = st.session_state.district_info
 
-    if district_info and district_info["district_number"] != "District not found":
-        m = create_district_map(lat, lon, district_info)
-        map_key = f"map_{st.session_state.current_address}"
-        map_data = st_folium(m, width=None, height=500, key=map_key)
+        if district_info and district_info["district_number"] != "District not found":
+            m = create_district_map(lat, lon, district_info)
+            map_key = f"map_{st.session_state.current_address}"
+            map_data = st_folium(m, width=None, height=500, key=map_key)
 
 # Initialize district modal state
 if 'show_district_info' not in st.session_state:
@@ -407,21 +408,12 @@ if st.session_state.show_district_info and st.session_state.selected_district:
             st.error("Address not found in Chattanooga city limits")
 
 
-with row1_col2:
-    if not st.session_state.search_performed:
-        st.subheader("Chattanooga City Council Districts")
-        m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=500, key="base_map")
-
-    # Show map in col2
+with col2:
     if st.session_state.search_performed and st.session_state.current_coords:
-        lat, lon = st.session_state.current_coords
         district_info = st.session_state.district_info
-
         if district_info and district_info["district_number"] != "District not found":
-            m = create_district_map(lat, lon, district_info)
-            map_key = f"map_{st.session_state.current_address}"
-            map_data = st_folium(m, width=None, height=500, key=map_key)
+            st.subheader("District Information")
+            st.write(f"You are in District {district_info['district_number']}")
 
 
 # Footer
