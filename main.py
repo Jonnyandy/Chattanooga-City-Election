@@ -104,42 +104,75 @@ with st.sidebar:
     st.title("Quick Links")
     st.markdown("---")
 
-    with st.expander("🗳️ Voting Information", expanded=True):
-        st.subheader("City Council Districts")
-        st.markdown("Click on a district to see detailed information about current council members and candidates.")
+    with st.expander("🔍 Find Your District", expanded=True):
+    if 'show_search_form' not in st.session_state:
+        st.session_state.show_search_form = False
 
-        # Initialize district modal state if not exists
-        if 'show_district_info' not in st.session_state:
-            st.session_state.show_district_info = False
+    if st.button("Search by Address", use_container_width=True):
+        st.session_state.show_search_form = not st.session_state.show_search_form
 
-        def toggle_district_modal(district):
-            st.session_state.selected_district = str(district)
-            st.session_state.show_district_info = not st.session_state.show_district_info
+    if st.session_state.show_search_form:
+        street_address = st.text_input(
+            "Street Address",
+            placeholder="123 Main St",
+            help="Enter your street address"
+        )
 
-        def close_district_modal():
-            st.session_state.show_district_info = False
-            st.session_state.selected_district = None
+        zip_code = st.text_input(
+            "ZIP Code",
+            placeholder="37402",
+            help="Enter your ZIP code",
+            max_chars=5
+        )
 
-        # Create single column of district buttons
-        for district in range(1, 10):
-            if st.button(f"District {district}", key=f"district_btn_{district}", use_container_width=True):
-                toggle_district_modal(district)
+        if st.button("Find District", type="primary"):
+            if street_address and zip_code:
+                address = f"{street_address}, {zip_code}"
 
-        # District Information Modal
-        if st.session_state.show_district_info and st.session_state.selected_district:
-            district = st.session_state.selected_district
-            council_info = get_council_member(district)
-            candidates = get_district_candidates(district)
+                if validate_address(address):
+                    coords = geocode_address(address)
 
-            with st.container():
-                st.markdown(f"### District {district}")
-                st.markdown("#### Current Council Member")
-                st.markdown(f"{council_info['name']}")
-                st.markdown("#### March 4th, 2025 Election Candidates")
-                for candidate in candidates:
-                    st.markdown(f"- {candidate}")
-                if st.button("Close", key="close_district", on_click=close_district_modal):
-                    pass
+                    if coords:
+                        st.session_state.search_performed = True
+                        st.session_state.current_address = address
+                        st.session_state.current_coords = coords
+                        lat, lon = coords
+                        district_info = get_district_info(lat, lon)
+                        st.session_state.district_info = district_info
+                    else:
+                        st.error("Unable to locate this address. Please check the format and try again.")
+                else:
+                    st.error("Please enter a valid Chattanooga address with ZIP code")
+            else:
+                st.error("Please enter both street address and ZIP code")
+
+    # Display results if search was performed
+    if st.session_state.search_performed and st.session_state.current_coords:
+        lat, lon = st.session_state.current_coords
+        district_info = st.session_state.district_info
+
+        if district_info and district_info["district_number"] != "District not found":
+            st.markdown("### Your District Information")
+            council_info = get_council_member(district_info["district_number"])
+
+            st.markdown(f"**District:** {district_info['district_number']}")
+            st.markdown(f"**Current Council Member:** {council_info['name']}")
+
+            if district_info.get('candidates'):
+                st.markdown("---")
+                st.markdown("**March 4th, 2025 Election Candidates:**")
+                for candidate in district_info['candidates']:
+                    st.markdown(f"• {candidate}")
+
+            st.markdown("---")
+            if district_info["polling_place"] != "Not found":
+                st.markdown(f"""
+                **Polling Location:** {district_info["polling_place"]}  
+                **Address:** {district_info["polling_address"]}  
+                **Precinct:** {district_info["precinct"]}
+                """)
+        else:
+            st.error("Address not found in Chattanooga city limits")
 
         st.markdown("---")
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
@@ -265,25 +298,49 @@ This tool uses official City of Chattanooga district boundaries.
 """)
 
 # Main content
-row1_col1, row1_col2 = st.columns([1, 2], gap="large")
-row2_col1 = st.columns(1)
+row1_col1 = st.columns(1)[0]
 
-with row1_col1:
-    st.subheader("Find Your District")
+# Map display
+st.subheader("Chattanooga City Council Districts")
+if not st.session_state.search_performed:
+    m = create_base_district_map()
+    map_data = st_folium(m, width=None, height=500, key="base_map")
 
-    # Address input
-    street_address = st.text_input(
-        "Street Address",
-        placeholder="123 Main St",
-        help="Enter your street address"
-    )
+# Show map if search is performed
+if st.session_state.search_performed and st.session_state.current_coords:
+    lat, lon = st.session_state.current_coords
+    district_info = st.session_state.district_info
 
-    zip_code = st.text_input(
-        "ZIP Code",
-        placeholder="37402",
-        help="Enter your ZIP code",
-        max_chars=5
-    )
+    if district_info and district_info["district_number"] != "District not found":
+        m = create_district_map(lat, lon, district_info)
+        map_key = f"map_{st.session_state.current_address}"
+        map_data = st_folium(m, width=None, height=500, key=map_key)
+
+# District buttons below map
+st.subheader("City Council Districts")
+st.markdown("Click on a district to see detailed information about current council members and candidates.")
+
+col1, col2, col3 = st.columns(3)
+for i in range(1, 10):
+    with col1 if i <= 3 else col2 if i <= 6 else col3:
+        if st.button(f"District {i}", key=f"main_district_btn_{i}", use_container_width=True):
+            toggle_district_modal(i)
+
+# District Information Modal
+if st.session_state.show_district_info and st.session_state.selected_district:
+    district = st.session_state.selected_district
+    council_info = get_council_member(district)
+    candidates = get_district_candidates(district)
+
+    with st.container():
+        st.markdown(f"### District {district}")
+        st.markdown("#### Current Council Member")
+        st.markdown(f"{council_info['name']}")
+        st.markdown("#### March 4th, 2025 Election Candidates")
+        for candidate in candidates:
+            st.markdown(f"- {candidate}")
+        if st.button("Close", key="close_district_main", on_click=close_district_modal):
+            pass
 
     # Search button
     if st.button("Find District", type="primary"):
