@@ -214,18 +214,37 @@ with st.sidebar:
 
     with st.expander("ℹ️ Helpful Information", expanded=False):
         def show_chattanooga_show():
-            st.session_state.show_chattanooga_show = True
+            st.session_state.show_chattanooga_show = not st.session_state.show_chattanooga_show
             st.session_state.show_chattamatters = False
 
         def show_chattamatters():
-            st.session_state.show_chattamatters = True
+            st.session_state.show_chattamatters = not st.session_state.show_chattamatters
             st.session_state.show_chattanooga_show = False
+
+        def close_modals():
+            st.session_state.show_chattanooga_show = False
+            st.session_state.show_chattamatters = False
 
         if st.button("📺 The Chattanooga Show", on_click=show_chattanooga_show):
             pass
 
         if st.button("📰 ChattaMatters", on_click=show_chattamatters):
             pass
+
+        # Add modal content with close buttons
+        if st.session_state.show_chattanooga_show:
+            with st.container():
+                st.markdown("### The Chattanooga Show")
+                st.write("Content for The Chattanooga Show goes here")
+                if st.button("Close", key="close_chattanooga", on_click=close_modals):
+                    pass
+
+        if st.session_state.show_chattamatters:
+            with st.container():
+                st.markdown("### ChattaMatters")
+                st.write("Content for ChattaMatters goes here")
+                if st.button("Close", key="close_chattamatters", on_click=close_modals):
+                    pass
 
     with st.expander("🤝 Become a Poll Worker", expanded=False):
         st.markdown("""
