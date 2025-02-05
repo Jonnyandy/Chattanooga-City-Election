@@ -13,14 +13,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# Initialize session state for modals
+# Initialize session state
 if 'show_chattanooga_show' not in st.session_state:
     st.session_state.show_chattanooga_show = False
 if 'show_chattamatters' not in st.session_state:
     st.session_state.show_chattamatters = False
-# Add new session state variables for district modals
-if 'show_district_modal' not in st.session_state:
-    st.session_state.show_district_modal = None
+if 'selected_district' not in st.session_state:
+    st.session_state.selected_district = None
 
 # Add custom CSS
 st.markdown("""
@@ -34,135 +33,33 @@ st.markdown("""
         .st-emotion-cache-1cypcdb {
             padding-top: 50px !important;
         }
-        /* Modal CSS */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .modal-overlay.visible {
-            display: flex !important;
-            opacity: 1;
-        }
-        .modal-content {
-            background: white;
+        .district-card {
             padding: 20px;
             border-radius: 10px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            transform: translateY(-20px);
-            transition: transform 0.3s ease-in-out;
+            background: #f8f9fa;
+            margin-bottom: 20px;
         }
-        .modal-overlay.visible .modal-content {
-            transform: translateY(0);
+        .district-card h3 {
+            color: #1976D2;
+            margin-bottom: 15px;
         }
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.3s;
-        }
-        .modal-close:hover {
-            color: #000;
-        }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .district-info {
-            padding: 20px;
-        }
-        .candidates-list {
-            margin-top: 10px;
-        }
-        .candidates-list p {
+        .candidate-item {
+            padding: 10px;
+            background: #ffffff;
+            border-radius: 5px;
             margin: 5px 0;
-            padding: 5px;
-            border-radius: 4px;
-            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Add modals
+# Add modals (Simplified - No longer using raw HTML/JS)
 if st.session_state.show_chattanooga_show:
-    st.markdown("""
-        <div class="modal-overlay visible" id="chattanoogaShowModal">
-            <div class="modal-content">
-                <span class="modal-close" onclick="closeModal('chattanoogaShowModal')">&times;</span>
-                <h2>The Chattanooga Show</h2>
-                <div class="video-container">
-                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/"
-                        data-instgrm-version="14" style="width: 100%;">
-                    </blockquote>
-                </div>
-                <script async src="//www.instagram.com/embed.js"></script>
-            </div>
-        </div>
-        <script>
-            function closeModal(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-                window.parent.streamlit.setComponentValue({
-                    show_chattanooga_show: false,
-                    show_chattamatters: false
-                });
-            }
-        </script>
-    """, unsafe_allow_html=True)
+    st.write("The Chattanooga Show Modal (Streamlit implementation would go here)")
 
 if st.session_state.show_chattamatters:
-    st.markdown("""
-        <div class="modal-overlay visible" id="chattamattersModal">
-            <div class="modal-content">
-                <span class="modal-close" onclick="closeModal('chattamattersModal')">&times;</span>
-                <h2>ChattaMatters</h2>
-                <div class="video-container">
-                    <iframe width="100%" height="315"
-                        src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-                        title="ChattaMatters"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-        </div>
-        <script>
-            function closeModal(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-                window.parent.streamlit.setComponentValue({
-                    show_chattanooga_show: false,
-                    show_chattamatters: false
-                });
-            }
-        </script>
-    """, unsafe_allow_html=True)
+    st.write("ChattaMatters Modal (Streamlit implementation would go here)")
+
 
 # Initialize other session state variables
 if 'search_performed' not in st.session_state:
@@ -194,46 +91,27 @@ with st.sidebar:
             col_idx = (district - 1) % 3
             with cols[col_idx]:
                 if st.button(f"District {district}", key=f"district_btn_{district}"):
-                    st.session_state.show_district_modal = str(district)
+                    st.session_state.selected_district = str(district)
 
-        # District Information Modal
-        if st.session_state.show_district_modal:
-            district = st.session_state.show_district_modal
+        # District Information Dialog
+        if st.session_state.selected_district:
+            district = st.session_state.selected_district
             council_info = get_council_member(district)
             candidates = get_district_candidates(district)
 
-            modal_content = f"""
-            <div class="modal-overlay visible" id="districtModal_{district}">
-                <div class="modal-content">
-                    <span class="modal-close" onclick="closeDistrictModal('{district}')">&times;</span>
-                    <h2>District {district} Information</h2>
-                    <div class="district-info">
-                        <h3>Current Council Member</h3>
-                        <p>{council_info['name']}</p>
+            st.markdown("---")
+            with st.container():
+                st.markdown(f"### District {district} Information")
+                st.markdown("#### Current Council Member")
+                st.markdown(f"**{council_info['name']}**")
 
-                        <h3>March 4th, 2025 Election Candidates</h3>
-                        <div class="candidates-list">
-            """
+                st.markdown("#### March 4th, 2025 Election Candidates")
+                for candidate in candidates:
+                    st.markdown(f"- {candidate}")
 
-            for candidate in candidates:
-                modal_content += f"<p>{candidate}</p>"
-
-            modal_content += """
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                function closeDistrictModal(district) {
-                    document.getElementById('districtModal_' + district).style.display = 'none';
-                    window.parent.streamlit.setComponentValue({
-                        show_district_modal: null
-                    });
-                }
-            </script>
-            """
-
-            st.markdown(modal_content, unsafe_allow_html=True)
+                if st.button("Close", key=f"close_district_{district}"):
+                    st.session_state.selected_district = None
+                st.markdown("---")
 
         st.markdown("---")
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
