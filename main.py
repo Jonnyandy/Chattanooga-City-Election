@@ -3,7 +3,7 @@ import folium
 from datetime import datetime
 from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
-from utils.district_data import get_district_info, get_council_member
+from utils.district_data import get_district_info, get_council_member, get_district_candidates
 from utils.mapping import create_district_map, create_base_district_map
 
 # Page configuration
@@ -18,6 +18,9 @@ if 'show_chattanooga_show' not in st.session_state:
     st.session_state.show_chattanooga_show = False
 if 'show_chattamatters' not in st.session_state:
     st.session_state.show_chattamatters = False
+# Add new session state variables for district modals
+if 'show_district_modal' not in st.session_state:
+    st.session_state.show_district_modal = None
 
 # Add custom CSS
 st.markdown("""
@@ -91,6 +94,18 @@ st.markdown("""
             left: 0;
             width: 100%;
             height: 100%;
+        }
+        .district-info {
+            padding: 20px;
+        }
+        .candidates-list {
+            margin-top: 10px;
+        }
+        .candidates-list p {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 4px;
+            background: #f5f5f5;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -170,8 +185,55 @@ with st.sidebar:
     st.markdown("---")
 
     with st.expander("🗳️ Voting Information", expanded=True):
-        if st.button("📍 Find My District"):
-            st.session_state.active_section = "find_district"
+        st.subheader("City Council Districts")
+        st.markdown("Click on a district to see detailed information about current council members and candidates.")
+
+        # Create a 3x3 grid for district buttons
+        cols = st.columns(3)
+        for district in range(1, 10):
+            col_idx = (district - 1) % 3
+            with cols[col_idx]:
+                if st.button(f"District {district}", key=f"district_btn_{district}"):
+                    st.session_state.show_district_modal = str(district)
+
+        # District Information Modal
+        if st.session_state.show_district_modal:
+            district = st.session_state.show_district_modal
+            council_info = get_council_member(district)
+            candidates = get_district_candidates(district)
+
+            modal_content = f"""
+            <div class="modal-overlay visible" id="districtModal_{district}">
+                <div class="modal-content">
+                    <span class="modal-close" onclick="closeDistrictModal('{district}')">&times;</span>
+                    <h2>District {district} Information</h2>
+                    <div class="district-info">
+                        <h3>Current Council Member</h3>
+                        <p>{council_info['name']}</p>
+
+                        <h3>March 4th, 2025 Election Candidates</h3>
+                        <div class="candidates-list">
+            """
+
+            for candidate in candidates:
+                modal_content += f"<p>{candidate}</p>"
+
+            modal_content += """
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function closeDistrictModal(district) {
+                    document.getElementById('districtModal_' + district).style.display = 'none';
+                    window.parent.streamlit.setComponentValue({
+                        show_district_modal: null
+                    });
+                }
+            </script>
+            """
+
+            st.markdown(modal_content, unsafe_allow_html=True)
 
         st.markdown("---")
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
