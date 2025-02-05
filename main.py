@@ -48,11 +48,25 @@ with st.sidebar:
             st.session_state.active_section = "find_district"
 
         st.markdown("---")
+        st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
+        st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
+        
         st.markdown("**Early Voting Locations:**")
         st.markdown("""
-        • Election Commission
-        • Hixson Community Center
-        • Chris L. Ramsey Sr. Center
+        1. **Election Commission**  
+           700 River Terminal Rd, Chattanooga, TN 37406  
+           *Monday - Friday: 8:00 am – 7:00 pm*  
+           *Saturday: 8:00 am – 4:00 pm*  
+
+        2. **Hixson Community Center**  
+           5401 School Dr, Hixson, TN 37343  
+           *Monday - Friday: 10:00 am – 6:00 pm*  
+           *Saturday: 10:00 am – 4:00 pm*
+
+        3. **Chris L. Ramsey Sr. Community Center**  
+           1010 N Moore Rd, Chattanooga, TN 37411  
+           *Monday - Friday: 10:00 am – 6:00 pm*  
+           *Saturday: 10:00 am – 4:00 pm*
         """)
 
     with st.expander("📋 View Sample Ballot", expanded=False):
@@ -228,33 +242,7 @@ with row2_col1[0]:
 
 
 
-    with st.expander("🗳️ Early Voting Details", expanded=False):
-        st.markdown("""
-        **Early Voting Period:** February 12 – February 27, 2025  
-        *ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*
-
-        **Early Voting Locations:**
-
-        1. **Election Commission**  
-           700 River Terminal Rd, Chattanooga, TN 37406  
-           *Monday - Friday: 8:00 am – 7:00 pm*  
-           *Saturday: 8:00 am – 4:00 pm*  
-
-        2. **Hixson Community Center**  
-           5401 School Dr, Hixson, TN 37343  
-           *Monday - Friday: 10:00 am – 6:00 pm*  
-           *Saturday: 10:00 am – 4:00 pm*
-
-        3. **Chris L. Ramsey Sr. Community Center**  
-           1010 N Moore Rd, Chattanooga, TN 37411  
-           *Monday - Friday: 10:00 am – 6:00 pm*  
-           *Saturday: 10:00 am – 4:00 pm*
-
-        **Important Notes:**
-        - Only eligible voters who reside in the City of Chattanooga may participate
-        - PHOTO ID ISSUED BY STATE OF TN OR FEDERAL GOVT REQUIRED TO VOTE
-        - Visit [govotetn.gov](http://govotetn.gov) to update your information
-        """)
+    
 
 
 # Footer
