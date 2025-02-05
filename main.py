@@ -13,7 +13,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Add custom CSS
+# Update the CSS for close button
 st.markdown("""
     <style>
         [data-testid="stSidebar"] {
@@ -58,6 +58,13 @@ st.markdown("""
             margin: 0.5rem 0;
             border-radius: 8px;
             border: 1px solid #e0e0e0;
+        }
+        .candidate-card a {
+            color: #1976D2;
+            text-decoration: none;
+        }
+        .candidate-card a:hover {
+            text-decoration: underline;
         }
         .close-button {
             position: absolute;
@@ -117,10 +124,17 @@ with st.sidebar:
             council_info = get_council_member(district)
             candidates = get_district_candidates(district)
 
-            # Add close button before the modal content
-            if st.button("Close", key="close_modal", type="primary"):
-                st.session_state.selected_district = None
-                st.rerun()
+            def convert_markdown_links(text):
+                """Convert markdown links to HTML links"""
+                import re
+                pattern = r'\[(.*?)\]\((.*?)\)'
+                return re.sub(pattern, r'<a href="\2" target="_blank">\1</a>', text)
+
+            # Create formatted candidate cards with proper HTML links
+            candidate_cards = []
+            for candidate in candidates:
+                formatted_candidate = convert_markdown_links(candidate)
+                candidate_cards.append(f'<div class="candidate-card">{formatted_candidate}</div>')
 
             # Create a full-screen modal with better HTML structure
             modal_content = f"""
@@ -131,8 +145,9 @@ with st.sidebar:
                             <h2>Current Council Member</h2>
                             <div class="candidate-card">{council_info['name']}</div>
                             <h2>March 4th, 2025 Election Candidates</h2>
-                            {''.join([f'<div class="candidate-card">{candidate}</div>' for candidate in candidates])}
+                            {''.join(candidate_cards)}
                         </div>
+                        <button onclick="window.location.reload();" style="position: absolute; top: 1rem; right: 1rem; padding: 0.5rem 1rem; background: #1976D2; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
                     </div>
                 </div>
             """
