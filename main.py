@@ -84,7 +84,7 @@ This tool uses official City of Chattanooga district boundaries.
 """)
 
 # Main content
-col1, col2 = st.columns([3, 1], gap="large")
+col1, col2 = st.columns([1, 2], gap="large")
 
 with col1:
     st.subheader("Find Your District")
