@@ -43,25 +43,39 @@ with st.sidebar:
     st.title("Quick Links")
     st.markdown("---")
 
-    if st.button("📍 Find My District"):
-        st.session_state.active_section = "find_district"
+    with st.expander("🗳️ Voting Information", expanded=True):
+        if st.button("📍 Find My District"):
+            st.session_state.active_section = "find_district"
+        
+        if st.button("📋 View Sample Ballot"):
+            st.session_state.active_section = "sample_ballot"
+        
+        st.markdown("---")
+        st.markdown("**Early Voting Locations:**")
+        st.markdown("""
+        • Election Commission
+        • Hixson Community Center
+        • Chris L. Ramsey Sr. Center
+        """)
 
-    if st.button("📋 View Sample Ballot"):
-        st.session_state.active_section = "sample_ballot"
-
-    if st.button("🗳️ Early Voting Info"):
-        st.session_state.active_section = "early_voting"
-
-    if st.button("✓ Check Registration"):
-        st.session_state.active_section = "check_registration"
+    with st.expander("✓ Registration", expanded=False):
+        if st.button("Check Registration Status"):
+            st.session_state.active_section = "check_registration"
+        
+        st.markdown("""
+        **Requirements:**
+        • Valid TN Photo ID
+        • Must be 18+ by election day
+        • Chattanooga resident
+        """)
 
     st.markdown("---")
-    st.markdown("""
-        ### Need Help?
-        Contact Election Commission:
-        - 📞 (423) 493-5100
-        - 📧 vote@hamiltontn.gov
-    """)
+    with st.expander("❓ Need Help?", expanded=True):
+        st.markdown("""
+        **Election Commission:**
+        📞 (423) 493-5100
+        📧 vote@hamiltontn.gov
+        """)
 
 # Countdown to Election Day
 election_date = datetime(2025, 3, 4)
