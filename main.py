@@ -99,11 +99,6 @@ if 'current_coords' not in st.session_state:
 if 'district_info' not in st.session_state:
     st.session_state.district_info = None
 
-# Debug information
-st.sidebar.write("Debug - Modal States:")
-st.sidebar.write(f"Show Chattanooga Show: {st.session_state.show_chattanooga_show}")
-st.sidebar.write(f"Show ChattaMatters: {st.session_state.show_chattamatters}")
-
 # Add sidebar content
 with st.sidebar:
     st.title("Quick Links")
