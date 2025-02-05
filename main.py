@@ -144,11 +144,24 @@ with st.sidebar:
                 </div>
                 """, unsafe_allow_html=True)
 
-        # Add JavaScript for panel control
+        # Add JavaScript for panel and lightbox control
         st.markdown("""
+        <div class="lightbox" id="lightbox">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <div class="lightbox-content" id="lightbox-content"></div>
+        </div>
         <script>
         function hidePanel() {
             document.querySelector('.slide-out-panel').classList.remove('active');
+        }
+        
+        function openLightbox(content) {
+            document.getElementById('lightbox-content').innerHTML = content;
+            document.getElementById('lightbox').classList.add('active');
+        }
+        
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
         }
         </script>
         """, unsafe_allow_html=True)
