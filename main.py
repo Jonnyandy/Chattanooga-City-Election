@@ -13,6 +13,12 @@ st.set_page_config(
     layout="wide"
 )
 
+# Initialize session state for modals
+if 'show_chattanooga_show' not in st.session_state:
+    st.session_state.show_chattanooga_show = False
+if 'show_chattamatters' not in st.session_state:
+    st.session_state.show_chattamatters = False
+
 # Add custom CSS
 st.markdown("""
     <style>
@@ -25,7 +31,7 @@ st.markdown("""
         .st-emotion-cache-1cypcdb {
             padding-top: 50px !important;
         }
-        /* Add modal CSS */
+        /* Modal CSS */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -41,11 +47,10 @@ st.markdown("""
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
         }
-
         .modal-overlay.visible {
+            display: flex !important;
             opacity: 1;
         }
-
         .modal-content {
             background: white;
             padding: 20px;
@@ -58,11 +63,9 @@ st.markdown("""
             transform: translateY(-20px);
             transition: transform 0.3s ease-in-out;
         }
-
         .modal-overlay.visible .modal-content {
             transform: translateY(0);
         }
-
         .modal-close {
             position: absolute;
             top: 10px;
@@ -72,18 +75,16 @@ st.markdown("""
             color: #666;
             transition: color 0.3s;
         }
-
         .modal-close:hover {
             color: #000;
         }
-
         .video-container {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 aspect ratio */
             height: 0;
             overflow: hidden;
+            margin-top: 20px;
         }
-
         .video-container iframe {
             position: absolute;
             top: 0;
@@ -94,7 +95,61 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state
+# Add modals
+if st.session_state.show_chattanooga_show:
+    st.markdown("""
+        <div class="modal-overlay visible" id="chattanoogaShowModal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('chattanoogaShowModal')">&times;</span>
+                <h2>The Chattanooga Show</h2>
+                <div class="video-container">
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/"
+                        data-instgrm-version="14" style="width: 100%;">
+                    </blockquote>
+                </div>
+                <script async src="//www.instagram.com/embed.js"></script>
+            </div>
+        </div>
+        <script>
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+                window.parent.streamlit.setComponentValue({
+                    show_chattanooga_show: false,
+                    show_chattamatters: false
+                });
+            }
+        </script>
+    """, unsafe_allow_html=True)
+
+if st.session_state.show_chattamatters:
+    st.markdown("""
+        <div class="modal-overlay visible" id="chattamattersModal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('chattamattersModal')">&times;</span>
+                <h2>ChattaMatters</h2>
+                <div class="video-container">
+                    <iframe width="100%" height="315"
+                        src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+                        title="ChattaMatters"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        <script>
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+                window.parent.streamlit.setComponentValue({
+                    show_chattanooga_show: false,
+                    show_chattamatters: false
+                });
+            }
+        </script>
+    """, unsafe_allow_html=True)
+
+# Initialize other session state variables
 if 'search_performed' not in st.session_state:
     st.session_state.search_performed = False
 if 'current_address' not in st.session_state:
@@ -103,12 +158,11 @@ if 'current_coords' not in st.session_state:
     st.session_state.current_coords = None
 if 'district_info' not in st.session_state:
     st.session_state.district_info = None
-# Initialize session state for modals
-if 'show_chattanooga_show' not in st.session_state:
-    st.session_state.show_chattanooga_show = False
-if 'show_chattamatters' not in st.session_state:
-    st.session_state.show_chattamatters = False
 
+# Debug information
+st.sidebar.write("Debug - Modal States:")
+st.sidebar.write(f"Show Chattanooga Show: {st.session_state.show_chattanooga_show}")
+st.sidebar.write(f"Show ChattaMatters: {st.session_state.show_chattamatters}")
 
 # Add sidebar content
 with st.sidebar:
@@ -122,7 +176,7 @@ with st.sidebar:
         st.markdown("---")
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
         st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
-        
+
         st.markdown("**Early Voting Locations:**")
         st.markdown("""
         1. **Election Commission**  
@@ -183,39 +237,26 @@ with st.sidebar:
         """)
 
     with st.expander("ℹ️ Helpful Information", expanded=False):
-        if st.button("📺 The Chattanooga Show"):
+        def show_chattanooga_show():
             st.session_state.show_chattanooga_show = True
+            st.session_state.show_chattamatters = False
 
-        if st.button("📰 ChattaMatters"):
+        def show_chattamatters():
             st.session_state.show_chattamatters = True
+            st.session_state.show_chattanooga_show = False
 
-        # Add JavaScript for panel and lightbox control
-        st.markdown("""
-        <div class="lightbox" id="lightbox">
-            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-            <div class="lightbox-content" id="lightbox-content"></div>
-        </div>
-        <script>
-        function hidePanel() {
-            document.querySelector('.slide-out-panel').classList.remove('active');
-        }
-        
-        function openLightbox(content) {
-            document.getElementById('lightbox-content').innerHTML = content;
-            document.getElementById('lightbox').classList.add('active');
-        }
-        
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
-        }
-        </script>
-        """, unsafe_allow_html=True)
+        if st.button("📺 The Chattanooga Show", on_click=show_chattanooga_show):
+            pass
+
+        if st.button("📰 ChattaMatters", on_click=show_chattamatters):
+            pass
 
     with st.expander("🤝 Become a Poll Worker", expanded=False):
         st.markdown("""
         Poll officials get a stipend of $135 - $175 per election.  
         Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
         """)
+
 
 # Countdown to Election Day
 election_date = datetime(2025, 3, 4)
@@ -228,66 +269,6 @@ if delta.days >= 0:
     minutes = (delta.seconds % 3600) // 60
     countdown_text = f"🗓️ {days} days until Election Day"
     st.markdown(f'<p class="header-countdown">{countdown_text}</p>', unsafe_allow_html=True)
-
-# Add modals
-if st.session_state.show_chattanooga_show:
-    modal_html = """
-    <div class="modal-overlay visible" id="chattanoogaShowModal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('chattanoogaShowModal')">&times;</span>
-            <h2>The Chattanooga Show</h2>
-            <div class="video-container">
-                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/"
-                    data-instgrm-version="14" style="width: 100%;">
-                </blockquote>
-            </div>
-            <script async src="//www.instagram.com/embed.js"></script>
-        </div>
-    </div>
-    <script>
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            window.streamlitResetState();
-        }
-    </script>
-    """
-    st.markdown(modal_html, unsafe_allow_html=True)
-
-if st.session_state.show_chattamatters:
-    modal_html = """
-    <div class="modal-overlay visible" id="chattamattersModal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('chattamattersModal')">&times;</span>
-            <h2>ChattaMatters</h2>
-            <div class="video-container">
-                <iframe width="100%" height="315"
-                    src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-                    title="ChattaMatters"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
-    </div>
-    <script>
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            window.streamlitResetState();
-        }
-
-        // Reset session state when modal is closed
-        window.streamlitResetState = function() {
-            const streamlit = window.parent.streamlit;
-            streamlit.setComponentValue({
-                show_chattanooga_show: false,
-                show_chattamatters: false
-            });
-        }
-    </script>
-    """
-    st.markdown(modal_html, unsafe_allow_html=True)
-
 
 # Header
 st.title("🗳️ Chattanooga . Vote")
@@ -386,11 +367,6 @@ with row1_col2:
             m = create_district_map(lat, lon, district_info)
             map_key = f"map_{st.session_state.current_address}"
             map_data = st_folium(m, width=None, height=500, key=map_key)
-
-
-# Rest of the content (Helpful Information sections) - removed redundant section
-with row2_col1[0]:
-    st.subheader("Helpful Information")
 
 
 # Footer
