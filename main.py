@@ -256,14 +256,6 @@ with row2_col1[0]:
         Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
         """)
 
-    with st.expander("❓ Need Help?", expanded=False):
-        st.markdown("""
-        **Contact the Hamilton County Election Commission:**
-        - Phone: (423) 493-5100
-        - Email: vote@hamiltontn.gov
-        """)
-
-
 # Footer
 st.markdown("---")
 st.markdown(
