@@ -117,27 +117,28 @@ with st.sidebar:
             council_info = get_council_member(district)
             candidates = get_district_candidates(district)
 
-            # Create a full-screen modal using st.markdown
-            modal_html = f"""
+            # Add close button before the modal content
+            if st.button("Close", key="close_modal", type="primary"):
+                st.session_state.selected_district = None
+                st.rerun()
+
+            # Create a full-screen modal with better HTML structure
+            modal_content = f"""
                 <div class="fullscreen-modal">
                     <div class="modal-content">
                         <div class="district-info">
                             <h1>District {district}</h1>
                             <h2>Current Council Member</h2>
-                            <p class="candidate-card">{council_info['name']}</p>
-
+                            <div class="candidate-card">{council_info['name']}</div>
                             <h2>March 4th, 2025 Election Candidates</h2>
                             {''.join([f'<div class="candidate-card">{candidate}</div>' for candidate in candidates])}
                         </div>
                     </div>
                 </div>
             """
-            st.markdown(modal_html, unsafe_allow_html=True)
 
-            # Add close button
-            if st.button("Close", key="close_modal", type="primary"):
-                st.session_state.selected_district = None
-                st.rerun()
+            # Display modal content
+            st.markdown(modal_content, unsafe_allow_html=True)
 
         st.markdown("---")
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
