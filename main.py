@@ -208,10 +208,6 @@ st.markdown("""
 </script>
 """, unsafe_allow_html=True)
 
-# Show modal button
-if st.button("📺 The Chattanooga Show", key="chattanooga_show_btn"):
-    st.markdown("<script>showChattanoogaShowModal();</script>", unsafe_allow_html=True)
-
 # Header
 st.title("🗳️ Chattanooga . Vote")
 
