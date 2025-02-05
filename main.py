@@ -25,6 +25,72 @@ st.markdown("""
         .st-emotion-cache-1cypcdb {
             padding-top: 50px !important;
         }
+        /* Add modal CSS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #000;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -37,6 +103,12 @@ if 'current_coords' not in st.session_state:
     st.session_state.current_coords = None
 if 'district_info' not in st.session_state:
     st.session_state.district_info = None
+# Initialize session state for modals
+if 'show_chattanooga_show' not in st.session_state:
+    st.session_state.show_chattanooga_show = False
+if 'show_chattamatters' not in st.session_state:
+    st.session_state.show_chattamatters = False
+
 
 # Add sidebar content
 with st.sidebar:
@@ -111,43 +183,11 @@ with st.sidebar:
         """)
 
     with st.expander("ℹ️ Helpful Information", expanded=False):
-        if st.button("📺 The Chattanooga Show", key="chattanooga_show_btn"):
-            st.markdown("""
-            <script>
-                function showModal() {
-                    document.getElementById('chattanoogaShowModal').style.display = 'flex';
-                }
-                window.addEventListener('load', showModal);
-            </script>
-            """, unsafe_allow_html=True)
-            
+        if st.button("📺 The Chattanooga Show"):
+            st.session_state.show_chattanooga_show = True
+
         if st.button("📰 ChattaMatters"):
             st.session_state.show_chattamatters = True
-            
-        st.markdown("""
-        <script>
-            function closeModal(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-            }
-            
-            window.onclick = function(event) {
-                if (event.target.className === 'modal-overlay') {
-                    event.target.style.display = 'none';
-                }
-            }
-        </script>
-        """, unsafe_allow_html=True)
-                
-        # Slide-out panel for ChattaMatters
-        if 'show_chattamatters' in st.session_state and st.session_state.show_chattamatters:
-            with st.container():
-                st.markdown("""
-                <div class="slide-out-panel active">
-                    <div class="close-button" onclick="hidePanel()">✕</div>
-                    <h3>ChattaMatters</h3>
-                    <p>Content for ChattaMatters goes here...</p>
-                </div>
-                """, unsafe_allow_html=True)
 
         # Add JavaScript for panel and lightbox control
         st.markdown("""
@@ -189,27 +229,65 @@ if delta.days >= 0:
     countdown_text = f"🗓️ {days} days until Election Day"
     st.markdown(f'<p class="header-countdown">{countdown_text}</p>', unsafe_allow_html=True)
 
-# Modal Setup
-st.markdown("""
-<div class="modal-overlay" id="chattanoogaShowModal" style="display: none;">
-    <div class="modal">
-        <span class="modal-close" onclick="closeModal('chattanoogaShowModal')">&times;</span>
-        <h3>The Chattanooga Show</h3>
-        <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14"
-                  style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"></blockquote>
-        <script async src="//www.instagram.com/embed.js"></script>
+# Add modals
+if st.session_state.show_chattanooga_show:
+    modal_html = """
+    <div class="modal-overlay visible" id="chattanoogaShowModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('chattanoogaShowModal')">&times;</span>
+            <h2>The Chattanooga Show</h2>
+            <div class="video-container">
+                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/"
+                    data-instgrm-version="14" style="width: 100%;">
+                </blockquote>
+            </div>
+            <script async src="//www.instagram.com/embed.js"></script>
+        </div>
     </div>
-</div>
-""", unsafe_allow_html=True)
+    <script>
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            window.streamlitResetState();
+        }
+    </script>
+    """
+    st.markdown(modal_html, unsafe_allow_html=True)
 
-# JavaScript to show modal
-st.markdown("""
-<script>
-    function showChattanoogaShowModal() {
-        document.getElementById('chattanoogaShowModal').style.display = 'flex';
-    }
-</script>
-""", unsafe_allow_html=True)
+if st.session_state.show_chattamatters:
+    modal_html = """
+    <div class="modal-overlay visible" id="chattamattersModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('chattamattersModal')">&times;</span>
+            <h2>ChattaMatters</h2>
+            <div class="video-container">
+                <iframe width="100%" height="315"
+                    src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+                    title="ChattaMatters"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+    <script>
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            window.streamlitResetState();
+        }
+
+        // Reset session state when modal is closed
+        window.streamlitResetState = function() {
+            const streamlit = window.parent.streamlit;
+            streamlit.setComponentValue({
+                show_chattanooga_show: false,
+                show_chattamatters: false
+            });
+        }
+    </script>
+    """
+    st.markdown(modal_html, unsafe_allow_html=True)
+
 
 # Header
 st.title("🗳️ Chattanooga . Vote")
@@ -310,15 +388,9 @@ with row1_col2:
             map_data = st_folium(m, width=None, height=500, key=map_key)
 
 
-# Rest of the content (Helpful Information sections)
+# Rest of the content (Helpful Information sections) - removed redundant section
 with row2_col1[0]:
     st.subheader("Helpful Information")
-
-    
-
-
-
-    
 
 
 # Footer
