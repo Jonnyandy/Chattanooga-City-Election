@@ -105,18 +105,18 @@ with st.sidebar:
     st.markdown("---")
 
     with st.expander("🔍 Find Your District", expanded=True):
-    if 'show_search_form' not in st.session_state:
-        st.session_state.show_search_form = False
+        if 'show_search_form' not in st.session_state:
+            st.session_state.show_search_form = False
 
-    if st.button("Search by Address", use_container_width=True):
-        st.session_state.show_search_form = not st.session_state.show_search_form
+        if st.button("Search by Address", use_container_width=True):
+            st.session_state.show_search_form = not st.session_state.show_search_form
 
-    if st.session_state.show_search_form:
-        street_address = st.text_input(
-            "Street Address",
-            placeholder="123 Main St",
-            help="Enter your street address"
-        )
+        if st.session_state.show_search_form:
+            street_address = st.text_input(
+                "Street Address",
+                placeholder="123 Main St",
+                help="Enter your street address"
+            )
 
         zip_code = st.text_input(
             "ZIP Code",
