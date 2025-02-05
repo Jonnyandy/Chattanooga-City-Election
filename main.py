@@ -13,14 +13,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Initialize session state
-if 'show_chattanooga_show' not in st.session_state:
-    st.session_state.show_chattanooga_show = False
-if 'show_chattamatters' not in st.session_state:
-    st.session_state.show_chattamatters = False
-if 'selected_district' not in st.session_state:
-    st.session_state.selected_district = None
-
 # Add custom CSS
 st.markdown("""
     <style>
@@ -33,25 +25,55 @@ st.markdown("""
         .st-emotion-cache-1cypcdb {
             padding-top: 50px !important;
         }
-        .district-card {
-            padding: 20px;
+        .fullscreen-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 999999;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .modal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
             border-radius: 10px;
-            background: #f8f9fa;
-            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .district-card h3 {
+        .district-info h1 {
             color: #1976D2;
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
         }
-        .candidate-item {
-            padding: 10px;
-            background: #ffffff;
-            border-radius: 5px;
-            margin: 5px 0;
+        .district-info h2 {
+            color: #333;
+            margin: 1.5rem 0 1rem;
+        }
+        .candidate-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
             border: 1px solid #e0e0e0;
+        }
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
         }
     </style>
 """, unsafe_allow_html=True)
+
+# Initialize session state
+if 'show_chattanooga_show' not in st.session_state:
+    st.session_state.show_chattanooga_show = False
+if 'show_chattamatters' not in st.session_state:
+    st.session_state.show_chattamatters = False
+if 'selected_district' not in st.session_state:
+    st.session_state.selected_district = None
 
 # Add modals (Simplified - No longer using raw HTML/JS)
 if st.session_state.show_chattanooga_show:
@@ -59,7 +81,6 @@ if st.session_state.show_chattanooga_show:
 
 if st.session_state.show_chattamatters:
     st.write("ChattaMatters Modal (Streamlit implementation would go here)")
-
 
 # Initialize other session state variables
 if 'search_performed' not in st.session_state:
@@ -85,38 +106,42 @@ with st.sidebar:
         st.subheader("City Council Districts")
         st.markdown("Click on a district to see detailed information about current council members and candidates.")
 
-        # Create a 3x3 grid for district buttons
-        cols = st.columns(3)
+        # Create single column of district buttons
         for district in range(1, 10):
-            col_idx = (district - 1) % 3
-            with cols[col_idx]:
-                if st.button(f"District {district}", key=f"district_btn_{district}"):
-                    st.session_state.selected_district = str(district)
+            if st.button(f"District {district}", key=f"district_btn_{district}", use_container_width=True):
+                st.session_state.selected_district = str(district)
 
-        # District Information Dialog
+        # District Information Modal
         if st.session_state.selected_district:
             district = st.session_state.selected_district
             council_info = get_council_member(district)
             candidates = get_district_candidates(district)
 
-            st.markdown("---")
-            with st.container():
-                st.markdown(f"### District {district} Information")
-                st.markdown("#### Current Council Member")
-                st.markdown(f"**{council_info['name']}**")
+            # Create a full-screen modal using st.markdown
+            modal_html = f"""
+                <div class="fullscreen-modal">
+                    <div class="modal-content">
+                        <div class="district-info">
+                            <h1>District {district}</h1>
+                            <h2>Current Council Member</h2>
+                            <p class="candidate-card">{council_info['name']}</p>
 
-                st.markdown("#### March 4th, 2025 Election Candidates")
-                for candidate in candidates:
-                    st.markdown(f"- {candidate}")
+                            <h2>March 4th, 2025 Election Candidates</h2>
+                            {''.join([f'<div class="candidate-card">{candidate}</div>' for candidate in candidates])}
+                        </div>
+                    </div>
+                </div>
+            """
+            st.markdown(modal_html, unsafe_allow_html=True)
 
-                if st.button("Close", key=f"close_district_{district}"):
-                    st.session_state.selected_district = None
-                st.markdown("---")
+            # Add close button
+            if st.button("Close", key="close_modal", type="primary"):
+                st.session_state.selected_district = None
+                st.rerun()
 
         st.markdown("---")
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
         st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
-
         st.markdown("**Early Voting Locations:**")
         st.markdown("""
         1. **Election Commission**  
