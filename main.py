@@ -114,7 +114,10 @@ with st.sidebar:
         if st.button("📺 The Chattanooga Show", key="chattanooga_show_btn"):
             st.markdown("""
             <script>
-                document.getElementById('chattanoogaShowModal').style.display = 'flex';
+                function showModal() {
+                    document.getElementById('chattanoogaShowModal').style.display = 'flex';
+                }
+                window.addEventListener('load', showModal);
             </script>
             """, unsafe_allow_html=True)
             
