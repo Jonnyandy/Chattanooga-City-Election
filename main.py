@@ -316,6 +316,18 @@ if st.session_state.search_performed and st.session_state.current_coords:
         map_key = f"map_{st.session_state.current_address}"
         map_data = st_folium(m, width=None, height=500, key=map_key)
 
+# Initialize district modal state
+if 'show_district_info' not in st.session_state:
+    st.session_state.show_district_info = False
+
+def toggle_district_modal(district):
+    st.session_state.selected_district = str(district)
+    st.session_state.show_district_info = not st.session_state.show_district_info
+
+def close_district_modal():
+    st.session_state.show_district_info = False
+    st.session_state.selected_district = None
+
 # District buttons below map
 st.subheader("City Council Districts")
 st.markdown("Click on a district to see detailed information about current council members and candidates.")
