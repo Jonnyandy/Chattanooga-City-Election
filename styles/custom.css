@@ -144,6 +144,33 @@ div[data-testid="stExpander"] {
     border: 1px solid var(--border-color) !important;
 }
 
+/* Slide-out panel */
+.slide-out-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    height: 100vh;
+    background: white;
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    padding: 2rem;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+    overflow-y: auto;
+}
+
+.slide-out-panel.active {
+    right: 0;
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
     .stTitle {
@@ -152,5 +179,9 @@ div[data-testid="stExpander"] {
     
     div[data-testid="stExpander"] {
         padding: 1rem !important;
+    }
+    
+    .slide-out-panel {
+        width: 100%;
     }
 }

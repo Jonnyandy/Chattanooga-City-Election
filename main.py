@@ -110,6 +110,49 @@ with st.sidebar:
         📧 vote@hamiltontn.gov
         """)
 
+    with st.expander("ℹ️ Helpful Information", expanded=False):
+        if st.button("📺 The Chattanooga Show"):
+            st.session_state.show_chattanooga_show = True
+            st.session_state.show_chattamatters = False
+        if st.button("📰 ChattaMatters"):
+            st.session_state.show_chattamatters = True
+            st.session_state.show_chattanooga_show = False
+
+        # Slide-out panel for Chattanooga Show
+        if 'show_chattanooga_show' in st.session_state and st.session_state.show_chattanooga_show:
+            with st.container():
+                st.markdown("""
+                <div class="slide-out-panel active">
+                    <div class="close-button" onclick="hidePanel()">✕</div>
+                    <h3>The Chattanooga Show</h3>
+                    Watch this helpful video about voting in Chattanooga:
+                    <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                    <!-- Instagram embed code here -->
+                    </blockquote>
+                    <script async src="//www.instagram.com/embed.js"></script>
+                </div>
+                """, unsafe_allow_html=True)
+                
+        # Slide-out panel for ChattaMatters
+        if 'show_chattamatters' in st.session_state and st.session_state.show_chattamatters:
+            with st.container():
+                st.markdown("""
+                <div class="slide-out-panel active">
+                    <div class="close-button" onclick="hidePanel()">✕</div>
+                    <h3>ChattaMatters</h3>
+                    <p>Content for ChattaMatters goes here...</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # Add JavaScript for panel control
+        st.markdown("""
+        <script>
+        function hidePanel() {
+            document.querySelector('.slide-out-panel').classList.remove('active');
+        }
+        </script>
+        """, unsafe_allow_html=True)
+
     with st.expander("🤝 Become a Poll Worker", expanded=False):
         st.markdown("""
         Poll officials get a stipend of $135 - $175 per election.  
