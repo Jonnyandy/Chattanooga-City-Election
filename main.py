@@ -355,6 +355,22 @@ if st.session_state.show_district_info and st.session_state.selected_district:
         if st.button("Close", key="close_district_main", on_click=close_district_modal):
             pass
 
+    # Add address input fields before search button
+    street_address = st.text_input(
+        "Street Address",
+        placeholder="123 Main St",
+        help="Enter your street address",
+        key="main_street_address"
+    )
+
+    zip_code = st.text_input(
+        "ZIP Code",
+        placeholder="37402",
+        help="Enter your ZIP code",
+        max_chars=5,
+        key="main_zip_code"
+    )
+
     # Search button
     if st.button("Find District", key="find_district_main", type="primary"):
         if street_address and zip_code:
