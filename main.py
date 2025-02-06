@@ -125,7 +125,7 @@ with st.sidebar:
             max_chars=5
         )
 
-        if st.button("Find District", type="primary"):
+        if st.button("Find District", key="find_district_sidebar", type="primary"):
             if street_address and zip_code:
                 address = f"{street_address}, {zip_code}"
 
@@ -356,7 +356,7 @@ if st.session_state.show_district_info and st.session_state.selected_district:
             pass
 
     # Search button
-    if st.button("Find District", type="primary"):
+    if st.button("Find District", key="find_district_main", type="primary"):
         if street_address and zip_code:
             address = f"{street_address}, {zip_code}"
 
