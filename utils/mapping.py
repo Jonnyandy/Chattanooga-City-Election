@@ -162,15 +162,58 @@ def create_base_district_map() -> folium.Map:
 
 def create_district_map(lat: float, lon: float, district_info: dict) -> folium.Map:
     """Create a map highlighting the user's district with smooth transitions"""
+    # Create base map centered on Chattanooga
     m = folium.Map(
         location=[lat, lon],
         zoom_start=15,
         tiles="cartodbpositron",
         zoom_control=True,
-        prefer_canvas=True,  # Improves performance for animations
+        prefer_canvas=True,
         smooth_factor=3.0,
-        zoom_animation_threshold=4  # Enable smooth zoom for more zoom levels
+        zoom_animation_threshold=4
     )
+
+    # Add district boundaries first
+    district_boundaries = get_district_boundaries()
+    districts_group = folium.FeatureGroup(name='Districts', show=True)
+
+    # Color palette
+    colors = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', 
+              '#911eb4', '#42d4f4', '#f032e6', '#bfef45']
+
+    # Add districts with different colors
+    for i, (district_name, district_geojson) in enumerate(district_boundaries.items()):
+        color = colors[i % len(colors)]
+        style_function = lambda x, color=color: {
+            'fillColor': color,
+            'color': 'white',
+            'weight': 1,
+            'fillOpacity': 0.5,
+            'opacity': 1
+        }
+
+        highlight_function = lambda x, color=color: {
+            'fillColor': color,
+            'color': 'white',
+            'weight': 2,
+            'fillOpacity': 0.7,
+            'opacity': 1
+        }
+
+        g = folium.GeoJson(
+            district_geojson,
+            style_function=style_function,
+            highlight_function=highlight_function,
+            popup=folium.Popup(
+                f"District {district_name}",
+                max_width=300
+            ),
+            name=f'District {district_name}'
+        )
+        g.add_to(districts_group)
+
+    # Add districts group to map
+    districts_group.add_to(m)
 
     # Add marker for the entered address with animation
     icon_html = """
