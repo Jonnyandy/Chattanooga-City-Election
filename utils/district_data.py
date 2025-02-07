@@ -199,7 +199,10 @@ def get_district_candidates(district: str) -> list:
         candidates_2025 = {
             "1": ["James \"Skip\" Burnette", "Chip Henderson"],
             "2": ["Jenny Hill"],
-            "3": ["Jeff Davis", "Tom Marshall"],
+            "3": [
+                "Jeff Davis ([Campaign Website](https://votejeffdavis.com/))",
+                "Tom Marshall"
+            ],
             "4": ["Cody Harvey"],
             "5": ["Dennis Clark", "Cory Hall", "Isiah (Ike) Hester", "Samantha Reid-Hawkins"],
             "6": ["Jenni Berz", "Jennifer Gregory", "Mark Holland", "Christian Siler", "Robert C Wilson"],
