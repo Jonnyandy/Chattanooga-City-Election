@@ -179,15 +179,23 @@ def get_district_candidates(district: str) -> list:
 
         formatted_candidates = []
         for candidate_name, info in district_info.items():
+            candidate_str = candidate_name
+
+            # Add website if available
             if 'website' in info:
-                formatted_candidates.append(f"{candidate_name} ([Campaign Website]({info['website']}))")
-            else:
-                formatted_candidates.append(candidate_name)
+                candidate_str = f"{candidate_name} ([Campaign Website]({info['website']}))"
+
+            # Add contact info if available
+            if 'contact' in info:
+                candidate_str = f"{candidate_str}\n*Contact: {info['contact']}*"
+
+            formatted_candidates.append(candidate_str)
 
         return formatted_candidates if formatted_candidates else []
 
     except Exception as e:
         st.error(f"Error getting candidate information: {str(e)}")
+        # Fallback to basic candidate list if scraping fails
         candidates_2025 = {
             "1": ["James \"Skip\" Burnette", "Chip Henderson"],
             "2": ["Jenny Hill"],

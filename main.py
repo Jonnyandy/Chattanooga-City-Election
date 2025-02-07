@@ -5,6 +5,7 @@ from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member, get_district_candidates
 from utils.mapping import create_district_map, create_base_district_map
+from pathlib import Path
 
 # Page configuration
 st.set_page_config(
@@ -70,6 +71,29 @@ st.markdown("""
             position: absolute;
             top: 1rem;
             right: 1rem;
+        }
+        .candidate-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid #e9ecef;
+        }
+        .candidate-photo {
+            max-width: 200px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .candidate-name {
+            color: #1976D2;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .candidate-contact {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -428,8 +452,75 @@ with col2:
     if st.session_state.search_performed and st.session_state.current_coords:
         district_info = st.session_state.district_info
         if district_info and district_info["district_number"] != "District not found":
-            st.subheader("District Information")
-            st.write(f"You are in District {district_info['district_number']}")
+            st.markdown("""
+            <style>
+            .candidate-info {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 10px;
+                margin: 10px 0;
+                border: 1px solid #e9ecef;
+            }
+            .candidate-photo {
+                max-width: 200px;
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+            .candidate-name {
+                color: #1976D2;
+                font-size: 1.2em;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .candidate-contact {
+                font-size: 0.9em;
+                color: #666;
+                margin-top: 5px;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+            st.subheader("🗳️ District Information")
+            st.markdown(f"### District {district_info['district_number']}")
+
+            # Current Council Member
+            council_info = get_council_member(district_info["district_number"])
+            st.markdown("#### Current Council Member")
+            st.markdown(f"**{council_info['name']}**")
+
+            # Election Information
+            st.markdown("---")
+            st.markdown("### March 4th, 2025 Election Candidates")
+
+            for candidate in district_info.get('candidates', []):
+                with st.container():
+                    st.markdown('<div class="candidate-info">', unsafe_allow_html=True)
+
+                    # Handle candidate name and website if present
+                    if "[" in candidate:
+                        name = candidate.split("[")[0].strip()
+                        website = candidate.split("(")[1].split(")")[0]
+                        st.markdown(f'<div class="candidate-name">{name}</div>', unsafe_allow_html=True)
+                        st.markdown(f'[Campaign Website]({website})', unsafe_allow_html=True)
+                    else:
+                        st.markdown(f'<div class="candidate-name">{candidate}</div>', unsafe_allow_html=True)
+
+                    # If we have candidate photos (to be implemented)
+                    photo_path = f"assets/candidate_photos/{candidate.split('[')[0].strip()}.jpg"
+                    if Path(photo_path).exists():
+                        st.image(photo_path, use_column_width=True)
+
+                    st.markdown('</div>', unsafe_allow_html=True)
+
+            # Polling Location Information
+            if district_info["polling_place"] != "Not found":
+                st.markdown("---")
+                st.markdown("### 🏢 Your Polling Location")
+                st.markdown(f"""
+                **Location:** {district_info["polling_place"]}  
+                **Address:** {district_info["polling_address"]}  
+                **Precinct:** {district_info["precinct"]}
+                """)
 
 
 # Footer
