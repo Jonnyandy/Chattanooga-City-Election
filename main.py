@@ -128,6 +128,10 @@ with st.sidebar:
     st.title("Quick Links")
     st.markdown("---")
 
+    # Add Candidates button at the top
+    if st.button("👥 View All Candidates", use_container_width=True):
+        st.switch_page("pages/candidates.py")
+
     # Early Voting Information moved to sidebar
     with st.expander("🗓️ Early Voting Information", expanded=False):
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")

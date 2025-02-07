@@ -40,8 +40,8 @@ def create_base_district_map() -> folium.Map:
         tiles="cartodbpositron",
         zoom_control=True,
         smooth_factor=3.0,
-        prefer_canvas=True,  # Improves performance for animations
-        zoom_animation_threshold=4  # Enable smooth zoom for more zoom levels
+        prefer_canvas=True,
+        zoom_animation_threshold=4
     )
 
     # Add fullscreen option with smooth transitions
@@ -83,7 +83,7 @@ def create_base_district_map() -> folium.Map:
             else:
                 candidates_html = "<br>".join([f"• {candidate}" for candidate in clean_candidates])
 
-        # Enhanced popup with smooth transitions
+        # Enhanced popup with smooth transitions and view candidates button
         popup_html = f"""
         <div class="district-popup">
             <h3>District {district_name}</h3>
@@ -94,6 +94,12 @@ def create_base_district_map() -> folium.Map:
             <div>
                 <strong>March 4th, 2025 Election Candidates:</strong><br>
                 {candidates_html}
+            </div>
+            <div class="view-candidates-button">
+                <a href="?district={district_name}" 
+                   class="btn-view-candidates">
+                   👥 View Candidate Details
+                </a>
             </div>
         </div>
         """
@@ -115,7 +121,7 @@ def create_base_district_map() -> folium.Map:
     # Add districts group to map
     districts_group.add_to(m)
 
-    # Add custom CSS for animations
+    # Add custom CSS for animations and button styling
     custom_css = """
     <style>
         .leaflet-popup-content-wrapper {
@@ -153,6 +159,24 @@ def create_base_district_map() -> folium.Map:
         }
         .leaflet-zoom-animated {
             transition: transform 0.25s cubic-bezier(0,0,0.25,1);
+        }
+        .view-candidates-button {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .btn-view-candidates {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #1976D2;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .btn-view-candidates:hover {
+            background-color: #1565C0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
     </style>
     """

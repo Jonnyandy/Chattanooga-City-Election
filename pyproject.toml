@@ -10,6 +10,7 @@ dependencies = [
     "geopy>=2.4.1",
     "openai>=1.59.7",
     "pandas>=2.2.3",
+    "pillow>=11.1.0",
     "requests>=2.32.3",
     "shapely>=2.0.6",
     "streamlit>=1.41.1",
