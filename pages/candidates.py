@@ -109,8 +109,8 @@ st.title("🗳️ City Council Candidates")
 st.markdown("### March 4th, 2025 Election")
 
 # Get district from URL parameter if available
-query_params = st.experimental_get_query_params()
-initial_district = query_params.get("district", ["All Districts"])[0]
+params = st.query_params
+initial_district = params.get("district", "All Districts")
 
 # Filter by district
 district_filter = st.selectbox(

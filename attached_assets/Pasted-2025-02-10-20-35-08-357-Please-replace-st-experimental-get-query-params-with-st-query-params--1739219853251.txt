@@ -1,0 +1,38 @@
+2025-02-10 20:35:08.357 Please replace `st.experimental_get_query_params` with `st.query_params`.
+
+`st.experimental_get_query_params` will be removed after 2024-04-11.
+
+Refer to our [docs page](https://docs.streamlit.io/develop/api-reference/caching-and-state/st.query_params) for more information.
+2025-02-10 20:35:15.901 Please replace `st.experimental_get_query_params` with `st.query_params`.
+
+`st.experimental_get_query_params` will be removed after 2024-04-11.
+
+Refer to our [docs page](https://docs.streamlit.io/develop/api-reference/caching-and-state/st.query_params) for more information.
+2025-02-10 20:36:06.076 Uncaught app execution
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 88, in exec_func_with_error_handling
+    result = func()
+             ^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 579, in code_to_exec
+    exec(code, module.__dict__)
+  File "/home/runner/workspace/pages/candidates.py", line 112, in <module>
+    query_params = st.experimental_get_query_params()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/deprecation_util.py", line 97, in wrapped_func
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 409, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/commands/experimental_query_params.py", line 61, in get_query_params
+    ctx.mark_experimental_query_params_used()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner_utils/script_run_context.py", line 205, in mark_experimental_query_params_used
+    self.ensure_single_query_api_used()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner_utils/script_run_context.py", line 197, in ensure_single_query_api_used
+    raise StreamlitAPIException(
+streamlit.errors.StreamlitAPIException: Using `st.query_params` together with either `st.experimental_get_query_params` or `st.experimental_set_query_params` is not supported. Please convert your app to only use `st.query_params`
+2025-02-10 20:36:13.707 Please replace `st.experimental_get_query_params` with `st.query_params`.
+
+`st.experimental_get_query_params` will be removed after 2024-04-11.
+
+Refer to our [docs page](https://docs.streamlit.io/develop/api-reference/caching-and-state/st.query_params) for more information.
