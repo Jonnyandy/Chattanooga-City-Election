@@ -1,6 +1,6 @@
 import streamlit as st
 import folium
-from datetime import datetime
+from datetime import datetime, timezone
 from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member, get_district_candidates
@@ -12,6 +12,24 @@ st.set_page_config(
     page_title="Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide"
+)
+
+# Election countdown
+election_date = datetime(2025, 3, 4, tzinfo=timezone.utc)
+current_time = datetime.now(timezone.utc)
+time_until_election = election_date - current_time
+
+days = time_until_election.days
+hours = time_until_election.seconds // 3600
+minutes = (time_until_election.seconds % 3600) // 60
+
+st.markdown(
+    f"""
+    <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
+        Time until Election Day: {days} days, {hours} hours, {minutes} minutes
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
 # Update the CSS for close button
