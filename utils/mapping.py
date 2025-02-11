@@ -96,11 +96,10 @@ def create_base_district_map() -> folium.Map:
                 {candidates_html}
             </div>
             <div class="view-candidates-button">
-                <a href="?page=All_Candidates&district={district_name}" 
-                   class="btn-view-candidates"
-                   target="_self">
+                <button onclick="window.location.href='/All_Candidates?district={district_name}'" 
+                   class="btn-view-candidates">
                    👥 View Candidate Details
-                </a>
+                </button>
             </div>
         </div>
         """
