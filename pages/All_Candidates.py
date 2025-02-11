@@ -3,7 +3,7 @@ from utils.candidate_data import get_all_candidates, get_district_candidates, Ca
 from utils.photo_scraper import get_candidate_photo
 from typing import Optional
 from pathlib import Path
-from PIL import Image # Added import for Image.open()
+from PIL import Image
 
 def social_media_icon(platform: str) -> str:
     """Return emoji for social media platform"""
@@ -49,22 +49,12 @@ def candidate_card(candidate: Candidate):
         st.markdown(f'<div class="candidate-card">', unsafe_allow_html=True)
 
         # Photo handling
-        try:
-            photo_path = None
-            if candidate.assets_photo:
-                photo_path = candidate.assets_photo
-            else:
-                photo_path = get_candidate_photo(candidate.name, candidate.district)
-
-            if photo_path and Path(photo_path).exists():
-                try:
-                    # Try to open the image to verify it's valid
-                    Image.open(photo_path)
-                    st.image(photo_path, use_column_width=True)
-                except Exception as e:
-                    st.error(f"Error displaying photo for {candidate.name}: {str(e)}")
-        except Exception as e:
-            st.error(f"Error processing photo for {candidate.name}: {str(e)}")
+        photo_path = get_candidate_photo(candidate.name, candidate.district)
+        if photo_path and Path(photo_path).exists():
+            try:
+                st.image(photo_path, use_container_width=True)
+            except Exception as e:
+                st.error(f"Error displaying photo for {candidate.name}: {str(e)}")
 
         # Name and District
         st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)

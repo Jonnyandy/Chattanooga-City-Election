@@ -8,7 +8,7 @@ import subprocess
 
 def create_photo_directory() -> Path:
     """Create directory for storing candidate photos if it doesn't exist"""
-    photo_dir = Path('assets/candidate_photos')
+    photo_dir = Path('candidate_photos')
     photo_dir.mkdir(parents=True, exist_ok=True)
     return photo_dir
 
@@ -43,12 +43,6 @@ def process_candidate_photo(source_path: Union[str, Path], candidate_name: str) 
             st.error(f"Source photo not found: {source_path}")
             return None
 
-        # For AVIF files, first convert to PNG
-        if source_path.suffix.lower() == '.avif':
-            png_path = convert_avif_to_png(source_path)
-            if png_path:
-                source_path = png_path
-
         try:
             # Open and process the image
             img = Image.open(str(source_path))
@@ -63,19 +57,10 @@ def process_candidate_photo(source_path: Union[str, Path], candidate_name: str) 
 
             # Save as optimized JPEG
             img.save(target_path, 'JPEG', quality=85, optimize=True)
-
-            # Clean up temporary PNG if it was created
-            if source_path.suffix.lower() == '.png' and source_path.stem.endswith('_temp'):
-                source_path.unlink(missing_ok=True)
-
             return str(target_path)
 
         except Exception as e:
             st.error(f"Error processing image for {candidate_name}: {str(e)}")
-            # If source is already a JPEG, try direct copy
-            if source_path.suffix.lower() in ['.jpg', '.jpeg']:
-                shutil.copy2(source_path, target_path)
-                return str(target_path)
             return None
 
     except Exception as e:
@@ -83,34 +68,8 @@ def process_candidate_photo(source_path: Union[str, Path], candidate_name: str) 
         return None
 
 def get_candidate_photo(candidate_name: str, district: str = None) -> Optional[str]:
-    """Get candidate photo path, checking attached_assets first"""
-    # Check for photo in attached_assets
-    possible_extensions = ['.avif', '.jpg', '.jpeg', '.png']
-    name_variants = [
-        candidate_name.replace(' ', '-'),
-        candidate_name.replace(' ', '_'),
-        candidate_name.lower().replace(' ', '-'),
-        candidate_name.lower().replace(' ', '_')
-    ]
-
-    for name in name_variants:
-        for ext in possible_extensions:
-            # Check different name patterns
-            patterns = [
-                f"{name}{ext}",
-                f"{name}-District-{district}{ext}" if district else None,
-                f"{name}-D{district}{ext}" if district else None
-            ]
-
-            for pattern in patterns:
-                if not pattern:
-                    continue
-
-                source_path = Path('attached_assets') / pattern
-                if source_path.exists():
-                    return process_candidate_photo(source_path, candidate_name)
-
-    # If no photo found in attached_assets, check assets/candidate_photos
+    """Get candidate photo path from candidate_photos directory"""
+    # Check for photo in candidate_photos directory first
     photo_dir = create_photo_directory()
     file_name = f"{candidate_name.replace(' ', '_')}.jpg"
     photo_path = photo_dir / file_name
