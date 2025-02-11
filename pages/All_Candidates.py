@@ -55,7 +55,13 @@ def candidate_card(candidate: Candidate):
             photo_path = get_candidate_photo(candidate.name)
 
         if photo_path and Path(photo_path).exists():
-            st.image(photo_path, width=200)
+            try:
+                from PIL import Image
+                # Verify image can be opened before displaying
+                Image.open(photo_path)
+                st.image(photo_path, width=200)
+            except Exception as e:
+                st.warning(f"Unable to display photo for {candidate.name}")
 
         # Name and District
         st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)
