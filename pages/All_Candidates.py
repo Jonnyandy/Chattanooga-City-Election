@@ -2,7 +2,6 @@ import streamlit as st
 from utils.candidate_data import get_all_candidates, get_district_candidates, Candidate
 from utils.photo_scraper import get_candidate_photo
 from typing import Optional
-import requests
 from pathlib import Path
 
 def social_media_icon(platform: str) -> str:
@@ -48,20 +47,15 @@ def candidate_card(candidate: Candidate):
 
         st.markdown(f'<div class="candidate-card">', unsafe_allow_html=True)
 
-        # Get social media links for photo scraping
-        social_links = []
-        if candidate.contact:
-            for platform in ['website', 'facebook', 'instagram', 'linkedin', 'twitter']:
-                link = getattr(candidate.contact, platform, None)
-                if link:
-                    social_links.append(link)
+        # Photo handling
+        photo_path = None
+        if candidate.assets_photo:
+            photo_path = candidate.assets_photo
+        else:
+            photo_path = get_candidate_photo(candidate.name)
 
-        # Photo
-        photo_path = get_candidate_photo(candidate.name, social_links)
-        if photo_path:
+        if photo_path and Path(photo_path).exists():
             st.image(photo_path, width=200)
-        elif candidate.photo_url:
-            st.image(candidate.photo_url, width=200)
 
         # Name and District
         st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)

@@ -1,6 +1,7 @@
 import streamlit as st
 from dataclasses import dataclass
 from typing import List, Optional
+from pathlib import Path
 
 @dataclass
 class CandidateContact:
@@ -19,17 +20,37 @@ class Candidate:
     photo_url: Optional[str] = None
     contact: CandidateContact = None
     bio: Optional[str] = None
+    assets_photo: Optional[str] = None
 
-# Candidate data from the text file
+    def __post_init__(self):
+        # Check for photo in attached_assets
+        if not self.assets_photo:
+            name_variants = [
+                self.name.replace(' ', '-'),
+                self.name.replace(' ', '_'),
+                self.name.lower().replace(' ', '-'),
+                self.name.lower().replace(' ', '_')
+            ]
+
+            for name in name_variants:
+                patterns = [
+                    f"{name}.avif",
+                    f"{name}-District-{self.district}.avif",
+                    f"{name}-D{self.district}.avif",
+                    f"{name}.jpg"
+                ]
+
+                for pattern in patterns:
+                    photo_path = Path('attached_assets') / pattern
+                    if photo_path.exists():
+                        self.assets_photo = str(photo_path)
+                        break
+                if self.assets_photo:
+                    break
+
+# Candidate data
 CANDIDATES_2025 = {
     "1": [
-        Candidate(
-            name="James \"Skip\" Burnette",
-            district="1",
-            contact=CandidateContact(
-                email="skippythp@comcast.net"
-            )
-        ),
         Candidate(
             name="Chip Henderson",
             district="1",
@@ -38,6 +59,13 @@ CANDIDATES_2025 = {
                 phone="(423) 821-1331",
                 twitter="https://x.com/1chiphenderson",
                 facebook="https://www.facebook.com/electchiphenderson/"
+            )
+        ),
+        Candidate(
+            name="James \"Skip\" Burnette",
+            district="1",
+            contact=CandidateContact(
+                email="skippythp@comcast.net"
             )
         )
     ],
@@ -54,6 +82,10 @@ CANDIDATES_2025 = {
         )
     ],
     "3": [
+        Candidate(
+            name="Ken Smith",
+            district="3"
+        ),
         Candidate(
             name="Jeff Davis",
             district="3",
@@ -74,6 +106,10 @@ CANDIDATES_2025 = {
     ],
     "4": [
         Candidate(
+            name="Darrin Ledford",
+            district="4"
+        ),
+        Candidate(
             name="Cody Harvey",
             district="4",
             contact=CandidateContact(
@@ -84,6 +120,16 @@ CANDIDATES_2025 = {
         )
     ],
     "5": [
+        Candidate(
+            name="Isiah (Ike) Hester",
+            district="5",
+            contact=CandidateContact(
+                facebook="https://www.facebook.com/councilmanhester/",
+                instagram="https://www.instagram.com/isiahhester/",
+                email="Isiahhester7@gmail.com",
+                website="https://www.isiahhester.com/"
+            )
+        ),
         Candidate(
             name="Dennis Clark",
             district="5",
@@ -99,16 +145,6 @@ CANDIDATES_2025 = {
             district="5",
             contact=CandidateContact(
                 facebook="https://www.facebook.com/corydewaynehall/"
-            )
-        ),
-        Candidate(
-            name="Isiah (Ike) Hester",
-            district="5",
-            contact=CandidateContact(
-                facebook="https://www.facebook.com/councilmanhester/",
-                instagram="https://www.instagram.com/isiahhester/",
-                email="Isiahhester7@gmail.com",
-                website="https://www.isiahhester.com/"
             )
         ),
         Candidate(
@@ -175,16 +211,6 @@ CANDIDATES_2025 = {
     ],
     "8": [
         Candidate(
-            name="Anna Golladay",
-            district="8",
-            contact=CandidateContact(
-                website="https://annagolladay.com/",
-                phone="423-708-5546",
-                email="campaign@annagolladay.com",
-                instagram="https://www.instagram.com/unholyhairetic"
-            )
-        ),
-        Candidate(
             name="Marvene Noel",
             district="8",
             contact=CandidateContact(
@@ -192,6 +218,16 @@ CANDIDATES_2025 = {
                 phone="(423) 643-7180",
                 email="marvene@marvenenoel.com",
                 website="https://www.marvenenoel.com/"
+            )
+        ),
+        Candidate(
+            name="Anna Golladay",
+            district="8",
+            contact=CandidateContact(
+                website="https://annagolladay.com/",
+                phone="423-708-5546",
+                email="campaign@annagolladay.com",
+                instagram="https://www.instagram.com/unholyhairetic"
             )
         ),
         Candidate(
@@ -215,6 +251,10 @@ CANDIDATES_2025 = {
         )
     ],
     "9": [
+        Candidate(
+            name="Demetrus Coonrod",
+            district="9"
+        ),
         Candidate(
             name="Ron Elliott",
             district="9",
