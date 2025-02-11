@@ -11,8 +11,12 @@ from pathlib import Path
 st.set_page_config(
     page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
+
+# Rename the page in navigation
+st.sidebar.header("Find Your District")
 
 # Election countdown
 election_date = datetime(2025, 3, 4, tzinfo=timezone.utc)
