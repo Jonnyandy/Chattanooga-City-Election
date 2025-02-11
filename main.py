@@ -116,20 +116,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state
-if 'show_chattanooga_show' not in st.session_state:
-    st.session_state.show_chattanooga_show = False
-if 'show_chattamatters' not in st.session_state:
-    st.session_state.show_chattamatters = False
-if 'selected_district' not in st.session_state:
-    st.session_state.selected_district = None
-
-# Add modals (Simplified - No longer using raw HTML/JS)
-if st.session_state.show_chattanooga_show:
-    st.write("The Chattanooga Show Modal (Streamlit implementation would go here)")
-
-if st.session_state.show_chattamatters:
-    st.write("ChattaMatters Modal (Streamlit implementation would go here)")
 
 # Initialize other session state variables
 if 'search_performed' not in st.session_state:
@@ -146,11 +132,7 @@ with st.sidebar:
     st.title("Quick Links")
     st.markdown("---")
 
-    # Add Candidates button at the top
-    if st.button("Find My District", use_container_width=True):
-        st.switch_page("pages/All_Candidates.py")
-
-    # Early Voting Information moved to sidebar
+   # Early Voting Information moved to sidebar
     with st.expander("Early Voting Information", expanded=False):
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
         st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
@@ -172,7 +154,7 @@ with st.sidebar:
            *Saturday: 10:00 am – 4:00 pm*
         """)
 
-    with st.expander("✓ Registration", expanded=False):
+    with st.expander("Check Registration", expanded=False):
         st.markdown("""
         ### Verify Your Voter Registration
 
@@ -268,7 +250,7 @@ with col1:
         if district_info and district_info["district_number"] != "District not found":
             m = create_district_map(lat, lon, district_info)
             map_key = f"map_{st.session_state.current_address}"
-            map_data = st_folium(m, width=None, height=500, key=map_key)
+            map_data = st_folium(m, width=None, height=350, key=map_key)
 
             # Display district information below map
             st.markdown("""
