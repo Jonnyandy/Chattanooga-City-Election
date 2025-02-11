@@ -147,7 +147,7 @@ with st.sidebar:
     st.markdown("---")
 
     # Add Candidates button at the top
-    if st.button("View All Candidates", use_container_width=True):
+    if st.button("Find My District", use_container_width=True):
         st.switch_page("pages/All_Candidates.py")
 
     # Early Voting Information moved to sidebar
