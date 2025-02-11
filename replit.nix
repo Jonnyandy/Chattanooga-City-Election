@@ -1,5 +1,7 @@
 {pkgs}: {
   deps = [
+    pkgs.imagemagick
+    pkgs.libheif
     pkgs.pkg-config
     pkgs.libavif
     pkgs.zlib
