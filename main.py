@@ -129,11 +129,11 @@ with st.sidebar:
     st.markdown("---")
 
     # Add Candidates button at the top
-    if st.button("👥 View All Candidates", use_container_width=True):
-        st.switch_page("pages/candidates.py")
+    if st.button("View All Candidates", use_container_width=True):
+        st.switch_page("pages/All_Candidates.py")
 
     # Early Voting Information moved to sidebar
-    with st.expander("🗓️ Early Voting Information", expanded=False):
+    with st.expander("Early Voting Information", expanded=False):
         st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
         st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
         st.markdown("**Early Voting Locations:**")
@@ -187,7 +187,7 @@ with st.sidebar:
 
 
 # Main content area
-st.title("🗳️ Chattanooga . Vote")
+st.title("Chattanooga Council Elections")
 
 st.markdown("""
 Find your city council district by entering your address below. 
@@ -208,7 +208,7 @@ with col1:
 
     zip_code = st.text_input(
         "ZIP Code",
-        placeholder="37402",
+        placeholder="37405",
         help="Enter your ZIP code",
         max_chars=5,
         key="main_zip_code"
@@ -240,7 +240,7 @@ with col1:
     st.subheader("Chattanooga City Council Districts")
     if not st.session_state.search_performed:
         m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=500, key="base_map")
+        map_data = st_folium(m, width=None, height=450, key="base_map")
 
     # Show map if search is performed
     if st.session_state.search_performed and st.session_state.current_coords:
@@ -281,7 +281,7 @@ with col1:
             </style>
             """, unsafe_allow_html=True)
 
-            st.subheader("🗳️ District Information")
+            st.subheader("District Information")
             st.markdown(f"### Your district is District {district_info['district_number']}")
 
             # Current Council Member
