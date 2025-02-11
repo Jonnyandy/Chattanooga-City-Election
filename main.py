@@ -9,7 +9,7 @@ from pathlib import Path
 
 # Page configuration
 st.set_page_config(
-    page_title="Chattanooga.Vote",
+    page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide"
 )
