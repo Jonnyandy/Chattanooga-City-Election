@@ -18,6 +18,3 @@ hideTopBar = true
 [client]
 toolbarMode = "minimal"
 showErrorDetails = false
-
-[pages]
-"main" = "Find Your District"
