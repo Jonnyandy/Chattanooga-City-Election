@@ -3,13 +3,13 @@ import streamlit.components.v1 as components
 
 # Page configuration
 st.set_page_config(
-    page_title="Media Coverage | Chattanooga.Vote",
+    page_title="Helpful Media | Chattanooga.Vote",
     page_icon="🎥",
     layout="wide"
 )
 
 # Title
-st.title("Media Coverage")
+st.title("Helpful Media")
 
 # The Chattanooga Show Section
 st.header("The Chattanooga Show")

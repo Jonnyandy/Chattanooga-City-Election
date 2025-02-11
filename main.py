@@ -15,12 +15,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Sidebar navigation
-st.sidebar.title("Find Your District")
+# Hide the "main" page name
+st.markdown("""
+    <style>
+        span[data-baseweb="tag"] {
+            visibility: hidden;
+        }
+        span[data-baseweb="tag"]::before {
+            content: "Find Your District";
+            visibility: visible;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-# Rest of the sidebar content
-st.sidebar.title("Quick Links")
-st.sidebar.markdown("---")
 
 # Early Voting Information moved to sidebar
 with st.sidebar.expander("Early Voting Information", expanded=False):
