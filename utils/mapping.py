@@ -95,12 +95,6 @@ def create_base_district_map() -> folium.Map:
                 <strong>March 4th, 2025 Election Candidates:</strong><br>
                 {candidates_html}
             </div>
-            <div class="view-candidates-button">
-                <button onclick="window.location.href='/All_Candidates?district={district_name}'" 
-                   class="btn-view-candidates">
-                   👥 View Candidate Details
-                </button>
-            </div>
         </div>
         """
 
