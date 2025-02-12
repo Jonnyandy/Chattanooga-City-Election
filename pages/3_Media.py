@@ -1,6 +1,8 @@
 
 import streamlit as st
 import streamlit.components.v1 as components
+from datetime import datetime, timezone
+import pytz
 
 # Page configuration
 st.set_page_config(
@@ -9,6 +11,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Set sidebar title for the media page
+st.sidebar.title("Helpful Media")
 
 # Early Voting Information moved to sidebar
 with st.sidebar.expander("Early Voting Information", expanded=False):
@@ -57,16 +62,52 @@ with st.sidebar.expander("❓ Need Help?", expanded=True):
     📧 vote@hamiltontn.gov
     """)
 
-# Display election countdown 
+with st.sidebar.expander("🤝 Become a Poll Worker", expanded=False):
+    st.markdown("""
+    Poll officials get a stipend of $135 - $175 per election.  
+    Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
+    """)
 
+# Add title and attribution to sidebar
+st.sidebar.markdown("""
+<hr>
+    <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
+        <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
+    </div>
+""", unsafe_allow_html=True)
+
+st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320)
+
+# Add attribution to sidebar
+st.sidebar.markdown("""
+    <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
+    <p style='font-style: italic; color: #666;'>
+        Brought to you by<br>
+        <a href="https://www.instagram.com/chattanoogashow/" target="_blank">The Chattanooga Show</a><br>
+        &
+        <a href="https://jonathanholborn.com" target="_blank">Jonathan Holborn</a>
+    </p>
+    </div>
+""", unsafe_allow_html=True)
+
+# Election countdown
+election_date = datetime(2025, 3, 4, tzinfo=pytz.timezone('America/New_York'))
+current_time = datetime.now(pytz.timezone('America/New_York'))
+time_until_election = election_date - current_time
+
+days = time_until_election.days
+hours = time_until_election.seconds // 3600
+minutes = (time_until_election.seconds % 3600) // 60
+
+# Display election countdown 
 st.markdown(
-        """
-        <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
-             {days} days until Election Day: March 4th, 2025
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    f"""
+    <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
+         {days} days until Election Day: March 4th, 2025
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Title
 st.title("Helpful Media")
