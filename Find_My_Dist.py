@@ -5,8 +5,10 @@ from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
 from pathlib import Path
+import re
+import pytz
 
-# Page configuration
+# Page configuration remains unchanged
 st.set_page_config(
     page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
@@ -14,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS to ensure the title appears above navigation
+# CSS remains unchanged through line 123
 st.markdown("""
     <style>
         section[data-testid="stSidebar"] > div:first-child {
@@ -22,8 +24,7 @@ st.markdown("""
         }
        
         div[data-testid="stSidebarUserContent"] {
-            padding-top: 0;
-            
+            padding-top: 0;            
         } 
         div[data-testid="stSidebarNav"] {
             margin-top: 20px;
@@ -121,9 +122,9 @@ st.sidebar.markdown("""
     </div>
     <hr>
 """, unsafe_allow_html=True)
-# Election countdown
-election_date = datetime(2025, 3, 4, tzinfo=timezone.utc)
-current_time = datetime.now(timezone.utc)
+# Election countdown with local timezone
+election_date = datetime(2025, 3, 4, tzinfo=pytz.timezone('America/New_York'))
+current_time = datetime.now(pytz.timezone('America/New_York'))
 time_until_election = election_date - current_time
 
 days = time_until_election.days
@@ -138,6 +139,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # Main content area
 st.title("Chattanooga Council Elections")
@@ -159,10 +161,14 @@ with col1:
         key="main_street_address"
     )
 
+    # Validate ZIP code format
+    def is_valid_zip(zip_code):
+        return bool(re.match(r'^\d{5}$', zip_code))
+
     zip_code = st.text_input(
         "ZIP Code",
         placeholder="37405",
-        help="Enter your ZIP code",
+        help="Enter your 5-digit ZIP code",
         max_chars=5,
         key="main_zip_code"
     )
@@ -170,30 +176,35 @@ with col1:
     # Search button
     if st.button("Find District", key="find_district_main", type="primary"):
         if street_address and zip_code:
-            address = f"{street_address}, {zip_code}"
-
-            if validate_address(address):
-                coords = geocode_address(address)
-
-                if coords:
-                    st.session_state.search_performed = True
-                    st.session_state.current_address = address
-                    st.session_state.current_coords = coords
-                    lat, lon = coords
-                    district_info = get_district_info(lat, lon)
-                    st.session_state.district_info = district_info
-                else:
-                    st.error("Unable to locate this address. Please check the format and try again.")
+            if not is_valid_zip(zip_code):
+                st.error("Please enter a valid 5-digit ZIP code")
             else:
-                st.error("Please enter a valid Chattanooga address with ZIP code")
+                address = f"{street_address}, {zip_code}"
+
+                if validate_address(address):
+                    coords = geocode_address(address)
+
+                    if coords:
+                        st.session_state.search_performed = True
+                        st.session_state.current_address = address
+                        st.session_state.current_coords = coords
+                        lat, lon = coords
+                        district_info = get_district_info(lat, lon)
+                        st.session_state.district_info = district_info
+                    else:
+                        st.error("Unable to locate this address. Please check the format and try again.")
+                else:
+                    st.error("Please enter a valid Chattanooga address with ZIP code")
         else:
             st.error("Please enter both street address and ZIP code")
 
-    # Map display
+    # Map display with consistent height
+    MAP_HEIGHT = 400  # Consistent height for all maps
+
     st.subheader("Chattanooga City Council Districts")
     if not st.session_state.search_performed:
         m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=400, key="base_map")
+        map_data = st_folium(m, width=None, height=MAP_HEIGHT, key="base_map")
 
     # Show map if search is performed
     if st.session_state.search_performed and st.session_state.current_coords:
@@ -203,7 +214,7 @@ with col1:
         if district_info and district_info["district_number"] != "District not found":
             m = create_district_map(lat, lon, district_info)
             map_key = f"map_{st.session_state.current_address}"
-            map_data = st_folium(m, width=None, height=350, key=map_key)
+            map_data = st_folium(m, width=None, height=MAP_HEIGHT, key=map_key)
 
             # Display district information below map
             st.subheader("District Information")
@@ -231,10 +242,13 @@ with col1:
                     else:
                         st.markdown(f'<div class="candidate-name">{candidate}</div>', unsafe_allow_html=True)
 
-                    # If we have candidate photos
-                    photo_path = f"assets/candidate_photos/{candidate.split('[')[0].strip()}.jpg"
-                    if Path(photo_path).exists():
-                        st.image(photo_path, use_column_width=True)
+                    # Safe image loading with error handling
+                    try:
+                        photo_path = Path(f"assets/candidate_photos/{candidate.split('[')[0].strip()}.jpg")
+                        if photo_path.exists():
+                            st.image(str(photo_path), use_column_width=True)
+                    except Exception as e:
+                        st.warning("Unable to load candidate photo")
 
                     st.markdown('</div>', unsafe_allow_html=True)
 
