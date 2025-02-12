@@ -88,7 +88,7 @@ def create_base_district_map() -> folium.Map:
         <div class="district-popup">
             <h3>District {district_name}</h3>
             <div>
-                <strong>Current Council Member:</strong> {council_info['name']}<br>
+                <strong>Current Council Member:</strong> {council_info['name']}
             </div>
             <hr>
             <div>

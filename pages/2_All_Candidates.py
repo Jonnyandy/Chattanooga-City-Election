@@ -1,9 +1,11 @@
+# Content from All_Candidates.py
 import streamlit as st
 from utils.candidate_data import get_all_candidates, get_district_candidates, Candidate
 from utils.photo_scraper import get_candidate_photo
 from typing import Optional
 from pathlib import Path
 from PIL import Image
+from datetime import datetime, timezone
 
 def social_media_icon(platform: str) -> str:
     """Return emoji for social media platform"""
@@ -90,8 +92,6 @@ def candidate_card(candidate: Candidate):
             st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('</div>', unsafe_allow_html=True)
-
-from datetime import datetime, timezone
 
 # Page Configuration
 st.set_page_config(
