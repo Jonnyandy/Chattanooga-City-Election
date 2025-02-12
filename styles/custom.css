@@ -18,27 +18,6 @@
     color: var(--text-dark) !important;
 }
 
-/* Sidebar Logo */
-.sidebar-logo {
-    margin-bottom: 2rem;
-    text-align: center;
-    padding: 1rem;
-}
-
-.sidebar-logo img {
-    max-width: 200px;
-    margin: 0 auto;
-}
-
-/* Adjust navigation positioning */
-section[data-testid="stSidebar"] > div {
-    padding-top: 0 !important;
-}
-
-div[data-testid="stSidebarNav"] {
-    padding-top: 0 !important;
-}
-
 /* Countdown styling */
 .header-countdown {
     background-color: var(--secondary-teal);
