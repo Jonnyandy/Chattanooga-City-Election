@@ -100,11 +100,6 @@ st.set_page_config(
     layout="wide"
 )
 
-from utils.sidebar import show_shared_sidebar
-
-# Show shared sidebar
-show_shared_sidebar()
-
 # Election countdown
 election_date = datetime(2025, 3, 4, tzinfo=timezone.utc)
 current_time = datetime.now(timezone.utc)

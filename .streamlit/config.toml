@@ -2,12 +2,19 @@
 headless = true
 address = "0.0.0.0"
 port = 5000
-enableCORS = true
-enableXsrfProtection = false
 
 [browser]
 gatherUsageStats = false
 
-[logger]
-level = "debug"
-messageFormat = "%(asctime)s %(levelname)s %(message)s"
+[theme]
+primaryColor = "#00BCD4"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F5F5"
+textColor = "#004B54"
+
+[ui]
+hideTopBar = true
+
+[client]
+toolbarMode = "minimal"
+showErrorDetails = false
