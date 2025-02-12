@@ -1,21 +1,15 @@
 
 [server]
 headless = true
+enableCORS = false
 address = "0.0.0.0"
 port = 8501
 
 [browser]
 gatherUsageStats = false
 
+[logger]
+level = "error"
+
 [theme]
-primaryColor = "#00BCD4"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F0F5F5"
-textColor = "#004B54"
-
-[ui]
-hideTopBar = true
-
-[client]
-toolbarMode = "minimal"
-showErrorDetails = false
+base = "light"
