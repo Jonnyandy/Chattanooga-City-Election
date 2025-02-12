@@ -20,11 +20,13 @@ st.markdown("""
         section[data-testid="stSidebar"] > div:first-child {
             padding-top: 0;
         }
-        div[data-testid="stSidebarNav"] {
-            margin-top: 20px;
-        }
+       
         div[data-testid="stSidebarUserContent"] {
             padding-top: 0;
+            
+        } 
+        div[data-testid="stSidebarNav"] {
+            margin-top: 20px;
         }
         .sidebar-content {
             margin-top: 0;
@@ -137,7 +139,7 @@ minutes = (time_until_election.seconds % 3600) // 60
 st.markdown(
     f"""
     <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
-        Time until Election Day: {days} days, {hours} hours, {minutes} minutes
+         {days} days until Election Day:
     </div>
     """,
     unsafe_allow_html=True
