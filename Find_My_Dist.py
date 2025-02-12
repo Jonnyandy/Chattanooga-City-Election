@@ -55,20 +55,26 @@ from utils.sidebar import show_shared_sidebar
 
 # Show shared sidebar
 show_shared_sidebar()
+
+# Early voting information
+with st.sidebar.expander("Early Voting Locations", expanded=False):
+    st.markdown("""
+    ### Early Voting Locations
+
     1. **Election Commission**  
-   700 River Terminal Rd, Chattanooga, TN 37406  
-   *Monday - Friday: 8:00 am – 7:00 pm*  
-   *Saturday: 8:00 am – 4:00 pm*  
+       700 River Terminal Rd, Chattanooga, TN 37406  
+       *Monday - Friday: 8:00 am – 7:00 pm*  
+       *Saturday: 8:00 am – 4:00 pm*  
 
-2. **Hixson Community Center**  
-   5401 School Dr, Hixson, TN 37343  
-   *Monday - Friday: 10:00 am – 6:00 pm*  
-   *Saturday: 10:00 am – 4:00 pm*
+    2. **Hixson Community Center**  
+       5401 School Dr, Hixson, TN 37343  
+       *Monday - Friday: 10:00 am – 6:00 pm*  
+       *Saturday: 10:00 am – 4:00 pm*  
 
-3. **Chris L. Ramsey Sr. Community Center**  
-   1010 N Moore Rd, Chattanooga, TN 37411  
-   *Monday - Friday: 10:00 am – 6:00 pm*  
-   *Saturday: 10:00 am – 4:00 pm*
+    3. **Chris L. Ramsey Sr. Community Center**  
+       1010 N Moore Rd, Chattanooga, TN 37411  
+       *Monday - Friday: 10:00 am – 6:00 pm*  
+       *Saturday: 10:00 am – 4:00 pm*  
     """)
 
 with st.sidebar.expander("Check Registration", expanded=False):
