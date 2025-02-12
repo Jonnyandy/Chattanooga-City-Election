@@ -109,7 +109,7 @@ st.sidebar.markdown("""
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
         <div style='margin: 20px 0;'>
             <div style='text-align: center; margin-bottom: 10px;'>
-                <img src='assets/chattanoogashow_jonathanholborn.png' style='max-width: 400px; height: auto;' alt='The Chattanooga Show and Jonathan Holborn'>
+                <img src='./assets/chattanoogashow_jonathanholborn.png' style='max-width: 400px; height: auto;' alt='The Chattanooga Show and Jonathan Holborn'>
             </div>
         </div>
         <p style='font-style: italic; color: #666;'>
@@ -232,7 +232,7 @@ with col1:
                         st.markdown(f'<div class="candidate-name">{candidate}</div>', unsafe_allow_html=True)
 
                     # If we have candidate photos
-                    photo_path = f"assets/candidate_photos/{candidate.split('[')[0].strip()}.jpg"
+                    photo_path = f"./assets/candidate_photos/{candidate.split('[')[0].strip()}.jpg"
                     if Path(photo_path).exists():
                         st.image(photo_path, use_column_width=True)
 
