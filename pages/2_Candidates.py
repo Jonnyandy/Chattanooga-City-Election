@@ -42,6 +42,7 @@ def candidate_card(candidate: Candidate):
             height: auto;
             margin-bottom: 15px;
             border-radius: 5px;
+            object-fit: cover;
         }
         .candidate-contact {
             margin-top: 10px;
@@ -51,18 +52,44 @@ def candidate_card(candidate: Candidate):
             text-decoration: none;
             color: #666;
         }
+        .photo-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
         </style>
         """, unsafe_allow_html=True)
 
         st.markdown(f'<div class="candidate-card">', unsafe_allow_html=True)
 
-        # Photo handling with error recovery
+        # Photo handling with improved error recovery
         try:
             photo_path = get_candidate_photo(candidate.name, candidate.district)
             if photo_path and Path(photo_path).exists():
-                st.image(photo_path, use_column_width=True, output_format="JPEG")
+                try:
+                    st.image(photo_path, use_column_width=True, output_format="JPEG", caption=candidate.name)
+                except Exception as e:
+                    st.error(f"Error displaying photo for {candidate.name}")
+                    st.markdown(
+                        f'<div class="photo-placeholder">Photo not available</div>',
+                        unsafe_allow_html=True
+                    )
+            else:
+                st.markdown(
+                    f'<div class="photo-placeholder">Photo not available</div>',
+                    unsafe_allow_html=True
+                )
         except Exception as e:
-            st.error(f"Error displaying photo for {candidate.name}")
+            st.error(f"Error processing photo for {candidate.name}")
+            st.markdown(
+                f'<div class="photo-placeholder">Photo not available</div>',
+                unsafe_allow_html=True
+            )
 
         # Name and District
         st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)

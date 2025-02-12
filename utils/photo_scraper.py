@@ -23,23 +23,28 @@ def convert_avif_to_png(avif_path: Path) -> Optional[Path]:
         )
         if result.returncode == 0 and png_path.exists():
             return png_path
+        else:
+            st.error(f"AVIF conversion failed: {result.stderr}")
     except Exception as e:
         st.error(f"Error converting AVIF to PNG: {str(e)}")
     return None
+
+def sanitize_filename(name: str) -> str:
+    """Sanitize the filename by removing/replacing special characters"""
+    # Replace quotes and spaces with underscores
+    sanitized = name.replace('"', '').replace("'", '').replace(' ', '_')
+    return sanitized
 
 def process_candidate_photo(source_path: Union[str, Path], candidate_name: str) -> Optional[str]:
     """Process and save candidate photo from source path"""
     try:
         photo_dir = create_photo_directory()
-        file_name = f"{candidate_name.replace(' ', '_')}.jpg"
+        file_name = f"{sanitize_filename(candidate_name)}.jpg"
         target_path = photo_dir / file_name
-
-        # Check if photo already exists
-        if target_path.exists():
-            return str(target_path)
 
         source_path = Path(source_path)
         if not source_path.exists():
+            st.warning(f"Source photo not found: {source_path}")
             return None
 
         try:
@@ -56,6 +61,7 @@ def process_candidate_photo(source_path: Union[str, Path], candidate_name: str) 
 
             # Save as optimized JPEG
             img.save(target_path, 'JPEG', quality=85, optimize=True)
+            st.success(f"Successfully processed photo for {candidate_name}")
             return str(target_path)
 
         except Exception as e:
@@ -69,16 +75,19 @@ def process_candidate_photo(source_path: Union[str, Path], candidate_name: str) 
 def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
     """Get candidate photo path from various sources"""
     # Clean the candidate name for file matching
-    clean_name = candidate_name.replace(' ', '_').replace('"', '').replace("'", "")
+    clean_name = sanitize_filename(candidate_name)
 
-    # Check in candidate_photos directory first
+    # List of directories to check
     photo_dir = create_photo_directory()
+    assets_dir = Path('attached_assets')
+
+    # First, check if we already have a processed photo
     jpg_path = photo_dir / f"{clean_name}.jpg"
     if jpg_path.exists():
+        st.info(f"Found existing processed photo for {candidate_name}")
         return str(jpg_path)
 
     # Check in attached_assets directory
-    assets_dir = Path('attached_assets')
     if assets_dir.exists():
         # Try different possible file names and formats
         possible_names = [
@@ -87,24 +96,31 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
             f"{clean_name}-District-{district}.jpg",
             f"{clean_name}-District-{district}.avif",
             f"{clean_name}-D{district}.jpg",
-            f"{clean_name}-D{district}.avif"
+            f"{clean_name}-D{district}.avif",
+            # Add lowercase variants
+            f"{clean_name.lower()}.jpg",
+            f"{clean_name.lower()}.avif",
+            f"{clean_name.lower()}-district-{district}.jpg",
+            f"{clean_name.lower()}-district-{district}.avif",
+            f"{clean_name.lower()}-d{district}.jpg",
+            f"{clean_name.lower()}-d{district}.avif"
         ]
 
         for name in possible_names:
             asset_path = assets_dir / name
             if asset_path.exists():
+                st.info(f"Found image {name} for {candidate_name}")
                 if asset_path.suffix == '.avif':
-                    # Convert AVIF to PNG
+                    st.info(f"Converting AVIF to PNG for {candidate_name}")
                     png_path = convert_avif_to_png(asset_path)
                     if png_path:
-                        # Process and store in candidate_photos
                         processed_path = process_candidate_photo(png_path, candidate_name)
                         if processed_path:
                             return processed_path
                 else:
-                    # Process and store regular image
                     processed_path = process_candidate_photo(asset_path, candidate_name)
                     if processed_path:
                         return processed_path
 
+    st.warning(f"No photo found for {candidate_name} in any location")
     return None
