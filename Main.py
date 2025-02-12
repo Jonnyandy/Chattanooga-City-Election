@@ -1,6 +1,4 @@
-# Content from Find_Your_District.py
 import streamlit as st
-
 from datetime import datetime, timezone
 from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
@@ -10,7 +8,7 @@ from pathlib import Path
 
 # Page configuration
 st.set_page_config(
-    page_title="Find Your District",
+    page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide",
     initial_sidebar_state="expanded"
