@@ -108,9 +108,8 @@ st.sidebar.markdown("""
     <div style='text-align: center; padding-top: 0; margin-bottom: 20px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
         <div style='margin: 20px 0;'>
-            <!-- Placeholder for The Chattanooga Show logo -->
-            <div style='background-color: #f0f0f0; padding: 20px; margin-bottom: 10px; border-radius: 5px;'>
-                [The Chattanooga Show Logo]
+            <div style='text-align: center; margin-bottom: 10px;'>
+                <img src='assets/chattanooga_show_logo.png' style='max-width: 200px; height: auto;'>
             </div>
             <!-- Placeholder for Jonathan Holborn logo -->
             <div style='background-color: #f0f0f0; padding: 20px; margin-bottom: 10px; border-radius: 5px;'>
