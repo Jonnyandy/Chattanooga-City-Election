@@ -9,7 +9,7 @@ deploymentTarget = "autoscale"
 run = ["sh", "-c", "streamlit run Find_My_Dist.py --server.port 5000 --server.address 0.0.0.0"]
 
 [workflows]
-runButton = "Streamlit App"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Project"
