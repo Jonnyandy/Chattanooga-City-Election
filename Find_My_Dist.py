@@ -111,15 +111,12 @@ st.sidebar.markdown("""
             <div style='text-align: center; margin-bottom: 10px;'>
                 <img src='assets/chattanoogashow_jonathanholborn.png' style='max-width: 400px; height: auto;' alt='The Chattanooga Show and Jonathan Holborn'>
             </div>
-            <!-- Placeholder for Jonathan Holborn logo -->
-            <div style='background-color: #f0f0f0; padding: 20px; margin-bottom: 10px; border-radius: 5px;'>
-                [Jonathan Holborn Logo]
-            </div>
         </div>
         <p style='font-style: italic; color: #666;'>
             Brought to you by<br>
-            The Chattanooga Show<br>
-            and Jonathan Holborn
+            <a href="https://www.instagram.com/chattanoogashow/" target="_blank">The Chattanooga Show</a><br>
+            &
+            <a href="https://jonathanholborn.com" target="_blank">Jonathan Holborn</a>
         </p>
     </div>
     <hr>
