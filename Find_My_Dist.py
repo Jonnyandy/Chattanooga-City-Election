@@ -109,9 +109,7 @@ st.sidebar.markdown("""
     <div style='text-align: center; padding-top: 0; margin-bottom: 20px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
         <div style='margin: 20px 0;'>
-            <div style='text-align: center; margin-bottom: 10px;'>
-                <img src='./assets/chattanoogashow_jonathanholborn.png' style='max-width: 400px; height: auto;' alt='The Chattanooga Show and Jonathan Holborn' />
-            </div>
+            {st.image('assets/chattanoogashow_jonathanholborn.png', width=400, caption='The Chattanooga Show and Jonathan Holborn')}
         </div>
         <p style='font-style: italic; color: #666;'>
             Brought to you by<br>
