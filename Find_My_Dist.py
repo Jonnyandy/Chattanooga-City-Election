@@ -51,12 +51,10 @@ if 'current_coords' not in st.session_state:
 if 'district_info' not in st.session_state:
     st.session_state.district_info = None
 
-# Early Voting Information moved to sidebar
-with st.sidebar.expander("Early Voting Information", expanded=False):
-    st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
-    st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
-    st.markdown("**Early Voting Locations:**")
-    st.markdown("""
+from utils.sidebar import show_shared_sidebar
+
+# Show shared sidebar
+show_shared_sidebar()
     1. **Election Commission**  
        700 River Terminal Rd, Chattanooga, TN 37406  
        *Monday - Friday: 8:00 am – 7:00 pm*  
