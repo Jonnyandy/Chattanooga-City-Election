@@ -16,6 +16,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Set sidebar title
+st.sidebar.title("Find Your District")
+
 # Initialize session state variables
 if 'search_performed' not in st.session_state:
     st.session_state.search_performed = False
