@@ -80,6 +80,7 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
     # List of directories to check
     photo_dir = create_photo_directory()
     assets_dir = Path('attached_assets')
+    candidate_photos_dir = Path('assets/candidate_photos')
 
     # First, check if we already have a processed photo
     jpg_path = photo_dir / f"{clean_name}.jpg"
@@ -87,7 +88,24 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
         st.info(f"Found existing processed photo for {candidate_name}")
         return str(jpg_path)
 
-    # Check in attached_assets directory
+    # Check in assets/candidate_photos directory
+    if candidate_photos_dir.exists():
+        possible_names = [
+            f"{clean_name}.jpg",
+            f"{clean_name.lower()}.jpg",
+            f"{candidate_name.replace(' ', '-')}.jpg",
+            f"{candidate_name.lower().replace(' ', '-')}.jpg"
+        ]
+
+        for name in possible_names:
+            photo_path = candidate_photos_dir / name
+            if photo_path.exists():
+                st.info(f"Found image in candidate_photos: {name}")
+                processed_path = process_candidate_photo(photo_path, candidate_name)
+                if processed_path:
+                    return processed_path
+
+    # Check in attached_assets directory as fallback
     if assets_dir.exists():
         # Try different possible file names and formats
         possible_names = [
@@ -109,7 +127,7 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
         for name in possible_names:
             asset_path = assets_dir / name
             if asset_path.exists():
-                st.info(f"Found image {name} for {candidate_name}")
+                st.info(f"Found image in attached_assets: {name}")
                 if asset_path.suffix == '.avif':
                     st.info(f"Converting AVIF to PNG for {candidate_name}")
                     png_path = convert_avif_to_png(asset_path)
