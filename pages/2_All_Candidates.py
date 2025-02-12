@@ -12,9 +12,9 @@ def social_media_icon(platform: str) -> str:
     icons = {
         'email': '📧',
         'phone': '📞',
-        'facebook': 'ꜰʙ',
-        'instagram': 'ɪɢ',
-        'linkedin': 'ʟɪ',
+        'facebook': 'FB',
+        'instagram': 'IG',
+        'linkedin': 'IN',
         'twitter': '𝕏',
         'website': '🌐'
     }
