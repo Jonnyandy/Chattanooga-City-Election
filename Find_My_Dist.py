@@ -14,7 +14,30 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Set sidebar title
+# Add title and attribution to sidebar
+st.sidebar.markdown("""
+    <div style='text-align: center; margin-bottom: 20px;'>
+        <h1 style='color: #1B4E5D; margin-bottom: 5px;'>Chattanooga.vote</h1>
+        <div style='margin: 20px 0;'>
+            <!-- Placeholder for The Chattanooga Show logo -->
+            <div style='background-color: #f0f0f0; padding: 20px; margin-bottom: 10px; border-radius: 5px;'>
+                [The Chattanooga Show Logo]
+            </div>
+            <!-- Placeholder for Jonathan Holborn logo -->
+            <div style='background-color: #f0f0f0; padding: 20px; margin-bottom: 10px; border-radius: 5px;'>
+                [Jonathan Holborn Logo]
+            </div>
+        </div>
+        <p style='font-style: italic; color: #666;'>
+            Brought to you by<br>
+            The Chattanooga Show<br>
+            and Jonathan Holborn
+        </p>
+    </div>
+    <hr>
+""", unsafe_allow_html=True)
+
+# Set sidebar title for the district finder
 st.sidebar.title("Find Your District")
 
 # Initialize session state variables
