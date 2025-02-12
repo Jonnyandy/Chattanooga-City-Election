@@ -134,12 +134,23 @@ district_filter = st.selectbox(
 
 # Display candidates
 if district_filter == "All Districts":
-    candidates = get_all_candidates()
+    # Get all candidates and sort them by district number
+    candidates = sorted(get_all_candidates(), key=lambda x: int(x.district))
 else:
     candidates = get_district_candidates(district_filter)
 
-# Create a grid layout for cards
-col1, col2 = st.columns(2)
-for i, candidate in enumerate(candidates):
-    with col1 if i % 2 == 0 else col2:
-        candidate_card(candidate)
+# Group candidates by district
+candidates_by_district = {}
+for candidate in candidates:
+    if candidate.district not in candidates_by_district:
+        candidates_by_district[candidate.district] = []
+    candidates_by_district[candidate.district].append(candidate)
+
+# Display candidates grouped by district
+for district in sorted(candidates_by_district.keys(), key=int):
+    st.markdown(f"## District {district}")
+    col1, col2 = st.columns(2)
+    district_candidates = candidates_by_district[district]
+    for i, candidate in enumerate(district_candidates):
+        with col1 if i % 2 == 0 else col2:
+            candidate_card(candidate)
