@@ -151,7 +151,7 @@ with col1:
     st.subheader("Chattanooga City Council Districts")
     if not st.session_state.search_performed:
         m = create_base_district_map()
-        map_data = st_folium(m, width=None, height=450, key="base_map")
+        map_data = st_folium(m, width=None, height=400, key="base_map")
 
     # Show map if search is performed
     if st.session_state.search_performed and st.session_state.current_coords:
