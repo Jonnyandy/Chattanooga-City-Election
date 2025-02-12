@@ -14,6 +14,16 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Add logo to sidebar
+st.sidebar.markdown(
+    """
+    <div class="sidebar-logo">
+        <img src="https://raw.githubusercontent.com/your-repo/path-to-logo.png" alt="Chattanooga.Vote Logo">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # Custom CSS to ensure the title appears above navigation
 st.markdown("""
     <style>
