@@ -23,13 +23,23 @@ st.markdown("""
         div[data-testid="stSidebarNav"] {
             margin-top: 20px;
         }
+        div[data-testid="stSidebarUserContent"] {
+            padding-top: 0;
+        }
+        .sidebar-content {
+            margin-top: 0;
+            padding-top: 0;
+        }
+        button[kind="header"] {
+            margin-top: 20px;
+        }
     </style>
 """, unsafe_allow_html=True)
 
 # Add title and attribution to sidebar - This will appear at the very top
 st.sidebar.markdown("""
     <div style='text-align: center; padding-top: 0; margin-bottom: 20px;'>
-        <h1 style='color: #1B4E5D; margin-bottom: 5px;'>Chattanooga.vote</h1>
+        <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
         <div style='margin: 20px 0;'>
             <!-- Placeholder for The Chattanooga Show logo -->
             <div style='background-color: #f0f0f0; padding: 20px; margin-bottom: 10px; border-radius: 5px;'>
