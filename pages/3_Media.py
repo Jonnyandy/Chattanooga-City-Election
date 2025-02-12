@@ -57,6 +57,17 @@ with st.sidebar.expander("❓ Need Help?", expanded=True):
     📧 vote@hamiltontn.gov
     """)
 
+# Display election countdown 
+
+st.markdown(
+        """
+        <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
+             {days} days until Election Day: March 4th, 2025
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 # Title
 st.title("Helpful Media")
 

@@ -37,6 +37,12 @@ def candidate_card(candidate: Candidate):
             font-size: 24px;
             margin-bottom: 10px;
         }
+        .candidate-photo {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
         .candidate-contact {
             margin-top: 10px;
         }
@@ -50,13 +56,13 @@ def candidate_card(candidate: Candidate):
 
         st.markdown(f'<div class="candidate-card">', unsafe_allow_html=True)
 
-        # Photo handling
-        photo_path = get_candidate_photo(candidate.name, candidate.district)
-        if photo_path and Path(photo_path).exists():
-            try:
-                st.image(photo_path, use_container_width=True)
-            except Exception as e:
-                st.error(f"Error displaying photo for {candidate.name}: {str(e)}")
+        # Photo handling with error recovery
+        try:
+            photo_path = get_candidate_photo(candidate.name, candidate.district)
+            if photo_path and Path(photo_path).exists():
+                st.image(photo_path, use_column_width=True, output_format="JPEG")
+        except Exception as e:
+            st.error(f"Error displaying photo for {candidate.name}")
 
         # Name and District
         st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)
@@ -109,10 +115,11 @@ days = time_until_election.days
 hours = time_until_election.seconds // 3600
 minutes = (time_until_election.seconds % 3600) // 60
 
+# Display election countdown 
 st.markdown(
-    f"""
+    """
     <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
-        Time until Election Day: {days} days, {hours} hours, {minutes} minutes
+         {days} days until Election Day: March 4th, 2025
     </div>
     """,
     unsafe_allow_html=True
