@@ -14,9 +14,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Add title and attribution to sidebar
+# Custom CSS to ensure the title appears above navigation
+st.markdown("""
+    <style>
+        section[data-testid="stSidebar"] > div:first-child {
+            padding-top: 0;
+        }
+        div[data-testid="stSidebarNav"] {
+            margin-top: 20px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Add title and attribution to sidebar - This will appear at the very top
 st.sidebar.markdown("""
-    <div style='text-align: center; margin-bottom: 20px;'>
+    <div style='text-align: center; padding-top: 0; margin-bottom: 20px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>Chattanooga.vote</h1>
         <div style='margin: 20px 0;'>
             <!-- Placeholder for The Chattanooga Show logo -->
