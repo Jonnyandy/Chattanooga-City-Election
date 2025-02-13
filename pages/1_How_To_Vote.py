@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import pytz
+from streamlit_pdf_viewer import pdf_viewer
 
 # Page Configuration
 st.set_page_config(
@@ -50,16 +51,8 @@ with st.expander("📋 View Sample Ballot", expanded=False):
         type="primary"
     )
 
-    # Display PDF using iframe
-    pdf_display = f"""
-        <iframe
-            src="attached_assets/cha-sample-ballot-2025.pdf"
-            width="100%"
-            height="800"
-            type="application/pdf">
-        </iframe>
-    """
-    st.components.v1.html(pdf_display, height=800)
+    # Display PDF using streamlit-pdf-viewer
+    pdf_viewer("attached_assets/cha-sample-ballot-2025.pdf", height=800)
 
 col1, col2 = st.columns([3, 2])
 
@@ -77,12 +70,12 @@ with col1:
         - 700 River Terminal Road
         - Monday - Friday, 8 AM - 6 PM
         - Saturday, 9 AM - 4 PM
-    
+
     - **Brainerd Recreation Center:**
         - 1010 N Moore Road
         - Monday - Friday, 10 AM - 6 PM
         - Saturday, 9 AM - 4 PM
-        
+
     - **Hixson Community Center:**
         - 5401 School Drive
         - Monday - Friday, 10 AM - 6 PM
@@ -117,13 +110,13 @@ with col2:
     - US Military photo ID
     - Tennessee handgun carry permit with photo
     """)
-    
+
     st.subheader("Need a Ride?")
     st.markdown("""
     Free rides to polling locations are available.
     Call (423) 209-8683 for assistance.
     """)
-    
+
     st.subheader("Be a Poll Worker")
     st.markdown("""
     Help your community by becoming a poll worker!

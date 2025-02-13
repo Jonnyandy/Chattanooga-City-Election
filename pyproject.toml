@@ -19,4 +19,5 @@ dependencies = [
     "trafilatura>=2.0.0",
     "twilio>=9.4.4",
     "pytz>=2024.2",
+    "streamlit-pdf-viewer>=0.0.21",
 ]
