@@ -13,7 +13,7 @@ st.set_page_config(
     page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    
 )
 
 # CSS remains unchanged through line 123
