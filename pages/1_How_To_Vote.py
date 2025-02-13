@@ -92,4 +92,24 @@ with col2:
         Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
         """)
 
-    st.image('assets/chattanoogashow_jonathanholborn.png', use_container_width=True)
+    # Add title and attribution to sidebar
+    st.sidebar.markdown("""
+    <hr>
+        <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
+            <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320, use_container_width=False)
+
+    # Add attribution to sidebar
+    st.sidebar.markdown("""
+        <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
+        <p style='font-style: italic; color: #666;'>
+            Brought to you by<br>
+            <a href="https://www.instagram.com/chattanoogashow/" target="_blank">The Chattanooga Show</a><br>
+            &
+            <a href="https://jonathanholborn.com" target="_blank">Jonathan Holborn</a>
+        </p>
+        </div>
+    """, unsafe_allow_html=True)
