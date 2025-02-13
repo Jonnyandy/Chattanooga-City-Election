@@ -1,4 +1,3 @@
-
 import streamlit as st
 import streamlit.components.v1 as components
 from datetime import datetime, timezone
@@ -14,28 +13,6 @@ st.set_page_config(
 
 # Set sidebar title for the media page
 st.sidebar.title("Helpful Media")
-
-# Early Voting Information moved to sidebar
-with st.sidebar.expander("Early Voting Information", expanded=False):
-    st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
-    st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
-    st.markdown("**Early Voting Locations:**")
-    st.markdown("""
-    1. **Election Commission**  
-       700 River Terminal Rd, Chattanooga, TN 37406  
-       *Monday - Friday: 8:00 am – 7:00 pm*  
-       *Saturday: 8:00 am – 4:00 pm*  
-
-    2. **Hixson Community Center**  
-       5401 School Dr, Hixson, TN 37343  
-       *Monday - Friday: 10:00 am – 6:00 pm*  
-       *Saturday: 10:00 am – 4:00 pm*
-
-    3. **Chris L. Ramsey Sr. Community Center**  
-       1010 N Moore Rd, Chattanooga, TN 37411  
-       *Monday - Friday: 10:00 am – 6:00 pm*  
-       *Saturday: 10:00 am – 4:00 pm*
-    """)
 
 with st.sidebar.expander("Check Registration", expanded=False):
     st.markdown("""
