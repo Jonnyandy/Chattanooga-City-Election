@@ -39,7 +39,7 @@ st.markdown("### Important Information for Chattanooga Voters")
 # Sample Ballot Section
 with st.expander("📋 View Sample Ballot", expanded=False):
     st.markdown("### 2025 City Council Election Sample Ballot")
-    
+
     # Add download button for the sample ballot
     pdf_data = get_pdf_data()
     st.download_button(
@@ -49,7 +49,7 @@ with st.expander("📋 View Sample Ballot", expanded=False):
         mime="application/pdf",
         type="primary"
     )
-    
+
     # Display PDF using iframe
     pdf_display = f"""
         <iframe
@@ -87,6 +87,24 @@ with col1:
         - 5401 School Drive
         - Monday - Friday, 10 AM - 6 PM
         - Saturday, 9 AM - 4 PM
+    """)
+
+# Voter Registration Information
+with st.expander("Check Registration", expanded=True):
+    st.markdown("""
+    ### Verify Your Voter Registration
+
+    To check if you're registered to vote in the March 4th, 2025 election, visit the official Tennessee voter lookup tool:
+
+    [Click here to verify your registration ↗](https://tnmap.tn.gov/voterlookup/)
+
+    **Requirements:**
+    • Valid TN Photo ID
+    • Must be 18+ by election day
+    • Chattanooga resident
+
+    **Need to register or update your information?**  
+    Visit [GoVoteTN.gov](https://govotetn.gov)
     """)
 
 with col2:
