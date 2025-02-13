@@ -76,7 +76,7 @@ st.sidebar.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320)
+st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320, use_container_width=False)
 
 # Add attribution to sidebar
 st.sidebar.markdown("""
