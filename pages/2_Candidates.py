@@ -142,58 +142,8 @@ days = time_until_election.days
 hours = time_until_election.seconds // 3600
 minutes = (time_until_election.seconds % 3600) // 60
 
-# Early Voting Information moved to sidebar
-with st.sidebar.expander("Early Voting Information", expanded=False):
-    st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
-    st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
-    st.markdown("**Early Voting Locations:**")
-    st.markdown("""
-    1. **Election Commission**  
-       700 River Terminal Rd, Chattanooga, TN 37406  
-       *Monday - Friday: 8:00 am – 7:00 pm*  
-       *Saturday: 8:00 am – 4:00 pm*  
-
-    2. **Hixson Community Center**  
-       5401 School Dr, Hixson, TN 37343  
-       *Monday - Friday: 10:00 am – 6:00 pm*  
-       *Saturday: 10:00 am – 4:00 pm*
-
-    3. **Chris L. Ramsey Sr. Community Center**  
-       1010 N Moore Rd, Chattanooga, TN 37411  
-       *Monday - Friday: 10:00 am – 6:00 pm*  
-       *Saturday: 10:00 am – 4:00 pm*
-    """)
-
-with st.sidebar.expander("Check Registration", expanded=False):
-    st.markdown("""
-    ### Verify Your Voter Registration
-
-    To check if you're registered to vote in the March 4th, 2025 election, visit the official Tennessee voter lookup tool:
-
-    [Click here to verify your registration ↗](https://tnmap.tn.gov/voterlookup/)
-
-    **Requirements:**
-    • Valid TN Photo ID
-    • Must be 18+ by election day
-    • Chattanooga resident
-
-    **Need to register or update your information?**  
-    Visit [GoVoteTN.gov](https://govotetn.gov)
-    """)
-
-st.sidebar.markdown("---")
-with st.sidebar.expander("❓ Need Help?", expanded=True):
-    st.markdown("""
-    **Election Commission:**
-    📞 (423) 493-5100
-    📧 vote@hamiltontn.gov
-    """)
-
-with st.sidebar.expander("🤝 Become a Poll Worker", expanded=False):
-    st.markdown("""
-    Poll officials get a stipend of $135 - $175 per election.  
-    Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
-    """)
+# Add navigation hint to sidebar
+st.sidebar.info("ℹ️ Visit the 'How to Vote' page for information about voting locations, registration, and becoming a poll worker.")
 
 # Add title and attribution to sidebar
 st.sidebar.markdown("""
