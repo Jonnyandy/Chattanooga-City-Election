@@ -1,15 +1,20 @@
-
 import streamlit as st
 from datetime import datetime
 import pytz
+import base64
 
 # Page Configuration
 st.set_page_config(
     page_title="How to Vote | Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
+
+# Function to display and create download link for PDF
+def get_pdf_download_link(pdf_path):
+    with open(pdf_path, "rb") as pdf_file:
+        base64_pdf = base64.b64encode(pdf_file.read()).decode('utf-8')
+    return f'<a href="data:application/pdf;base64,{base64_pdf}" download="sample-ballot-2025.pdf">Click here to download the Sample Ballot</a>'
 
 # Election countdown
 election_date = datetime(2025, 3, 4, tzinfo=pytz.timezone('America/New_York'))
@@ -32,6 +37,19 @@ st.markdown(
 
 st.title("How to Vote")
 st.markdown("### Important Information for Chattanooga Voters")
+
+# Sample Ballot Section
+with st.expander("📋 View Sample Ballot", expanded=False):
+    st.markdown("### 2025 City Council Election Sample Ballot")
+    # Display PDF viewer
+    st.markdown("""
+        <iframe src="data:application/pdf;base64,{}" width="100%" height="800px" type="application/pdf">
+        </iframe>
+        """.format(base64.b64encode(open("attached_assets/cha-sample-ballot-2025.pdf", "rb").read()).decode('utf-8')), 
+        unsafe_allow_html=True
+    )
+    # Download button for the sample ballot
+    st.markdown(get_pdf_download_link("attached_assets/cha-sample-ballot-2025.pdf"), unsafe_allow_html=True)
 
 col1, col2 = st.columns([3, 2])
 
@@ -92,24 +110,23 @@ with col2:
         Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
         """)
 
-    # Add title and attribution to sidebar
-    st.sidebar.markdown("""
-    <hr>
-        <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
-            <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
-        </div>
-    """, unsafe_allow_html=True)
+# Add title and attribution to sidebar
+st.sidebar.markdown("""
+<hr>
+    <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
+        <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
+    </div>
+""", unsafe_allow_html=True)
+st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320, use_container_width=False)
 
-    st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320, use_container_width=False)
-
-    # Add attribution to sidebar
-    st.sidebar.markdown("""
-        <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
-        <p style='font-style: italic; color: #666;'>
-            Brought to you by<br>
-            <a href="https://www.instagram.com/chattanoogashow/" target="_blank">The Chattanooga Show</a><br>
-            &
-            <a href="https://jonathanholborn.com" target="_blank">Jonathan Holborn</a>
-        </p>
-        </div>
-    """, unsafe_allow_html=True)
+# Add attribution to sidebar
+st.sidebar.markdown("""
+    <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
+    <p style='font-style: italic; color: #666;'>
+        Brought to you by<br>
+        <a href="https://www.instagram.com/chattanoogashow/" target="_blank">The Chattanooga Show</a><br>
+        &
+        <a href="https://jonathanholborn.com" target="_blank">Jonathan Holborn</a>
+    </p>
+    </div>
+""", unsafe_allow_html=True)

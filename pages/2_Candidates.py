@@ -1,130 +1,7 @@
-# Content from All_Candidates.py
 import streamlit as st
-from utils.candidate_data import get_all_candidates, get_district_candidates, Candidate
-from utils.photo_scraper import get_candidate_photo
-from typing import Optional
+import base64
+from utils.candidate_data import get_all_candidates, get_district_candidates
 from pathlib import Path
-from PIL import Image
-from datetime import datetime, timezone
-
-def social_media_icon(platform: str) -> str:
-    """Return emoji for social media platform"""
-    icons = {
-        'email': '📧',
-        'phone': '📞',
-        'facebook': 'FB',
-        'instagram': 'IG',
-        'linkedin': 'IN',
-        'twitter': '𝕏',
-        'website': '🌐'
-    }
-    return icons.get(platform, '🔗')
-
-def candidate_card(candidate: Candidate):
-    """Display a candidate card with photo and contact information"""
-    with st.container():
-        st.markdown("""
-        <style>
-        .candidate-card {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .candidate-name {
-            color: #1976D2;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .candidate-photo {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            object-fit: cover;
-        }
-        .candidate-contact {
-            margin-top: 10px;
-        }
-        .social-link {
-            margin-right: 10px;
-            text-decoration: none;
-            color: #666;
-        }
-        .photo-placeholder {
-            width: 100%;
-            height: 200px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-        st.markdown(f'<div class="candidate-card">', unsafe_allow_html=True)
-
-        # Photo handling with improved error recovery
-        try:
-            photo_path = get_candidate_photo(candidate.name, candidate.district)
-            if photo_path and Path(photo_path).exists():
-                try:
-                    st.image(photo_path, use_column_width=True, output_format="JPEG", caption=candidate.name)
-                except Exception as e:
-                    st.error(f"Error displaying photo for {candidate.name}")
-                    st.markdown(
-                        f'<div class="photo-placeholder">Photo not available</div>',
-                        unsafe_allow_html=True
-                    )
-            else:
-                st.markdown(
-                    f'<div class="photo-placeholder">Photo not available</div>',
-                    unsafe_allow_html=True
-                )
-        except Exception as e:
-            st.error(f"Error processing photo for {candidate.name}")
-            st.markdown(
-                f'<div class="photo-placeholder">Photo not available</div>',
-                unsafe_allow_html=True
-            )
-
-        # Name and District
-        st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)
-        st.markdown(f"**District {candidate.district}**")
-
-        # Contact Information
-        if candidate.contact:
-            st.markdown('<div class="candidate-contact">', unsafe_allow_html=True)
-
-            if candidate.contact.website:
-                st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
-
-            if candidate.contact.email:
-                st.markdown(f"{social_media_icon('email')} {candidate.contact.email}")
-
-            if candidate.contact.phone:
-                st.markdown(f"{social_media_icon('phone')} {candidate.contact.phone}")
-
-            # Social Media
-            social_links = []
-            if candidate.contact.facebook:
-                social_links.append(f"[{social_media_icon('facebook')}]({candidate.contact.facebook})")
-            if candidate.contact.instagram:
-                social_links.append(f"[{social_media_icon('instagram')}]({candidate.contact.instagram})")
-            if candidate.contact.linkedin:
-                social_links.append(f"[{social_media_icon('linkedin')}]({candidate.contact.linkedin})")
-            if candidate.contact.twitter:
-                social_links.append(f"[{social_media_icon('twitter')}]({candidate.contact.twitter})")
-
-            if social_links:
-                st.markdown(" ".join(social_links))
-
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # Page Configuration
 st.set_page_config(
@@ -133,19 +10,71 @@ st.set_page_config(
     layout="wide"
 )
 
-# Election countdown
-election_date = datetime(2025, 3, 4, tzinfo=timezone.utc)
-current_time = datetime.now(timezone.utc)
-time_until_election = election_date - current_time
+# Function to create download link for PDF
+def get_pdf_download_link(pdf_path):
+    with open(pdf_path, "rb") as pdf_file:
+        base64_pdf = base64.b64encode(pdf_file.read()).decode('utf-8')
+    return f'<a href="data:application/pdf;base64,{base64_pdf}" download="sample-ballot-2025.pdf" class="download-button">Download Sample Ballot</a>'
 
-days = time_until_election.days
-hours = time_until_election.seconds // 3600
-minutes = (time_until_election.seconds % 3600) // 60
+# Custom CSS for the download button
+st.markdown("""
+    <style>
+    .download-button {
+        display: inline-block;
+        padding: 0.5em 1em;
+        color: white;
+        background-color: #1B4E5D;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 1em 0;
+        transition: background-color 0.3s;
+    }
+    .download-button:hover {
+        background-color: #2C7A92;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# Add navigation hint to sidebar
-st.sidebar.info("ℹ️ Visit the 'How to Vote' page for information about voting locations, registration, and becoming a poll worker.")
+st.title("2025 City Council Candidates")
 
-# Add title and attribution to sidebar
+# Add Sample Ballot download button
+st.markdown(get_pdf_download_link("attached_assets/cha-sample-ballot-2025.pdf"), unsafe_allow_html=True)
+
+# Display candidates by district
+candidates = get_all_candidates()
+
+# Group candidates by district
+for district in sorted(set(c.district for c in candidates)):
+    st.header(f"District {district}")
+    district_candidates = get_district_candidates(district)
+    
+    cols = st.columns(min(3, len(district_candidates)))
+    for idx, candidate in enumerate(district_candidates):
+        with cols[idx % 3]:
+            st.subheader(candidate.name)
+            
+            # Display candidate photo if available
+            if candidate.assets_photo:
+                st.image(candidate.assets_photo, use_column_width=True)
+            
+            # Display contact information
+            if candidate.contact:
+                if candidate.contact.website:
+                    st.markdown(f"[Campaign Website]({candidate.contact.website})")
+                if candidate.contact.email:
+                    st.markdown(f"📧 {candidate.contact.email}")
+                if candidate.contact.phone:
+                    st.markdown(f"📞 {candidate.contact.phone}")
+                if candidate.contact.facebook:
+                    st.markdown(f"[Facebook]({candidate.contact.facebook})")
+                if candidate.contact.instagram:
+                    st.markdown(f"[Instagram]({candidate.contact.instagram})")
+                if candidate.contact.twitter:
+                    st.markdown(f"[Twitter]({candidate.contact.twitter})")
+                if candidate.contact.linkedin:
+                    st.markdown(f"[LinkedIn]({candidate.contact.linkedin})")
+
+# Sidebar content
 st.sidebar.markdown("""
 <hr>
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
@@ -155,7 +84,6 @@ st.sidebar.markdown("""
 
 st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320)
 
-# Add attribution to sidebar
 st.sidebar.markdown("""
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
     <p style='font-style: italic; color: #666;'>
@@ -166,50 +94,3 @@ st.sidebar.markdown("""
     </p>
     </div>
 """, unsafe_allow_html=True)
-
-# Display election countdown 
-st.markdown(
-    f"""
-    <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
-         {days} days until Election Day: March 4th, 2025
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-st.title("🗳️ City Council Candidates")
-st.markdown("### March 4th, 2025 Election")
-
-# Get district from URL parameter if available
-params = st.query_params
-initial_district = params.get("district", "All Districts")
-
-# Filter by district
-district_filter = st.selectbox(
-    "Filter by District",
-    ["All Districts"] + [str(i) for i in range(1, 10)],
-    index=["All Districts"] + [str(i) for i in range(1, 10)].index(initial_district) if initial_district in map(str, range(1, 10)) else 0
-)
-
-# Display candidates
-if district_filter == "All Districts":
-    # Get all candidates and sort them by district number
-    candidates = sorted(get_all_candidates(), key=lambda x: int(x.district))
-else:
-    candidates = get_district_candidates(district_filter)
-
-# Group candidates by district
-candidates_by_district = {}
-for candidate in candidates:
-    if candidate.district not in candidates_by_district:
-        candidates_by_district[candidate.district] = []
-    candidates_by_district[candidate.district].append(candidate)
-
-# Display candidates grouped by district
-for district in sorted(candidates_by_district.keys(), key=int):
-    st.markdown(f"## District {district}")
-    col1, col2 = st.columns(2)
-    district_candidates = candidates_by_district[district]
-    for i, candidate in enumerate(district_candidates):
-        with col1 if i % 2 == 0 else col2:
-            candidate_card(candidate)

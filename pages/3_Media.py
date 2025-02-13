@@ -8,12 +8,7 @@ st.set_page_config(
     page_title="Helpful Media | Chattanooga.Vote",
     page_icon="🎥",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
-
-# Set sidebar title for the media page
-st.sidebar.title("Helpful Media")
-
 
 
 # Add title and attribution to sidebar
