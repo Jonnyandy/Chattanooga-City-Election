@@ -14,36 +14,7 @@ st.set_page_config(
 # Set sidebar title for the media page
 st.sidebar.title("Helpful Media")
 
-with st.sidebar.expander("Check Registration", expanded=False):
-    st.markdown("""
-    ### Verify Your Voter Registration
 
-    To check if you're registered to vote in the March 4th, 2025 election, visit the official Tennessee voter lookup tool:
-
-    [Click here to verify your registration ↗](https://tnmap.tn.gov/voterlookup/)
-
-    **Requirements:**
-    • Valid TN Photo ID
-    • Must be 18+ by election day
-    • Chattanooga resident
-
-    **Need to register or update your information?**  
-    Visit [GoVoteTN.gov](https://govotetn.gov)
-    """)
-
-st.sidebar.markdown("---")
-with st.sidebar.expander("❓ Need Help?", expanded=True):
-    st.markdown("""
-    **Election Commission:**
-    📞 (423) 493-5100
-    📧 vote@hamiltontn.gov
-    """)
-
-with st.sidebar.expander("🤝 Become a Poll Worker", expanded=False):
-    st.markdown("""
-    Poll officials get a stipend of $135 - $175 per election.  
-    Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
-    """)
 
 # Add title and attribution to sidebar
 st.sidebar.markdown("""
