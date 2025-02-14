@@ -8,14 +8,14 @@ from PIL import Image
 from datetime import datetime, timezone
 
 def social_media_icon(platform: str) -> str:
-    """Return emoji for social media platform"""
+    """Return HTML img tag for social media platform icon"""
     icons = {
         'email': '📧',
         'phone': '📞',
-        'facebook': 'FB',
-        'instagram': 'IG',
-        'linkedin': 'IN',
-        'twitter': '𝕏',
+        'facebook': '<img src="https://raw.githubusercontent.com/gauravghongde/social-icons/master/SVG/Color/Facebook.svg" style="height: 16px; width: 16px; vertical-align: middle;">',
+        'instagram': '<img src="https://raw.githubusercontent.com/gauravghongde/social-icons/master/SVG/Color/Instagram.svg" style="height: 16px; width: 16px; vertical-align: middle;">',
+        'linkedin': '<img src="https://raw.githubusercontent.com/gauravghongde/social-icons/master/SVG/Color/LinkedIN.svg" style="height: 16px; width: 16px; vertical-align: middle;">',
+        'twitter': '<img src="https://raw.githubusercontent.com/gauravghongde/social-icons/master/SVG/Color/Twitter.svg" style="height: 16px; width: 16px; vertical-align: middle;">',
         'website': '🌐'
     }
     return icons.get(platform, '🔗')
