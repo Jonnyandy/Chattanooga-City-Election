@@ -61,7 +61,6 @@ def process_candidate_photo(source_path: Union[str, Path], candidate_name: str) 
 
             # Save as optimized JPEG
             img.save(target_path, 'JPEG', quality=85, optimize=True)
-            st.success(f"Successfully processed photo for {candidate_name}")
             return str(target_path)
 
         except Exception as e:
@@ -85,7 +84,6 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
     # First, check if we already have a processed photo
     jpg_path = photo_dir / f"{clean_name}.jpg"
     if jpg_path.exists():
-        st.info(f"Found existing processed photo for {candidate_name}")
         return str(jpg_path)
 
     # Check in assets/candidate_photos directory
@@ -100,7 +98,6 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
         for name in possible_names:
             photo_path = candidate_photos_dir / name
             if photo_path.exists():
-                st.info(f"Found image in candidate_photos: {name}")
                 processed_path = process_candidate_photo(photo_path, candidate_name)
                 if processed_path:
                     return processed_path
