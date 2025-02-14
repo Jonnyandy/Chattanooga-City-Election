@@ -111,16 +111,16 @@ def candidate_card(candidate: Candidate):
             # Social Media
             social_links = []
             if candidate.contact.facebook:
-                social_links.append(f"[{social_media_icon('facebook')}]({candidate.contact.facebook})")
+                social_links.append(f'<a href="{candidate.contact.facebook}" target="_blank">{social_media_icon("facebook")}</a>')
             if candidate.contact.instagram:
-                social_links.append(f"[{social_media_icon('instagram')}]({candidate.contact.instagram})")
+                social_links.append(f'<a href="{candidate.contact.instagram}" target="_blank">{social_media_icon("instagram")}</a>')
             if candidate.contact.linkedin:
-                social_links.append(f"[{social_media_icon('linkedin')}]({candidate.contact.linkedin})")
+                social_links.append(f'<a href="{candidate.contact.linkedin}" target="_blank">{social_media_icon("linkedin")}</a>')
             if candidate.contact.twitter:
-                social_links.append(f"[{social_media_icon('twitter')}]({candidate.contact.twitter})")
+                social_links.append(f'<a href="{candidate.contact.twitter}" target="_blank">{social_media_icon("twitter")}</a>')
 
             if social_links:
-                st.markdown(" ".join(social_links))
+                st.markdown(" ".join(social_links), unsafe_allow_html=True)
 
             st.markdown('</div>', unsafe_allow_html=True)
 
