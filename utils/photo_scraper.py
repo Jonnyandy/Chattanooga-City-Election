@@ -127,9 +127,7 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
         for name in possible_names:
             asset_path = assets_dir / name
             if asset_path.exists():
-                st.info(f"Found image in attached_assets: {name}")
                 if asset_path.suffix == '.avif':
-                    st.info(f"Converting AVIF to PNG for {candidate_name}")
                     png_path = convert_avif_to_png(asset_path)
                     if png_path:
                         processed_path = process_candidate_photo(png_path, candidate_name)
@@ -140,5 +138,4 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
                     if processed_path:
                         return processed_path
 
-    st.warning(f"No photo found for {candidate_name} in any location")
     return None
