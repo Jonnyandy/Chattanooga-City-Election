@@ -1,3 +1,4 @@
+
 [server]
 address = "0.0.0.0"
 port = 5000
@@ -6,11 +7,10 @@ enableCORS = false
 enableWebsocketCompression = false
 enableXsrfProtection = false
 enableStaticServing = true
-baseUrlPath = "https://chattanooga.vote"
 
 [browser]
 gatherUsageStats = false
-serverAddress = "chattanooga.vote"
+serverAddress = "0.0.0.0"
 
 [theme]
 primaryColor = "#00BCD4"
