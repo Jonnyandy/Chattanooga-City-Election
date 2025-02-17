@@ -57,7 +57,7 @@ st.markdown(f"""
 st.title("Helpful Media")
 
 # The Chattanooga Show Section
-st.header("The Chattanooga Show")
+st.header("JonJon.Community")
 
 # First Instagram embed code
 first_instagram_embed = """
@@ -67,7 +67,8 @@ first_instagram_embed = """
 
 # Use components.html to render the first Instagram embed
 components.html(first_instagram_embed, height=600, scrolling=True)
-
+# The Chattanooga Show Section
+st.header("The Chattanooga Show")
 # Second Instagram embed code
 instagram_embed = """
 <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
@@ -101,4 +102,4 @@ youtube_embed = """
 """
 
 # Use components.html to render the YouTube embed
-components.html(youtube_embed, height=400)
+components.html(youtube_embed, height=600)
