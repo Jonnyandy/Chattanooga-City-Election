@@ -244,10 +244,6 @@ CANDIDATES_2025 = {
     ],
     "9": [
         Candidate(
-            name="Demetrus Coonrod",
-            district="9"
-        ),
-        Candidate(
             name="Ron Elliott",
             district="9",
             contact=CandidateContact(
