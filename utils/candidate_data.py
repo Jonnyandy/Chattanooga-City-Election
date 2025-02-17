@@ -83,10 +83,6 @@ CANDIDATES_2025 = {
     ],
     "3": [
         Candidate(
-            name="Ken Smith",
-            district="3"
-        ),
-        Candidate(
             name="Jeff Davis",
             district="3",
             contact=CandidateContact(
@@ -105,10 +101,6 @@ CANDIDATES_2025 = {
         )
     ],
     "4": [
-        Candidate(
-            name="Darrin Ledford",
-            district="4"
-        ),
         Candidate(
             name="Cody Harvey",
             district="4",

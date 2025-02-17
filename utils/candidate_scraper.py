@@ -19,12 +19,10 @@ def get_candidate_info() -> Dict[str, Dict[str, Dict[str, str]]]:
             "Jenny Hill": {"website": "https://www.votejennyhill.org/"}
         },
         "3": {
-            "Ken Smith": {},
             "Jeff Davis": {},
             "Tom Marshall": {}
         },
         "4": {
-            "Darrin Ledford": {},
             "Cody Harvey": {}
         },
         "5": {
