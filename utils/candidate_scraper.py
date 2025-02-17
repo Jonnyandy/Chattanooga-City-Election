@@ -1,3 +1,4 @@
+
 import trafilatura
 import requests
 from typing import Dict, Optional
@@ -11,23 +12,25 @@ def get_candidate_info() -> Dict[str, Dict[str, Dict[str, str]]]:
     """
     candidates = {
         "1": {
-            "James \"Skip\" Burnette": {},
-            "Chip Henderson": {}
+            "Chip Henderson": {},
+            "James \"Skip\" Burnette": {}
         },
         "2": {
-            "Jenny Hill": {"website": "https://www.votejennyhill.org/"}  # Verified website
+            "Jenny Hill": {"website": "https://www.votejennyhill.org/"}
         },
         "3": {
+            "Ken Smith": {},
             "Jeff Davis": {},
             "Tom Marshall": {}
         },
         "4": {
+            "Darrin Ledford": {},
             "Cody Harvey": {}
         },
         "5": {
+            "Isiah (Ike) Hester": {},
             "Dennis Clark": {},
             "Cory Hall": {},
-            "Isiah (Ike) Hester": {},
             "Samantha Reid-Hawkins": {}
         },
         "6": {
@@ -41,12 +44,13 @@ def get_candidate_info() -> Dict[str, Dict[str, Dict[str, str]]]:
             "Raquetta Dotley": {}
         },
         "8": {
-            "Anna Golladay": {},
             "Marvene Noel": {},
+            "Anna Golladay": {},
             "Doll Sandridge": {},
             "Kelvin Scott": {}
         },
         "9": {
+            "Demetrus Coonrod": {},
             "Ron Elliott": {},
             "Letechia Ellis": {},
             "Evelina Irén Kertay": {}
