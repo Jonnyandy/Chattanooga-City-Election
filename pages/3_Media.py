@@ -10,16 +10,18 @@ st.set_page_config(
     layout="wide",
 )
 
-
 # Add title and attribution to sidebar
 st.sidebar.markdown("""
 <hr>
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>
-""", unsafe_allow_html=True)
+""",
+                    unsafe_allow_html=True)
 
-st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320, use_container_width=False)
+st.sidebar.image('assets/chattanoogashow_jonathanholborn.png',
+                 width=320,
+                 use_container_width=False)
 
 # Add attribution to sidebar
 st.sidebar.markdown("""
@@ -31,7 +33,8 @@ st.sidebar.markdown("""
         <a href="https://jonathanholborn.com" target="_blank">Jonathan Holborn</a>
     </p>
     </div>
-""", unsafe_allow_html=True)
+""",
+                    unsafe_allow_html=True)
 
 # Election countdown
 election_date = datetime(2025, 3, 4, tzinfo=pytz.timezone('America/New_York'))
@@ -42,15 +45,13 @@ days = time_until_election.days
 hours = time_until_election.seconds // 3600
 minutes = (time_until_election.seconds % 3600) // 60
 
-# Display election countdown 
-st.markdown(
-    f"""
+# Display election countdown
+st.markdown(f"""
     <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
          {days} days until Election Day: March 4th, 2025
     </div>
     """,
-    unsafe_allow_html=True
-)
+            unsafe_allow_html=True)
 
 # Title
 st.title("Helpful Media")
@@ -67,15 +68,13 @@ instagram_embed = """
 """
 
 # Use components.html to render the Instagram embed
-components.html(
-    instagram_embed,
-    height=600,
-    scrolling=True
-)
+components.html(instagram_embed, height=600, scrolling=True)
 
 # ChattaMatters Section
 st.header("ChattaMatters")
-st.markdown("[ChattaMatters Article](https://chattamatters.com/whos-running-for-mayor-and-city-council-chattanooga-2025/)")
+st.markdown(
+    "[ChattaMatters Article](https://chattamatters.com/whos-running-for-mayor-and-city-council-chattanooga-2025/)"
+)
 
 # YouTube embed
 youtube_embed = """
@@ -93,7 +92,4 @@ youtube_embed = """
 """
 
 # Use components.html to render the YouTube embed
-components.html(
-    youtube_embed,
-    height=400
-)
+components.html(youtube_embed, height=400)
