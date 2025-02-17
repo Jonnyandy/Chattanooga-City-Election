@@ -1,31 +1,3 @@
-
-import streamlit as st
-
-# Configure page metadata for social sharing
-st.set_page_config(
-    page_title="Find Your District | Chattanooga.Vote",
-    page_icon="🗳️",
-    layout="wide",
-    menu_items={
-        'About': "Find your district for the 2025 Chattanooga City Council Elections"
-    }
-)
-
-# Add Open Graph and Twitter Card metadata
-st.markdown("""
-    <head>
-        <meta property="og:title" content="Chattanooga City Council Elections 2025" />
-        <meta property="og:description" content="Find your district, learn about candidates, and get voting information for the 2025 Chattanooga City Council Elections." />
-        <meta property="og:image" content="https://chattanooga.vote/assets/social/preview.jpg" />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Chattanooga City Council Elections 2025" />
-        <meta name="twitter:description" content="Find your district, learn about candidates, and get voting information for the 2025 Chattanooga City Council Elections." />
-        <meta name="twitter:image" content="https://chattanooga.vote/assets/social/preview.jpg" />
-    </head>
-""", unsafe_allow_html=True)
-
-
 import streamlit as st
 from datetime import datetime, timezone
 from streamlit_folium import st_folium
