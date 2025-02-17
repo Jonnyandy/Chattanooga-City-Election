@@ -91,9 +91,9 @@ def candidate_card(candidate: Candidate):
                 unsafe_allow_html=True
             )
 
-        # Name and District
+        # Name
         st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)
-        st.markdown(f"**District {candidate.district}**")
+
 
         # Contact Information
         if candidate.contact:
@@ -141,9 +141,6 @@ time_until_election = election_date - current_time
 days = time_until_election.days
 hours = time_until_election.seconds // 3600
 minutes = (time_until_election.seconds % 3600) // 60
-
-# Add navigation hint to sidebar
-st.sidebar.info("ℹ️ Visit the 'How to Vote' page for information about voting locations, registration, and becoming a poll worker.")
 
 # Add title and attribution to sidebar
 st.sidebar.markdown("""

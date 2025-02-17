@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import pytz
-import base64
+from streamlit_pdf_viewer import pdf_viewer
 
 # Page Configuration
 st.set_page_config(
@@ -10,11 +10,10 @@ st.set_page_config(
     layout="wide",
 )
 
-# Function to display and create download link for PDF
-def get_pdf_download_link(pdf_path):
-    with open(pdf_path, "rb") as pdf_file:
-        base64_pdf = base64.b64encode(pdf_file.read()).decode('utf-8')
-    return f'<a href="data:application/pdf;base64,{base64_pdf}" download="sample-ballot-2025.pdf">Click here to download the Sample Ballot</a>'
+# Function to load PDF file
+def get_pdf_data():
+    with open("attached_assets/cha-sample-ballot-2025.pdf", "rb") as file:
+        return file.read()
 
 # Election countdown
 election_date = datetime(2025, 3, 4, tzinfo=pytz.timezone('America/New_York'))
@@ -25,7 +24,7 @@ days = time_until_election.days
 hours = time_until_election.seconds // 3600
 minutes = (time_until_election.seconds % 3600) // 60
 
-# Display election countdown 
+# Display countdown
 st.markdown(
     f"""
     <div style="background-color: #1B4E5D; color: white; padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 20px;">
@@ -41,74 +40,82 @@ st.markdown("### Important Information for Chattanooga Voters")
 # Sample Ballot Section
 with st.expander("📋 View Sample Ballot", expanded=False):
     st.markdown("### 2025 City Council Election Sample Ballot")
-    # Display PDF viewer
-    st.markdown("""
-        <iframe src="data:application/pdf;base64,{}" width="100%" height="800px" type="application/pdf">
-        </iframe>
-        """.format(base64.b64encode(open("attached_assets/cha-sample-ballot-2025.pdf", "rb").read()).decode('utf-8')), 
-        unsafe_allow_html=True
-    )
-    # Download button for the sample ballot
-    st.markdown(get_pdf_download_link("attached_assets/cha-sample-ballot-2025.pdf"), unsafe_allow_html=True)
 
+    # Add download button for the sample ballot
+    pdf_data = get_pdf_data()
+    st.download_button(
+        label="Download Sample Ballot",
+        data=pdf_data,
+        file_name="sample-ballot-2025.pdf",
+        mime="application/pdf",
+        type="primary"
+    )
+
+    # Display PDF using streamlit-pdf-viewer
+    pdf_viewer("attached_assets/cha-sample-ballot-2025.pdf", height=1000)
+    
+# Voter Registration Information
+with st.expander("Check Registration", expanded=False):
+    st.markdown("""
+    ### Verify Your Voter Registration
+
+    To check if you're registered to vote in the March 4th, 2025 election, visit the official Tennessee voter lookup tool:
+
+    [Click here to verify your registration ↗](https://tnmap.tn.gov/voterlookup/)
+
+    **Requirements:**
+    • Valid TN Photo ID
+    • Must be 18+ by election day
+    • Chattanooga resident
+
+    **Need to register or update your information?**  
+    Visit [GoVoteTN.gov](https://govotetn.gov)
+    """)
 col1, col2 = st.columns([3, 2])
 
 with col1:
-    # Early Voting Information
-    with st.expander("Early Voting Information", expanded=True):
-        st.markdown("**Early Voting Period:** February 12 – February 27, 2025")
-        st.markdown("*ALL LOCATIONS CLOSED MONDAY, FEBRUARY 17TH, FOR PRESIDENTS DAY*")
-        st.markdown("**Early Voting Locations:**")
-        st.markdown("""
-        1. **Election Commission**  
-           700 River Terminal Rd, Chattanooga, TN 37406  
-           *Monday - Friday: 8:00 am – 7:00 pm*  
-           *Saturday: 8:00 am – 4:00 pm*  
+    st.subheader("Important Dates")
+    st.markdown("""
+    - **Election Day:** March 4th, 2025
+    - **Early Voting:** February 12th - February 27th, 2025
+    - **Registration Deadline:** February 2nd, 2025
+    """)
 
-        2. **Hixson Community Center**  
-           5401 School Dr, Hixson, TN 37343  
-           *Monday - Friday: 10:00 am – 6:00 pm*  
-           *Saturday: 10:00 am – 4:00 pm*
+    st.subheader("Early Voting Locations")
+    st.markdown("""
+    - **Election Commission Office:**
+        - 700 River Terminal Road
+        - Monday - Friday, 8 AM - 6 PM
+        - Saturday, 9 AM - 4 PM
 
-        3. **Chris L. Ramsey Sr. Community Center**  
-           1010 N Moore Rd, Chattanooga, TN 37411  
-           *Monday - Friday: 10:00 am – 6:00 pm*  
-           *Saturday: 10:00 am – 4:00 pm*
-        """)
+    - **Brainerd Recreation Center:**
+        - 1010 N Moore Road
+        - Monday - Friday, 10 AM - 6 PM
+        - Saturday, 9 AM - 4 PM
 
-    # Voter Registration Information
-    with st.expander("Check Registration", expanded=True):
-        st.markdown("""
-        ### Verify Your Voter Registration
+    - **Hixson Community Center:**
+        - 5401 School Drive
+        - Monday - Friday, 10 AM - 6 PM
+        - Saturday, 9 AM - 4 PM
+    """)
 
-        To check if you're registered to vote in the March 4th, 2025 election, visit the official Tennessee voter lookup tool:
-
-        [Click here to verify your registration ↗](https://tnmap.tn.gov/voterlookup/)
-
-        **Requirements:**
-        • Valid TN Photo ID
-        • Must be 18+ by election day
-        • Chattanooga resident
-
-        **Need to register or update your information?**  
-        Visit [GoVoteTN.gov](https://govotetn.gov)
-        """)
 
 with col2:
-    # Need Help Section
-    with st.expander("❓ Need Help?", expanded=True):
-        st.markdown("""
-        **Election Commission:**
-        📞 (423) 493-5100
-        📧 vote@hamiltontn.gov
-        """)
+    st.subheader("What to Bring")
+    st.markdown("""
+    #### Valid Photo ID:
+    - Tennessee driver license
+    - US Passport
+    - Photo ID issued by Tennessee Department of Safety
+    - US Military photo ID
+    - Tennessee handgun carry permit with photo
+    """)
 
-    # Poll Worker Information
-    with st.expander("🤝 Become a Poll Worker", expanded=True):
-        st.markdown("""
-        Poll officials get a stipend of $135 - $175 per election.  
-        Sign up at [elect.hamiltontn.gov/pollworker](http://elect.hamiltontn.gov/pollworker)
-        """)
+    st.subheader("Need a Ride?")
+    st.markdown("""
+    Free rides to polling locations are available.
+    Call (423) 209-8683 for assistance.
+    """)
 
 # Add title and attribution to sidebar
 st.sidebar.markdown("""
