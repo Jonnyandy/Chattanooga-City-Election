@@ -4,9 +4,13 @@ port = 5000
 headless = true
 enableCORS = false
 enableWebsocketCompression = false
+enableXsrfProtection = false
+enableStaticServing = true
+baseUrlPath = "https://chattanooga.vote"
 
 [browser]
 gatherUsageStats = false
+serverAddress = "chattanooga.vote"
 
 [theme]
 primaryColor = "#00BCD4"
@@ -24,26 +28,6 @@ showErrorDetails = false
 [global]
 developmentMode = false
 
-[server.enableXsrfProtection]
-false = true
-
-[server.enableCORS]
-false = true
-
-# Social Media Preview Settings
-[browser.serverAddress]
-value = "chattanooga.vote"
-
-[server.baseUrlPath]
-value = "https://chattanooga.vote"
-
-[server.enableStaticServing]
-value = true
-
-[server.enableWebsocketCompression]
-value = true
-
-# Open Graph Meta Tags
 [server.customMetaTags]
 "og:title" = "Chattanooga City Council Elections 2025"
 "og:description" = "Find your district, learn about candidates, and get voting information for the 2025 Chattanooga City Council Elections."
