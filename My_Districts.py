@@ -39,6 +39,26 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Theme toggle
+theme = st.sidebar.selectbox('Theme', ['Light', 'Dark'], key='theme')
+if theme == 'Dark':
+    st.markdown("""
+        <style>
+        :root {
+            --secondary-background-color: #262730;
+            --primary-background-color: #0E1117;
+            --text-color: #FAFAFA;
+        }
+        .stApp {
+            background-color: var(--primary-background-color);
+            color: var(--text-color);
+        }
+        .stMarkdown, .stSelectbox, .stTextInput {
+            color: var(--text-color);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 # Set sidebar title for the district finder
 st.sidebar.title("Find Your District")
 
