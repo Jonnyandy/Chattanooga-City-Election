@@ -172,7 +172,7 @@ with col1:
             map_data = st_folium(m, width=None, height=MAP_HEIGHT, key=map_key)
 
             # Display district information below map
-            st.subheader("District Information")
+            
             st.markdown(f"### Your district is District {district_info['district_number']}")
 
             # Current Council Member
