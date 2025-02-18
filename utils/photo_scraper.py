@@ -75,7 +75,6 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
     """Get candidate photo path from various sources"""
     # Clean the candidate name for file matching
     clean_name = sanitize_filename(candidate_name)
-    st.write(f"Looking for photo for {candidate_name} (clean_name: {clean_name})")
 
     # List of directories to check
     photo_dir = create_photo_directory()
