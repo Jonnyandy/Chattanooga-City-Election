@@ -130,13 +130,24 @@ def create_base_district_map() -> folium.Map:
         .district-popup {
             min-width: 200px;
             max-width: 300px;
-            padding: 15px;
+            padding: 20px;
             font-family: Arial;
             font-size: 14px;
+            line-height: 1.5;
         }
         .district-popup h3 {
-            margin: 0 0 10px 0;
+            margin: 0 0 15px 0;
             color: #1976D2;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .district-popup hr {
+            margin: 12px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+        .district-popup div {
+            margin: 10px 0;
         }
         .district-polygon {
             transition: all 0.3s ease-in-out;
