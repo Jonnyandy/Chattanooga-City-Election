@@ -97,10 +97,6 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
             f"{candidate_name.replace(' ', '-')}.png",
             f"{candidate_name.lower().replace(' ', '-')}.jpg",
             f"{candidate_name.lower().replace(' ', '-')}.png",
-            f"{candidate_name.replace('é', 'e').replace(' ', '_')}.jpg",
-            f"{candidate_name.replace('é', 'e').replace(' ', '_')}.png",
-            "Evelina_Iren_Kertay.jpg",
-            # Additional variants for special characters
             f"{candidate_name.replace('é', 'e').replace('é', 'e').replace(' ', '_')}.jpg",
             f"{candidate_name.replace('é', 'e').replace('é', 'e').replace(' ', '_')}.png",
             "Evelina_Iren_Kertay.jpg"
