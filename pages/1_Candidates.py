@@ -27,22 +27,35 @@ def candidate_card(candidate: Candidate):
         <style>
         .candidate-card {
             background-color: white;
-            padding: 20px;
+            padding: 0;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .candidate-photo {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            margin: 0;
+            display: block;
+        }
+        .candidate-info {
+            padding: 20px;
+        }
+        .photo-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
         }
         .candidate-name {
             color: #1976D2;
             font-size: 24px;
             margin-bottom: 10px;
-        }
-        .candidate-photo {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            object-fit: cover;
         }
         .candidate-contact {
             margin-top: 10px;
@@ -51,16 +64,6 @@ def candidate_card(candidate: Candidate):
             margin-right: 10px;
             text-decoration: none;
             color: #666;
-        }
-        .photo-placeholder {
-            width: 100%;
-            height: 200px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-            margin-bottom: 15px;
         }
         </style>
         """, unsafe_allow_html=True)
