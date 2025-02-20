@@ -90,9 +90,15 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
     if candidate_photos_dir.exists():
         possible_names = [
             f"{clean_name}.jpg",
+            f"{clean_name}.png",
             f"{clean_name.lower()}.jpg",
+            f"{clean_name.lower()}.png",
             f"{candidate_name.replace(' ', '-')}.jpg",
-            f"{candidate_name.lower().replace(' ', '-')}.jpg"
+            f"{candidate_name.replace(' ', '-')}.png",
+            f"{candidate_name.lower().replace(' ', '-')}.jpg",
+            f"{candidate_name.lower().replace(' ', '-')}.png",
+            f"{candidate_name.replace('é', 'e').replace(' ', '_')}.jpg",
+            f"{candidate_name.replace('é', 'e').replace(' ', '_')}.png"
         ]
 
         for name in possible_names:
