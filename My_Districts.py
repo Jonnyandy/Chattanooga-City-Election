@@ -7,22 +7,43 @@ from utils.mapping import create_district_map, create_base_district_map
 from pathlib import Path
 import re
 import pytz
+from streamlit_modal import Modal
 
-# Page configuration remains unchanged
+# Page configuration remains unchanged through line 154
+
+# Function to create video modal
+def show_campaign_video(video_id, aspect_ratio="16:9"):
+    if aspect_ratio == "9:16":
+        width = 315  # Standard width for vertical video
+        height = 560  # Height for 9:16 aspect ratio
+    else:
+        width = 560  # Standard width for horizontal video
+        height = 315  # Height for 16:9 aspect ratio
+
+    return f"""
+    <iframe
+        width="{width}"
+        height="{height}"
+        src="https://www.youtube.com/embed/{video_id}"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+    </iframe>
+    """
+
 st.set_page_config(
     page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide",
-    
+
 )
 
-# CSS remains unchanged through line 123
 st.markdown("""
     <style>
         section[data-testid="stSidebar"] > div:first-child {
             padding-top: 0;
         }
-       
+
         div[data-testid="stSidebarUserContent"] {
             padding-top: 0;            
         } 
@@ -61,12 +82,12 @@ st.sidebar.markdown("""
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>
-    
+
 """, unsafe_allow_html=True)
 st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320)
 # Add attribution to sidebar
 st.sidebar.markdown("""
-    
+
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
     <p style='font-style: italic; color: #666;'>
         Brought to you by<br>
@@ -172,7 +193,8 @@ with col1:
             map_data = st_folium(m, width=None, height=MAP_HEIGHT, key=map_key)
 
             # Display district information below map
-            
+
+
             st.markdown(f"### Your district is District {district_info['district_number']}")
 
             # Current Council Member
@@ -194,10 +216,28 @@ with col1:
                         website = candidate.split("(")[1].split(")")[0]
                         st.markdown(f'<div class="candidate-name">{name}</div>', unsafe_allow_html=True)
                         st.markdown(f'[Campaign Website]({website})', unsafe_allow_html=True)
+
+                        # Add video button - for testing we'll use a sample video ID
+                        # You'll need to replace this with actual video IDs for each candidate
+                        if st.button(f"Watch Campaign Video", key=f"video_btn_{name}"):
+                            modal = Modal(
+                                title="Campaign Video",
+                                key=f"modal_{name}",
+                                padding=20,
+                                max_width=600
+                            )
+
+                            with modal.container():
+                                # Replace 'SAMPLE_VIDEO_ID' with actual YouTube video ID for each candidate
+                                # You can store these IDs in your district_info data
+                                st.markdown(
+                                    show_campaign_video('SAMPLE_VIDEO_ID', "9:16"),
+                                    unsafe_allow_html=True
+                                )
                     else:
                         st.markdown(f'<div class="candidate-name">{candidate}</div>', unsafe_allow_html=True)
 
-                    # Safe image loading with error handling
+                    # Safe image loading with error handling - remains unchanged
                     try:
                         photo_path = Path(f"assets/candidate_photos/{candidate.split('[')[0].strip()}.jpg")
                         if photo_path.exists():
