@@ -122,8 +122,9 @@ def candidate_card(candidate: Candidate):
                                     padding: 15px;
                                     border-radius: 10px;
                                     box-shadow: 0 0 10px rgba(0,0,0,0.5);
-                                    width: 30%;
-                                    max-width: 400px;
+                                    width: 35vh;
+                                    max-width: none;
+                                    height: 90vh;
                                 }
                                 .close-button {
                                     position: absolute;
@@ -147,7 +148,7 @@ def candidate_card(candidate: Candidate):
                             st.markdown(f"""
                                 <div class="video-container">
                                     <button class="close-button" key=f"close_video_{candidate.name}">×</button>
-                                    <div style="position: relative; width: 100%; padding-bottom: 177.78%; height: 0;">
+                                    <div style="position: relative; width: 100%; height: calc(100% - 40px);">
                                         <iframe 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
                                             src="{video_url}" 
