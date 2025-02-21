@@ -36,10 +36,14 @@ def candidate_card(candidate: Candidate):
         }
         .candidate-photo {
             width: 100%;
-            max-height: 400px;
+            max-height: 450px;
             object-fit: cover;
             margin: 0;
             display: block;
+        }
+        img {
+            max-height: 450px;
+            object-fit: cover;
         }
         .candidate-info {
             padding: 20px;
@@ -76,7 +80,7 @@ def candidate_card(candidate: Candidate):
             photo_path = get_candidate_photo(candidate.name, candidate.district)
             if photo_path and Path(photo_path).exists():
                 try:
-                    st.image(photo_path, use_container_width=True, output_format="JPEG", caption=candidate.name, max_height=450)
+                    st.image(photo_path, use_container_width=True, output_format="JPEG", caption=candidate.name)
                 except Exception as e:
                     st.error(f"Error displaying photo for {candidate.name}")
                     st.markdown(
