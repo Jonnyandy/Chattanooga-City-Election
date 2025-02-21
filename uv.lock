@@ -1715,7 +1715,7 @@ requires-dist = [
     { name = "pytz", specifier = ">=2024.2" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "shapely", specifier = ">=2.0.6" },
-    { name = "streamlit", specifier = ">=1.41.1" },
+    { name = "streamlit", specifier = ">=1.31.0" },
     { name = "streamlit-extras", specifier = ">=0.4.0" },
     { name = "streamlit-folium", specifier = ">=0.24.0" },
     { name = "streamlit-pdf-viewer", specifier = ">=0.0.21" },
