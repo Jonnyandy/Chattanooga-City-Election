@@ -161,7 +161,10 @@ def candidate_card(candidate: Candidate):
                             st.markdown("""
                                 <script>
                                     document.querySelector('.close-button').addEventListener('click', function() {
-                                        window.location.reload();
+                                        const videoContainer = document.querySelector('.video-container');
+                                        if (videoContainer) {
+                                            videoContainer.parentElement.remove();
+                                        }
                                     });
                                 </script>
                             """, unsafe_allow_html=True)
