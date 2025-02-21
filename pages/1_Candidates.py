@@ -76,7 +76,7 @@ def candidate_card(candidate: Candidate):
             photo_path = get_candidate_photo(candidate.name, candidate.district)
             if photo_path and Path(photo_path).exists():
                 try:
-                    st.image(photo_path, use_column_width=True, output_format="JPEG", caption=candidate.name)
+                    st.image(photo_path, use_container_width=True, output_format="JPEG", caption=candidate.name)
                 except Exception as e:
                     st.error(f"Error displaying photo for {candidate.name}")
                     st.markdown(
@@ -107,7 +107,7 @@ def candidate_card(candidate: Candidate):
                 if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
                     video_url = candidate.contact.website.replace('shorts/', 'embed/')
                     if st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_{candidate.name}"):
-                        with st.dialog("Video", on_dismiss=lambda: None):
+                        with st.dialog("Video"):
                             st.markdown(f"""
                                 <div style="position: relative; width: 100%; padding-bottom: 177.77%; height: 0;">
                                     <iframe 
@@ -118,7 +118,7 @@ def candidate_card(candidate: Candidate):
                                     </iframe>
                                 </div>
                             """, unsafe_allow_html=True)
-                            if st.button("Close", key=f"close_video_{candidate.name}"):
+                            if st.button("Close Dialog", key=f"close_video_{candidate.name}"):
                                 st.rerun()
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
@@ -171,7 +171,7 @@ st.sidebar.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320)
+st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320, use_container_width=False)
 
 # Add attribution to sidebar
 st.sidebar.markdown("""
