@@ -112,66 +112,7 @@ def candidate_card(candidate: Candidate):
                     video_url = candidate.contact.website.replace('shorts/', 'embed/')
                     show_video = st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}")
                     if show_video:
-                        video_container = st.container()
-                        with video_container:
-                            st.markdown("""
-                                <style>
-                                .video-container { 
-                                    position: fixed;
-                                    top: 50%;
-                                    left: 50%;
-                                    transform: translate(-50%, -50%);
-                                    z-index: 1000;
-                                    background: white;
-                                    padding: 20px;
-                                    border-radius: 10px;
-                                    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-                                    width: 80%;
-                                    max-width: 600px;
-                                    heigh: 450px;
-                                }
-                                .close-button {
-                                    position: absolute;
-                                    top: 10px;
-                                    right: 10px;
-                                    cursor: pointer;
-                                    background: #ff4444;
-                                    color: white;
-                                    border: none;
-                                    border-radius: 50%;
-                                    width: 30px;
-                                    height: 30px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    font-weight: bold;
-                                    z-index: 1001;
-                                }
-                                </style>
-                            """, unsafe_allow_html=True)
-                            st.markdown(f"""
-                                <div class="video-container">
-                                    <button class="close-button" key=f"close_video_{candidate.name}">×</button>
-                                    <div style="position: relative; width: 100%; padding-bottom: 75%; height: 0;">
-                                        <iframe 
-                                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                            src="{video_url}" 
-                                            frameborder="0" 
-                                            allowfullscreen>
-                                        </iframe>
-                                    </div>
-                                </div>
-                            """, unsafe_allow_html=True)
-                            st.markdown("""
-                                <script>
-                                    document.querySelector('.close-button').addEventListener('click', function() {
-                                        const videoContainer = document.querySelector('.video-container');
-                                        if (videoContainer) {
-                                            videoContainer.parentElement.remove();
-                                        }
-                                    });
-                                </script>
-                            """, unsafe_allow_html=True)
+                        st.video(video_url)
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
