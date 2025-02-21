@@ -105,6 +105,7 @@ def candidate_card(candidate: Candidate):
 
             if candidate.contact.website:
                 if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
+                    video_url = candidate.contact.website.replace('shorts/', 'embed/')
                     st.markdown(f"""
                         <div id="videoModal" class="modal-overlay">
                             <div class="modal-content">
@@ -112,7 +113,7 @@ def candidate_card(candidate: Candidate):
                                 <iframe 
                                     width="350" 
                                     height="622" 
-                                    src="{candidate.contact.website.replace('shorts/', 'embed/')}" 
+                                    src="{video_url}" 
                                     frameborder="0" 
                                     allowfullscreen>
                                 </iframe>
@@ -122,19 +123,19 @@ def candidate_card(candidate: Candidate):
                             const modal = document.getElementById("videoModal");
                             const closeBtn = document.getElementsByClassName("modal-close")[0];
                             
-                            function openModal() {
+                            function openModal() {{
                                 modal.style.display = "flex";
-                            }
+                            }}
                             
-                            closeBtn.onclick = function() {
+                            closeBtn.onclick = function() {{
                                 modal.style.display = "none";
-                            }
+                            }}
                             
-                            window.onclick = function(event) {
-                                if (event.target == modal) {
+                            window.onclick = function(event) {{
+                                if (event.target == modal) {{
                                     modal.style.display = "none";
-                                }
-                            }
+                                }}
+                            }}
                         </script>
                     """, unsafe_allow_html=True)
                     if st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_{candidate.name}", on_click=None):
