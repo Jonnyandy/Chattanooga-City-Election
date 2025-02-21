@@ -122,14 +122,14 @@ def candidate_card(candidate: Candidate):
                                     padding: 15px;
                                     border-radius: 10px;
                                     box-shadow: 0 0 10px rgba(0,0,0,0.5);
-                                    width: 35vh;
+                                    width: 40vh;
                                     max-width: none;
-                                    height: 90vh;
+                                    height: 85vh;
                                 }
                                 .close-button {
-                                    position: absolute;
-                                    top: 10px;
-                                    right: 10px;
+                                    position: fixed;
+                                    top: 5%;
+                                    right: calc(50% - 20vh - 20px);
                                     cursor: pointer;
                                     background: #ff4444;
                                     color: white;
@@ -158,7 +158,9 @@ def candidate_card(candidate: Candidate):
                                     </div>
                                 </div>
                             """, unsafe_allow_html=True)
-                            if st.button("×", key=f"close_modal_{candidate.name}", help="Close video"):
+                            close_clicked = st.button("×", key=f"close_modal_{candidate.name}", help="Close video")
+                            if close_clicked:
+                                st.session_state[f"video_btn_{candidate.name}"] = False
                                 st.rerun()
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
