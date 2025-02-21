@@ -146,6 +146,7 @@ def candidate_card(candidate: Candidate):
                             """, unsafe_allow_html=True)
                             st.markdown(f"""
                                 <div class="video-container">
+                                    <button class="close-button" key=f"close_video_{candidate.name}">×</button>
                                     <div style="position: relative; width: 100%; padding-bottom: 75%; height: 0;">
                                         <iframe 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
@@ -156,8 +157,13 @@ def candidate_card(candidate: Candidate):
                                     </div>
                                 </div>
                             """, unsafe_allow_html=True)
-                            if st.button("×", key=f"close_video_{candidate.name}", help="Close video"):
-                                st.rerun()
+                            st.markdown("""
+                                <script>
+                                    document.querySelector('.close-button').addEventListener('click', function() {
+                                        window.location.reload();
+                                    });
+                                </script>
+                            """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
