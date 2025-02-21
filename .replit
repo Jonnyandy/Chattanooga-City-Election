@@ -9,7 +9,7 @@ deploymentTarget = "autoscale"
 run = ["sh", "-c", "streamlit run --server.address 0.0.0.0 --server.headless true --server.enableCORS=false --server.enableWebsocketCompression=false My_Districts.py"]
 
 [workflows]
-runButton = "Project"
+runButton = "Streamlit"
 
 [[workflows.workflow]]
 name = "Project"
@@ -52,6 +52,14 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "streamlit run My_Districts.py --server.port 5000 --server.address 0.0.0.0"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Streamlit"
+author = 37050518
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run My_Districts.py --server.address 0.0.0.0"
 
 [[ports]]
 localPort = 5000
