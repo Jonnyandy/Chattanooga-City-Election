@@ -88,19 +88,24 @@ def get_candidate_photo(candidate_name: str, district: str) -> Optional[str]:
 
     # Check in assets/candidate_photos directory
     if candidate_photos_dir.exists():
-        possible_names = [
-            f"{clean_name}.jpg",
-            f"{clean_name}.png",
-            f"{clean_name.lower()}.jpg",
-            f"{clean_name.lower()}.png",
-            f"{candidate_name.replace(' ', '-')}.jpg",
-            f"{candidate_name.replace(' ', '-')}.png",
-            f"{candidate_name.lower().replace(' ', '-')}.jpg",
-            f"{candidate_name.lower().replace(' ', '-')}.png",
-            f"{candidate_name.replace('é', 'e').replace('é', 'e').replace(' ', '_')}.jpg",
-            f"{candidate_name.replace('é', 'e').replace('é', 'e').replace(' ', '_')}.png",
-            "Evelina_Iren_Kertay.jpg"
-        ]
+        # Create specific name variations based on the candidate name
+        possible_names = []
+        
+        # Handle special case for Evelina
+        if "Evelina Irén Kertay" in candidate_name:
+            possible_names.extend([
+                "Evelina_Iren_Kertay.jpg",
+                "Evelina_Irén_Kertay.jpg"
+            ])
+        else:
+            possible_names.extend([
+                f"{clean_name}.jpg",
+                f"{clean_name}.png",
+                f"{clean_name.lower()}.jpg",
+                f"{clean_name.lower()}.png",
+                f"{candidate_name.replace(' ', '-')}.jpg",
+                f"{candidate_name.replace(' ', '-')}.png"
+            ])
 
         for name in possible_names:
             photo_path = candidate_photos_dir / name
