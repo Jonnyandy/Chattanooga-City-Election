@@ -106,16 +106,37 @@ def candidate_card(candidate: Candidate):
             if candidate.contact.website:
                 if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
                     video_url = candidate.contact.website.replace('shorts/', 'embed/')
-                    if st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}"):
-                        with st.dialog("Video", on_dismiss=lambda: None):
+                    show_video = st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}")
+                    if show_video:
+                        video_container = st.container()
+                        with video_container:
+                            st.markdown("""
+                                <style>
+                                .video-container { 
+                                    position: fixed;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    z-index: 1000;
+                                    background: white;
+                                    padding: 20px;
+                                    border-radius: 10px;
+                                    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+                                    width: 80%;
+                                    max-width: 800px;
+                                }
+                                </style>
+                            """, unsafe_allow_html=True)
                             st.markdown(f"""
-                                <div style="position: relative; width: 100%; padding-bottom: 177.77%; height: 0;">
-                                    <iframe 
-                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                        src="{video_url}" 
-                                        frameborder="0" 
-                                        allowfullscreen>
-                                    </iframe>
+                                <div class="video-container">
+                                    <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0;">
+                                        <iframe 
+                                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                            src="{video_url}" 
+                                            frameborder="0" 
+                                            allowfullscreen>
+                                        </iframe>
+                                    </div>
                                 </div>
                             """, unsafe_allow_html=True)
                             if st.button("Close", key=f"close_video_{candidate.name}"):
