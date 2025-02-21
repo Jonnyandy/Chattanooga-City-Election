@@ -122,7 +122,7 @@ def candidate_card(candidate: Candidate):
                                 left: 0;
                                 width: 100%;
                                 height: 100%;
-                                background-color: rgba(0, 0, 0, 0.5);
+                                background-color: rgba(0, 0, 0, 0.7);
                                 z-index: 999;
                             }
                             .modal-container {
@@ -135,32 +135,60 @@ def candidate_card(candidate: Candidate):
                                 padding: 20px;
                                 border-radius: 10px;
                                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-                                width: 80%;
-                                max-width: 600px;
+                                width: 90%;
+                                max-width: 800px;
+                            }
+                            .video-container {
+                                position: relative;
+                                width: 100%;
+                                padding-bottom: 56.25%;
+                                margin-bottom: 15px;
+                            }
+                            .video-container iframe {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                border: none;
+                            }
+                            .close-button {
+                                position: absolute;
+                                top: 10px;
+                                right: 10px;
+                                background: #ff4b4b;
+                                color: white;
+                                border: none;
+                                border-radius: 50%;
+                                width: 30px;
+                                height: 30px;
+                                font-size: 18px;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                z-index: 1001;
+                            }
+                            .close-button:hover {
+                                background: #ff3333;
                             }
                             </style>
                             <div class="overlay"></div>
                             <div class="modal-container">
-                        """, unsafe_allow_html=True)
-
-                        st.markdown(f"""
-                            <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0;">
-                                <iframe 
-                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                    src="{video_url}" 
-                                    frameborder="0" 
-                                    allowfullscreen>
-                                </iframe>
+                                <button class="close-button" onclick="javascript:document.querySelector('[data-testid*=\\'close_video_\\']').click();">×</button>
+                                <div class="video-container">
+                                    <iframe 
+                                        src="{video_url}" 
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
                             </div>
                         """, unsafe_allow_html=True)
 
-                        col1, col2, col3 = st.columns([1, 1, 1])
-                        with col2:
-                            if st.button("Close Video", key=f"close_video_{candidate.name}"):
-                                st.session_state[f"show_video_{candidate.name}"] = False
-                                st.rerun()
-
-                        st.markdown("</div>", unsafe_allow_html=True)
+                        # Hidden button that will be clicked by the JavaScript close button
+                        if st.button("", key=f"close_video_{candidate.name}", type="secondary"):
+                            st.session_state[f"show_video_{candidate.name}"] = False
+                            st.rerun()
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
