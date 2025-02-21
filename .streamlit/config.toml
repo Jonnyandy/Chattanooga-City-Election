@@ -6,7 +6,7 @@ headless = true
 enableCORS = false
 enableWebsocketCompression = false
 enableXsrfProtection = false
-enableStaticServing = true
+enableStaticServing = false
 
 [browser]
 gatherUsageStats = false
