@@ -259,7 +259,7 @@ CANDIDATES_2025 = {
             contact=CandidateContact(
                 email="letechiaellis@gmail.com",
                 phone="(423) 708-5546",
-                facebook="https://www.facebook.com/profile.php?id=61571573788960",
+                facebook="https://www.facebook.com/ministerletechia.hymes",
                 instagram="@letechiaellis"
             )
         ),
