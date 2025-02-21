@@ -20,4 +20,5 @@ dependencies = [
     "twilio>=9.4.4",
     "pytz>=2024.2",
     "streamlit-pdf-viewer>=0.0.21",
+    "streamlit-modal>=0.1.2",
 ]

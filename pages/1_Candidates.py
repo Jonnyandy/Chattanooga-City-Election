@@ -110,9 +110,21 @@ def candidate_card(candidate: Candidate):
             if candidate.contact.website:
                 if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
                     video_url = candidate.contact.website.replace('shorts/', 'embed/')
+                    from streamlit_modal import Modal
+                    modal = Modal(key=f"modal_{candidate.name}", title="Campaign Video")
                     show_video = st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}")
                     if show_video:
-                        st.video(video_url)
+                        with modal.container():
+                            st.markdown(f"""
+                                <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
+                                    <iframe 
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                        src="{video_url}" 
+                                        frameborder="0" 
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                            """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
