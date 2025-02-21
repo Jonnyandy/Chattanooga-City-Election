@@ -36,7 +36,7 @@ def candidate_card(candidate: Candidate):
         }
         .candidate-photo {
             width: 100%;
-            height: 300px;
+            max-height: 400px;
             object-fit: cover;
             margin: 0;
             display: block;
