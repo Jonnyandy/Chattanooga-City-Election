@@ -106,21 +106,61 @@ def candidate_card(candidate: Candidate):
             if candidate.contact.website:
                 if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
                     video_url = candidate.contact.website.replace('shorts/', 'embed/')
-                    show_video = st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}")
-                    if show_video:
-                        with st.dialog("Campaign Video"):
-                            st.markdown(f"""
-                                <div style="position: relative; width: 100%; padding-bottom: 75%; height: 0;">
-                                    <iframe 
-                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                        src="{video_url}" 
-                                        frameborder="0" 
-                                        allowfullscreen>
-                                    </iframe>
-                                </div>
-                            """, unsafe_allow_html=True)
-                            if st.button("Close", key=f"close_video_{candidate.name}"):
+
+                    if f"show_video_{candidate.name}" not in st.session_state:
+                        st.session_state[f"show_video_{candidate.name}"] = False
+
+                    if st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}"):
+                        st.session_state[f"show_video_{candidate.name}"] = True
+
+                    if st.session_state[f"show_video_{candidate.name}"]:
+                        st.markdown("""
+                            <style>
+                            .overlay {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgba(0, 0, 0, 0.5);
+                                z-index: 999;
+                            }
+                            .modal-container {
+                                position: fixed;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                z-index: 1000;
+                                background-color: white;
+                                padding: 20px;
+                                border-radius: 10px;
+                                box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+                                width: 80%;
+                                max-width: 600px;
+                            }
+                            </style>
+                            <div class="overlay"></div>
+                            <div class="modal-container">
+                        """, unsafe_allow_html=True)
+
+                        st.markdown(f"""
+                            <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0;">
+                                <iframe 
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                    src="{video_url}" 
+                                    frameborder="0" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        """, unsafe_allow_html=True)
+
+                        col1, col2, col3 = st.columns([1, 1, 1])
+                        with col2:
+                            if st.button("Close Video", key=f"close_video_{candidate.name}"):
+                                st.session_state[f"show_video_{candidate.name}"] = False
                                 st.rerun()
+
+                        st.markdown("</div>", unsafe_allow_html=True)
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
