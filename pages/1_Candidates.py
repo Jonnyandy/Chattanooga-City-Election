@@ -123,7 +123,8 @@ def candidate_card(candidate: Candidate):
                                     border-radius: 10px;
                                     box-shadow: 0 0 10px rgba(0,0,0,0.5);
                                     width: 80%;
-                                    max-width: 800px;
+                                    max-width: 600px;
+                                    heigh: 450px;
                                 }
                                 .close-button {
                                     position: absolute;
