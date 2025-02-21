@@ -122,9 +122,8 @@ def candidate_card(candidate: Candidate):
                                     padding: 15px;
                                     border-radius: 10px;
                                     box-shadow: 0 0 10px rgba(0,0,0,0.5);
-                                    width: 80%;
-                                    max-width: 600px;
-                                    heigth: 450px;
+                                    width: 30%;
+                                    max-width: 400px;
                                 }
                                 .close-button {
                                     position: absolute;
@@ -148,7 +147,7 @@ def candidate_card(candidate: Candidate):
                             st.markdown(f"""
                                 <div class="video-container">
                                     <button class="close-button" key=f"close_video_{candidate.name}">×</button>
-                                    <div style="position: relative; width: 100%; padding-bottom: 75%; height: 0;">
+                                    <div style="position: relative; width: 100%; padding-bottom: 177.78%; height: 0;">
                                         <iframe 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
                                             src="{video_url}" 
@@ -158,13 +157,8 @@ def candidate_card(candidate: Candidate):
                                     </div>
                                 </div>
                             """, unsafe_allow_html=True)
-                            st.markdown("""
-                                <script>
-                                    document.querySelector('.close-button').addEventListener('click', function() {
-                                        window.location.reload();
-                                    });
-                                </script>
-                            """, unsafe_allow_html=True)
+                            if st.button("×", key=f"close_modal_{candidate.name}", help="Close video"):
+                                st.rerun()
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
