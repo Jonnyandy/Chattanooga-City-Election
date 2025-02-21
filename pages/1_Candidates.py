@@ -106,89 +106,68 @@ def candidate_card(candidate: Candidate):
             if candidate.contact.website:
                 if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
                     video_url = candidate.contact.website.replace('shorts/', 'embed/')
-
-                    if f"show_video_{candidate.name}" not in st.session_state:
-                        st.session_state[f"show_video_{candidate.name}"] = False
-
-                    if st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}"):
-                        st.session_state[f"show_video_{candidate.name}"] = True
-
-                    if st.session_state[f"show_video_{candidate.name}"]:
-                        st.markdown("""
-                            <style>
-                            .overlay {
-                                position: fixed;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                height: 100%;
-                                background-color: rgba(0, 0, 0, 0.7);
-                                z-index: 999;
-                            }
-                            .modal-container {
-                                position: fixed;
-                                top: 50%;
-                                left: 50%;
-                                transform: translate(-50%, -50%);
-                                z-index: 1000;
-                                background-color: white;
-                                padding: 20px;
-                                border-radius: 10px;
-                                box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-                                width: 90%;
-                                max-width: 800px;
-                            }
-                            .video-container {
-                                position: relative;
-                                width: 100%;
-                                padding-bottom: 56.25%;
-                                margin-bottom: 15px;
-                            }
-                            .video-container iframe {
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                height: 100%;
-                                border: none;
-                            }
-                            .close-button {
-                                position: absolute;
-                                top: 10px;
-                                right: 10px;
-                                background: #ff4b4b;
-                                color: white;
-                                border: none;
-                                border-radius: 50%;
-                                width: 30px;
-                                height: 30px;
-                                font-size: 18px;
-                                cursor: pointer;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                z-index: 1001;
-                            }
-                            .close-button:hover {
-                                background: #ff3333;
-                            }
-                            </style>
-                            <div class="overlay"></div>
-                            <div class="modal-container">
-                                <button class="close-button" onclick="document.querySelector('[data-testid*=\'close_video\']').click()">×</button>
+                    show_video = st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_btn_{candidate.name}")
+                    if show_video:
+                        video_container = st.container()
+                        with video_container:
+                            st.markdown("""
+                                <style>
+                                .video-container { 
+                                    position: fixed;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    z-index: 1000;
+                                    background: white;
+                                    padding: 20px;
+                                    border-radius: 10px;
+                                    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+                                    width: 80%;
+                                    max-width: 600px;
+                                    heigh: 450px;
+                                }
+                                .close-button {
+                                    position: absolute;
+                                    top: 10px;
+                                    right: 10px;
+                                    cursor: pointer;
+                                    background: #ff4444;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 50%;
+                                    width: 30px;
+                                    height: 30px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-weight: bold;
+                                    z-index: 1001;
+                                }
+                                </style>
+                            """, unsafe_allow_html=True)
+                            st.markdown(f"""
                                 <div class="video-container">
-                                    <iframe 
-                                        src="{video_url}" 
-                                        allowfullscreen>
-                                    </iframe>
+                                    <button class="close-button" key=f"close_video_{candidate.name}">×</button>
+                                    <div style="position: relative; width: 100%; padding-bottom: 75%; height: 0;">
+                                        <iframe 
+                                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                            src="{video_url}" 
+                                            frameborder="0" 
+                                            allowfullscreen>
+                                        </iframe>
+                                    </div>
                                 </div>
-                            </div>
-                        """, unsafe_allow_html=True)
-
-                        # Hidden button that will be clicked by the JavaScript close button
-                        if st.button("", key=f"close_video_{candidate.name}", type="secondary"):
-                            st.session_state[f"show_video_{candidate.name}"] = False
-                            st.rerun()
+                            """, unsafe_allow_html=True)
+                            st.markdown("""
+                                <script>
+                                    document.querySelector('.close-button').addEventListener('click', function() {
+                                        const videoContainer = document.querySelector('.video-container');
+                                        if (videoContainer) {
+                                            videoContainer.parentElement.remove();
+                                        }
+                                    });
+                                </script>
+                            """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
