@@ -16,7 +16,8 @@ def social_media_icon(platform: str) -> str:
         'instagram': '<img src="https://raw.githubusercontent.com/gauravghongde/social-icons/master/SVG/Color/Instagram.svg" style="height: 32px; width: 32px; vertical-align: middle; margin: 0 5px;">',
         'linkedin': '<img src="https://raw.githubusercontent.com/gauravghongde/social-icons/master/SVG/Color/LinkedIN.svg" style="height: 32px; width: 32px; vertical-align: middle; margin: 0 5px;">',
         'twitter': '<img src="https://raw.githubusercontent.com/gauravghongde/social-icons/master/SVG/Color/Twitter.svg" style="height: 32px; width: 32px; vertical-align: middle; margin: 0 5px;">',
-        'website': '🌐'
+        'website': '🌐',
+        'youtube': '📺'
     }
     return icons.get(platform, '🔗')
 
@@ -103,7 +104,11 @@ def candidate_card(candidate: Candidate):
             st.markdown('<div class="candidate-contact">', unsafe_allow_html=True)
 
             if candidate.contact.website:
-                st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
+                if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
+                    if st.button(f"{social_media_icon('youtube')} Watch Video", key=f"video_{candidate.name}"):
+                        st.video(candidate.contact.website)
+                else:
+                    st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
             if candidate.contact.email:
                 st.markdown(f"{social_media_icon('email')} {candidate.contact.email}")

@@ -229,7 +229,8 @@ CANDIDATES_2025 = {
                 facebook="https://www.facebook.com/p/Doll-Sandridge-For-District-8-61569480122309/",
                 phone="423 771 1072",
                 email="Dollfordistrict8@gmail.com",
-                instagram="https://www.instagram.com/dollfordistrict8"
+                instagram="https://www.instagram.com/dollfordistrict8",
+                website="https://www.youtube.com/shorts/tJdFzbBDlYo"
             )
         ),
         Candidate(
