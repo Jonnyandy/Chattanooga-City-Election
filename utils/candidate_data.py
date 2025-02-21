@@ -260,7 +260,7 @@ CANDIDATES_2025 = {
                 email="letechiaellis@gmail.com",
                 phone="(423) 708-5546",
                 facebook="https://www.facebook.com/ministerletechia.hymes",
-                instagram="@letechiaellis"
+                instagram="https://instagram.com/letechiaellis"
             )
         ),
         Candidate(
