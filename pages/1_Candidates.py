@@ -175,7 +175,7 @@ def candidate_card(candidate: Candidate):
                             </style>
                             <div class="overlay"></div>
                             <div class="modal-container">
-                                <button class="close-button" onclick="javascript:document.querySelector('[data-testid*=\\'close_video_\\']').click();">×</button>
+                                <button class="close-button" onclick="document.querySelector('[data-testid*=\'close_video\']').click()">×</button>
                                 <div class="video-container">
                                     <iframe 
                                         src="{video_url}" 
