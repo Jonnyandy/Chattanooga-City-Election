@@ -122,8 +122,8 @@ def candidate_card(candidate: Candidate):
                                     padding: 20px;
                                     border-radius: 10px;
                                     box-shadow: 0 0 10px rgba(0,0,0,0.5);
-                                    width: 80%;
-                                    max-width: 800px;
+                                    width: 60%;
+                                    max-width: 600px;
                                 }
                                 .close-button {
                                     position: absolute;
