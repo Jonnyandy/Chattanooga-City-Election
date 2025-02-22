@@ -80,7 +80,7 @@ def candidate_card(candidate: Candidate):
             photo_path = get_candidate_photo(candidate.name, candidate.district)
             if photo_path and Path(photo_path).exists():
                 try:
-                    st.image(photo_path, use_container_width=True, output_format="JPEG", caption=candidate.name)
+                    st.image(photo_path, use_container_width=True, output_format="JPEG")
                 except Exception as e:
                     st.error(f"Error displaying photo for {candidate.name}")
                     st.markdown(
