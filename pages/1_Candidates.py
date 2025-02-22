@@ -108,21 +108,20 @@ def candidate_card(candidate: Candidate):
             st.markdown('<div class="candidate-contact">', unsafe_allow_html=True)
 
             if candidate.contact.website:
-                if "youtube.com" in candidate.contact.website and candidate.name == "Doll Sandridge":
-                    video_url = candidate.contact.website.replace('shorts/', 'embed/')
-                    video_url = candidate.contact.website.replace('shorts/', 'embed/')
-                    st.markdown(f"""
-                        <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
-                            <iframe 
-                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                src="{video_url}" 
-                                frameborder="0" 
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                    """, unsafe_allow_html=True)
-                else:
-                    st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
+                if "youtube.com" in candidate.contact.website:
+                    with st.expander("Watch Personal Message"):
+                        video_url = candidate.contact.website.replace('shorts/', 'embed/')
+                        st.markdown(f"""
+                            <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
+                                <iframe 
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                    src="{video_url}" 
+                                    frameborder="0" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        """, unsafe_allow_html=True)
+                st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
             if candidate.contact.email:
                 st.markdown(f"{social_media_icon('email')} {candidate.contact.email}")
