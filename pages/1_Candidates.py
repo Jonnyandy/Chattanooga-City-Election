@@ -231,34 +231,38 @@ for district in sorted(candidates_by_district.keys(), key=int):
     # Custom CSS for responsive columns
     st.markdown("""
         <style>
+        /* Ultra-wide screens (3 columns) */
         @media (min-width: 1440px) {
             .block-container {
                 max-width: 1400px;
                 padding-left: 5rem;
                 padding-right: 5rem;
             }
+            [data-testid="column"] {
+                width: calc(33.33% - 1rem) !important;
+                flex: 0 0 auto !important;
+            }
+        }
+        /* Laptop screens (2 columns) */
+        @media (min-width: 768px) and (max-width: 1439px) {
+            [data-testid="column"] {
+                width: calc(50% - 1rem) !important;
+                flex: 0 0 auto !important;
+            }
+        }
+        /* Mobile screens (1 column) */
+        @media (max-width: 767px) {
+            [data-testid="column"] {
+                width: 100% !important;
+                flex: 0 0 auto !important;
+            }
         }
         </style>
     """, unsafe_allow_html=True)
     
     # Create columns based on screen width
-    use_wide_layout = st.checkbox('Use 3-column layout', value=True, key=f'layout_toggle_{district}')
-    if use_wide_layout:
-        col1, col2, col3 = st.columns(3)
-        district_candidates = candidates_by_district[district]
-        for i, candidate in enumerate(district_candidates):
-            if i % 3 == 0:
-                with col1:
-                    candidate_card(candidate)
-            elif i % 3 == 1:
-                with col2:
-                    candidate_card(candidate)
-            else:
-                with col3:
-                    candidate_card(candidate)
-    else:
-        col1, col2 = st.columns(2)
-        district_candidates = candidates_by_district[district]
-        for i, candidate in enumerate(district_candidates):
-            with col1 if i % 2 == 0 else col2:
-                candidate_card(candidate)
+    district_candidates = candidates_by_district[district]
+    cols = st.columns(3)  # Always create 3 columns, CSS will handle the responsive layout
+    for i, candidate in enumerate(district_candidates):
+        with cols[i % 3]:
+            candidate_card(candidate)
