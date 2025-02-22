@@ -78,7 +78,8 @@ CANDIDATES_2025 = {
                 email="jenny@votejennyhill.org",
                 phone="(423) 643-7187",
                 website="https://www.votejennyhill.org/",
-                instagram="https://www.instagram.com/votejennyhill/"
+                instagram="https://www.instagram.com/votejennyhill/",
+                video="https://www.youtube.com/shorts/V0kI47nHoI0"
             )
         )
     ],
@@ -88,7 +89,8 @@ CANDIDATES_2025 = {
             district="3",
             contact=CandidateContact(
                 email="team@votejeffdavis.com",
-                website="https://votejeffdavis.com/"
+                website="https://votejeffdavis.com/",
+                video="https://www.youtube.com/watch?v=Km0LAA8uVGM"
             )
         ),
         Candidate(
@@ -155,7 +157,8 @@ CANDIDATES_2025 = {
             district="6",
             contact=CandidateContact(
                 website="https://jenniberz.com/",
-                linkedin="https://www.linkedin.com/in/jenni-berz-933a819/"
+                linkedin="https://www.linkedin.com/in/jenni-berz-933a819/",
+                video="https://youtu.be/gqj2fBIJ5VA"
             )
         ),
         Candidate(
