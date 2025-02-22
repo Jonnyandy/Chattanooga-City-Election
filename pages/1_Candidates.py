@@ -1,124 +1,70 @@
 import streamlit as st
-from utils.candidate_data import get_all_candidates, get_district_candidates
-from streamlit_modal import Modal
+from utils.candidate_data import get_all_candidates, get_district_candidates, Candidate
+from utils.photo_scraper import get_candidate_photo
+from typing import Optional
 from pathlib import Path
+from PIL import Image
+from datetime import datetime, timezone
 
-# Page configuration
-st.set_page_config(
-    page_title="Candidates | Chattanooga.Vote",
-    page_icon="🗳️",
-    layout="wide"
-)
-
-# Add custom CSS for grid layout and styling
-st.markdown("""
-    <style>
-        .candidate-container {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background: white;
-        }
-        .candidate-photo {
-            max-width: 300px;
-            width: 100%;
-            margin: 0 auto;
-            display: block;
-        }
-        .candidate-info {
-            margin-top: 1rem;
-            text-align: center;
-        }
-        .contact-info {
-            margin: 1rem 0;
-            text-align: center;
-        }
-        .social-links {
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# Main content
-st.title("🗳️ City Council Candidates")
-st.markdown("### March 4th, 2025 Election")
-
-# District filter
-district_filter = st.selectbox(
-    "Filter by District",
-    ["All Districts"] + [str(i) for i in range(1, 10)],
-    index=0
-)
-
-try:
-    # Get candidates
-    if district_filter == "All Districts":
-        candidates = sorted(get_all_candidates(), key=lambda x: int(x.district))
+def show_campaign_video(video_id: str, aspect_ratio: str = "16:9") -> str:
+    """Return HTML for embedding a YouTube video with specified aspect ratio"""
+    if aspect_ratio == "9:16":
+        width = 315  # Standard width for vertical video
+        height = 560  # Height for 9:16 aspect ratio
     else:
-        candidates = get_district_candidates(district_filter)
+        width = 560  # Standard width for horizontal video
+        height = 315  # Height for 16:9 aspect ratio
 
-    # Calculate number of columns based on screen width
-    num_columns = 3
-    cols = st.columns(num_columns)
+    return f"""
+    <div style="display: flex; justify-content: center;">
+        <iframe
+            width="{width}"
+            height="{height}"
+            src="https://www.youtube.com/embed/{video_id}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+    """
 
-    # Display candidates in grid
-    for idx, candidate in enumerate(candidates):
-        with cols[idx % num_columns]:
-            st.markdown('<div class="candidate-container">', unsafe_allow_html=True)
+def candidate_card(candidate: Candidate):
+    """Display a candidate card with photo and contact information"""
+    with st.container():
+        col1, col2 = st.columns([3, 1])
 
-            # Candidate photo
-            if candidate.assets_photo:
-                st.image(candidate.assets_photo, use_column_width=True, clazz="candidate-photo")
+        with col1:
+            try:
+                photo_path = get_candidate_photo(candidate.name, candidate.district)
+                if photo_path and Path(photo_path).exists():
+                    st.image(photo_path, use_container_width=True)
+            except Exception as e:
+                st.error(f"Error displaying photo for {candidate.name}")
 
-            # Candidate name and district
+        with col2:
             st.markdown(f"### {candidate.name}")
-            st.markdown(f"**District {candidate.district}**")
 
-            # Campaign video button
-            modal = Modal(
-                title=f"Campaign Video - {candidate.name}",
-                key=f"modal_{candidate.district}_{candidate.name.replace(' ', '_')}"
-            )
+            # Video section using expander
+            with st.expander("📺 Watch Campaign Video"):
+                if candidate.name == "Doll Sandridge" and candidate.contact and candidate.contact.website:
+                    video_url = candidate.contact.website
+                    if "youtube.com/shorts/" in video_url:
+                        video_id = video_url.split("/")[-1]
+                        st.markdown(show_campaign_video(video_id, "9:16"), unsafe_allow_html=True)
+                    else:
+                        st.markdown(show_campaign_video('SAMPLE_VIDEO_ID'), unsafe_allow_html=True)
+                else:
+                    st.markdown(show_campaign_video('SAMPLE_VIDEO_ID'), unsafe_allow_html=True)
 
-            st.button(
-                "📺 Watch Campaign Video",
-                key=f"btn_{candidate.district}_{candidate.name.replace(' ', '_')}",
-                on_click=modal.open
-            )
-
-            if modal.is_open():
-                with modal.container():
-                    video_id = 'SAMPLE_VIDEO_ID'  # Default video ID
-                    if candidate.name == "Doll Sandridge" and candidate.contact and candidate.contact.website:
-                        if "youtube.com/shorts/" in candidate.contact.website:
-                            video_id = candidate.contact.website.split("/")[-1]
-
-                    st.markdown(
-                        f"""
-                        <iframe
-                            width="{315 if video_id != 'SAMPLE_VIDEO_ID' else 560}"
-                            height="{560 if video_id != 'SAMPLE_VIDEO_ID' else 315}"
-                            src="https://www.youtube.com/embed/{video_id}"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-                        </iframe>
-                        """,
-                        unsafe_allow_html=True
-                    )
 
             # Contact information
             if candidate.contact:
-                st.markdown('<div class="contact-info">', unsafe_allow_html=True)
                 if candidate.contact.website:
                     st.markdown(f"🌐 [Website]({candidate.contact.website})")
                 if candidate.contact.email:
                     st.markdown(f"📧 {candidate.contact.email}")
                 if candidate.contact.phone:
                     st.markdown(f"📞 {candidate.contact.phone}")
-                st.markdown('</div>', unsafe_allow_html=True)
 
                 # Social media links
                 social_links = []
@@ -132,11 +78,44 @@ try:
                     social_links.append(f'[Twitter]({candidate.contact.twitter})')
 
                 if social_links:
-                    st.markdown('<div class="social-links">', unsafe_allow_html=True)
                     st.markdown(" • ".join(social_links))
-                    st.markdown('</div>', unsafe_allow_html=True)
 
-            st.markdown('</div>', unsafe_allow_html=True)
+# Page configuration
+st.set_page_config(
+    page_title="Candidates | Chattanooga.Vote",
+    page_icon="🗳️",
+    layout="wide"
+)
 
-except Exception as e:
-    st.error(f"An error occurred while loading candidates: {str(e)}")
+# Main content
+st.title("🗳️ City Council Candidates")
+st.markdown("### March 4th, 2025 Election")
+
+# District filter
+district_filter = st.selectbox(
+    "Filter by District",
+    ["All Districts"] + [str(i) for i in range(1, 10)],
+    index=0
+)
+
+# Get and display candidates
+if district_filter == "All Districts":
+    candidates = sorted(get_all_candidates(), key=lambda x: int(x.district))
+else:
+    candidates = get_district_candidates(district_filter)
+
+# Group candidates by district
+candidates_by_district = {}
+for candidate in candidates:
+    if candidate.district not in candidates_by_district:
+        candidates_by_district[candidate.district] = []
+    candidates_by_district[candidate.district].append(candidate)
+
+# Display candidates
+for district in sorted(candidates_by_district.keys(), key=int):
+    st.markdown(f"## District {district}")
+    col1, col2 = st.columns(2)
+    district_candidates = candidates_by_district[district]
+    for i, candidate in enumerate(district_candidates):
+        with col1 if i % 2 == 0 else col2:
+            candidate_card(candidate)

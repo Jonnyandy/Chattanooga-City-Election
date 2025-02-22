@@ -21,15 +21,15 @@ args = "Initialize Data"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Test Streamlit"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Streamlit App"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Streamlit Test Basic"
+args = "Test Streamlit"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Streamlit Test"
 
 [[workflows.workflow]]
 name = "Initialize Data"
@@ -54,21 +54,6 @@ task = "shell.exec"
 args = "streamlit run My_Districts.py --server.address 0.0.0.0"
 
 [[workflows.workflow]]
-name = "Test Streamlit"
-author = "agent"
-
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
-
-[[workflows.workflow.tasks]]
-task = "packager.installForAll"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run test_streamlit.py --server.port 5006 --server.address 0.0.0.0"
-waitForPort = 5006
-
-[[workflows.workflow]]
 name = "Streamlit App"
 author = "agent"
 
@@ -84,7 +69,22 @@ args = "streamlit run My_Districts.py --server.address 0.0.0.0 --server.port 850
 waitForPort = 8501
 
 [[workflows.workflow]]
-name = "Streamlit Test Basic"
+name = "Test Streamlit"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run test_streamlit.py --server.port 5006 --server.address 0.0.0.0"
+waitForPort = 5006
+
+[[workflows.workflow]]
+name = "Streamlit Test"
 author = "agent"
 
 [workflows.workflow.metadata]
@@ -129,7 +129,3 @@ externalPort = 5000
 [[ports]]
 localPort = 8502
 externalPort = 5173
-
-[[ports]]
-localPort = 8503
-externalPort = 6000
