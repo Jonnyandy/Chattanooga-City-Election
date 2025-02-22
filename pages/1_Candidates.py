@@ -102,25 +102,19 @@ def candidate_card(candidate: Candidate):
         # Name
         st.markdown(f'<div class="candidate-name">{candidate.name}</div>', unsafe_allow_html=True)
 
-
+        
         # Contact Information
         if candidate.contact:
             st.markdown('<div class="candidate-contact">', unsafe_allow_html=True)
+            if candidate.contact.video:
+                video_url = candidate.contact.video.replace('shorts/', 'embed/')
+                @st.dialog(f"{candidate.name}" + " Video", width="large")
+                def show_youtube_video():
+                        st.video(video_url)
+                if st.button("Watch Personal Message"):
+                        show_youtube_video()
 
             if candidate.contact.website:
-                if "youtube.com" in candidate.contact.website:
-                    with st.expander("Watch Personal Message"):
-                        video_url = candidate.contact.website.replace('shorts/', 'embed/')
-                        st.markdown(f"""
-                            <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
-                                <iframe 
-                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                    src="{video_url}" 
-                                    frameborder="0" 
-                                    allowfullscreen>
-                                </iframe>
-                            </div>
-                        """, unsafe_allow_html=True)
                 st.markdown(f"{social_media_icon('website')} [{candidate.contact.website}]({candidate.contact.website})")
 
             if candidate.contact.email:

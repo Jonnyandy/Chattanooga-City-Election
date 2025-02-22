@@ -12,6 +12,7 @@ class CandidateContact:
     linkedin: Optional[str] = None
     twitter: Optional[str] = None
     website: Optional[str] = None
+    video: Optional[str] = None
 
 @dataclass
 class Candidate:
@@ -230,7 +231,7 @@ CANDIDATES_2025 = {
                 phone="423 771 1072",
                 email="Dollfordistrict8@gmail.com",
                 instagram="https://www.instagram.com/dollfordistrict8",
-                website="https://www.youtube.com/shorts/tJdFzbBDlYo"
+                video="https://www.youtube.com/shorts/tJdFzbBDlYo"
             )
         ),
         Candidate(
