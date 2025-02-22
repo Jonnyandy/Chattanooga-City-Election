@@ -3,28 +3,6 @@ from utils.candidate_data import get_all_candidates, get_district_candidates
 from streamlit_modal import Modal
 from pathlib import Path
 
-def show_campaign_video(video_id: str, aspect_ratio: str = "16:9") -> str:
-    """Return HTML for embedding a YouTube video with specified aspect ratio"""
-    if aspect_ratio == "9:16":
-        width = 315  # Standard width for vertical video
-        height = 560  # Height for 9:16 aspect ratio
-    else:
-        width = 560  # Standard width for horizontal video
-        height = 315  # Height for 16:9 aspect ratio
-
-    return f"""
-    <div style="display: flex; justify-content: center;">
-        <iframe
-            width="{width}"
-            height="{height}"
-            src="https://www.youtube.com/embed/{video_id}"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-    """
-
 # Page configuration
 st.set_page_config(
     page_title="Candidates | Chattanooga.Vote",
@@ -32,11 +10,19 @@ st.set_page_config(
     layout="wide"
 )
 
-# Add custom CSS to control image and content layout
+# Add custom CSS for grid layout and styling
 st.markdown("""
     <style>
+        .candidate-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: white;
+        }
         .candidate-photo {
             max-width: 300px;
+            width: 100%;
             margin: 0 auto;
             display: block;
         }
@@ -73,24 +59,24 @@ try:
     else:
         candidates = get_district_candidates(district_filter)
 
-    # Create columns for grid layout (3 candidates per row)
-    cols = st.columns(3)
+    # Calculate number of columns based on screen width
+    num_columns = 3
+    cols = st.columns(num_columns)
 
     # Display candidates in grid
     for idx, candidate in enumerate(candidates):
-        with cols[idx % 3]:
-            st.markdown("---")
+        with cols[idx % num_columns]:
+            st.markdown('<div class="candidate-container">', unsafe_allow_html=True)
 
             # Candidate photo
             if candidate.assets_photo:
                 st.image(candidate.assets_photo, use_column_width=True, clazz="candidate-photo")
 
             # Candidate name and district
-            st.markdown(f'<div class="candidate-info">', unsafe_allow_html=True)
             st.markdown(f"### {candidate.name}")
             st.markdown(f"**District {candidate.district}**")
 
-            # Campaign video modal
+            # Campaign video button
             modal = Modal(
                 title=f"Campaign Video - {candidate.name}",
                 key=f"modal_{candidate.district}_{candidate.name.replace(' ', '_')}"
@@ -104,13 +90,22 @@ try:
 
             if modal.is_open():
                 with modal.container():
-                    video_id = 'SAMPLE_VIDEO_ID'  # Default video ID for testing
+                    video_id = 'SAMPLE_VIDEO_ID'  # Default video ID
                     if candidate.name == "Doll Sandridge" and candidate.contact and candidate.contact.website:
                         if "youtube.com/shorts/" in candidate.contact.website:
                             video_id = candidate.contact.website.split("/")[-1]
 
                     st.markdown(
-                        show_campaign_video(video_id, "9:16" if video_id != 'SAMPLE_VIDEO_ID' else "16:9"),
+                        f"""
+                        <iframe
+                            width="{315 if video_id != 'SAMPLE_VIDEO_ID' else 560}"
+                            height="{560 if video_id != 'SAMPLE_VIDEO_ID' else 315}"
+                            src="https://www.youtube.com/embed/{video_id}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                        """,
                         unsafe_allow_html=True
                     )
 
