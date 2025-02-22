@@ -1,27 +1,28 @@
 import streamlit as st
-from datetime import datetime
-import pytz
+from datetime import datetime, timezone
 from streamlit_folium import st_folium
 from utils.geocoding import validate_address, geocode_address
 from utils.district_data import get_district_info, get_council_member
 from utils.mapping import create_district_map, create_base_district_map
 from pathlib import Path
 import re
-from streamlit_modal import Modal
+import pytz
 
-# Page configuration
+# Page configuration remains unchanged
 st.set_page_config(
     page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
-    layout="wide"
+    layout="wide",
+    
 )
 
-# Basic styling and sidebar additions from original
+# CSS remains unchanged through line 123
 st.markdown("""
     <style>
         section[data-testid="stSidebar"] > div:first-child {
             padding-top: 0;
         }
+       
         div[data-testid="stSidebarUserContent"] {
             padding-top: 0;            
         } 
@@ -38,10 +39,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Set sidebar title
+
+# Set sidebar title for the district finder
 st.sidebar.title("Find Your District")
 
-# Initialize session state
+# Initialize session state variables
 if 'search_performed' not in st.session_state:
     st.session_state.search_performed = False
 if 'current_address' not in st.session_state:
@@ -51,18 +53,20 @@ if 'current_coords' not in st.session_state:
 if 'district_info' not in st.session_state:
     st.session_state.district_info = None
 
-# Add title and attribution to sidebar from original
+
+# Add title and attribution to sidebar
+
 st.sidebar.markdown("""
 <hr>
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>
-
+    
 """, unsafe_allow_html=True)
 st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320)
 # Add attribution to sidebar
 st.sidebar.markdown("""
-
+    
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
     <p style='font-style: italic; color: #666;'>
         Brought to you by<br>
@@ -74,7 +78,7 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 
 
-# Election countdown with local timezone from original
+# Election countdown with local timezone
 election_date = datetime(2025, 3, 4, tzinfo=pytz.timezone('America/New_York'))
 current_time = datetime.now(pytz.timezone('America/New_York'))
 time_until_election = election_date - current_time
@@ -92,7 +96,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Main content
+# Main content area
 st.title("Chattanooga Council Elections")
 
 st.markdown("""
@@ -100,6 +104,7 @@ Find your city council district by entering your address below.
 This tool uses official City of Chattanooga district boundaries.
 """)
 
+# Main content
 col1, col2 = st.columns([2, 1])
 
 with col1:
@@ -139,7 +144,8 @@ with col1:
                         st.session_state.current_address = address
                         st.session_state.current_coords = coords
                         lat, lon = coords
-                        st.session_state.district_info = get_district_info(lat, lon)
+                        district_info = get_district_info(lat, lon)
+                        st.session_state.district_info = district_info
                     else:
                         st.error("Unable to locate this address. Please check the format and try again.")
                 else:
@@ -147,7 +153,8 @@ with col1:
         else:
             st.error("Please enter both street address and ZIP code")
 
-    MAP_HEIGHT = 400
+    # Map display with consistent height
+    MAP_HEIGHT = 400  # Consistent height for all maps
 
     st.subheader("Chattanooga City Council Districts")
     if not st.session_state.search_performed:
@@ -164,7 +171,8 @@ with col1:
             map_key = f"map_{st.session_state.current_address}"
             map_data = st_folium(m, width=None, height=MAP_HEIGHT, key=map_key)
 
-            # Display district information below map from original
+            # Display district information below map
+            
             st.markdown(f"### Your district is District {district_info['district_number']}")
 
             # Current Council Member
@@ -176,29 +184,6 @@ with col1:
             st.markdown("---")
             st.markdown("### March 4th, 2025 Election Candidates")
 
-            # Function to create video display
-            def show_campaign_video(video_id: str, aspect_ratio: str = "16:9") -> str:
-                """Return HTML for embedding a YouTube video with specified aspect ratio"""
-                if aspect_ratio == "9:16":
-                    width = 315  # Standard width for vertical video
-                    height = 560  # Height for 9:16 aspect ratio
-                else:
-                    width = 560  # Standard width for horizontal video
-                    height = 315  # Height for 16:9 aspect ratio
-
-                return f"""
-                <div style="display: flex; justify-content: center;">
-                    <iframe
-                        width="{width}"
-                        height="{height}"
-                        src="https://www.youtube.com/embed/{video_id}"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                """
-
             for candidate in district_info.get('candidates', []):
                 with st.container():
                     st.markdown('<div class="candidate-info">', unsafe_allow_html=True)
@@ -209,14 +194,6 @@ with col1:
                         website = candidate.split("(")[1].split(")")[0]
                         st.markdown(f'<div class="candidate-name">{name}</div>', unsafe_allow_html=True)
                         st.markdown(f'[Campaign Website]({website})', unsafe_allow_html=True)
-
-                        # Add video using expander
-                        with st.expander("📺 Watch Campaign Video"):
-                            # Replace 'SAMPLE_VIDEO_ID' with actual YouTube video ID for each candidate
-                            st.markdown(
-                                show_campaign_video('SAMPLE_VIDEO_ID', "9:16"),
-                                unsafe_allow_html=True
-                            )
                     else:
                         st.markdown(f'<div class="candidate-name">{candidate}</div>', unsafe_allow_html=True)
 
@@ -240,7 +217,7 @@ with col1:
                 **Precinct:** {district_info["precinct"]}
                 """)
 
-# Footer from original
+# Footer
 st.markdown("---")
 st.markdown(
     "Data provided by City of Chattanooga. "
