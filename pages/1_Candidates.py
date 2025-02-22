@@ -44,6 +44,14 @@ st.markdown("""
             margin-top: 1rem;
             text-align: center;
         }
+        .contact-info {
+            margin: 1rem 0;
+            text-align: center;
+        }
+        .social-links {
+            margin-top: 0.5rem;
+            text-align: center;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -65,18 +73,22 @@ try:
     else:
         candidates = get_district_candidates(district_filter)
 
-    # Display candidates
-    for candidate in candidates:
-        with st.container():
+    # Create columns for grid layout (3 candidates per row)
+    cols = st.columns(3)
+
+    # Display candidates in grid
+    for idx, candidate in enumerate(candidates):
+        with cols[idx % 3]:
             st.markdown("---")
 
             # Candidate photo
             if candidate.assets_photo:
                 st.image(candidate.assets_photo, use_column_width=True, clazz="candidate-photo")
 
-            # Candidate information - centered under photo
-            st.markdown('<div class="candidate-info">', unsafe_allow_html=True)
+            # Candidate name and district
+            st.markdown(f'<div class="candidate-info">', unsafe_allow_html=True)
             st.markdown(f"### {candidate.name}")
+            st.markdown(f"**District {candidate.district}**")
 
             # Campaign video modal
             modal = Modal(
@@ -104,12 +116,14 @@ try:
 
             # Contact information
             if candidate.contact:
+                st.markdown('<div class="contact-info">', unsafe_allow_html=True)
                 if candidate.contact.website:
                     st.markdown(f"🌐 [Website]({candidate.contact.website})")
                 if candidate.contact.email:
                     st.markdown(f"📧 {candidate.contact.email}")
                 if candidate.contact.phone:
                     st.markdown(f"📞 {candidate.contact.phone}")
+                st.markdown('</div>', unsafe_allow_html=True)
 
                 # Social media links
                 social_links = []
@@ -121,8 +135,12 @@ try:
                     social_links.append(f'[LinkedIn]({candidate.contact.linkedin})')
                 if candidate.contact.twitter:
                     social_links.append(f'[Twitter]({candidate.contact.twitter})')
+
                 if social_links:
+                    st.markdown('<div class="social-links">', unsafe_allow_html=True)
                     st.markdown(" • ".join(social_links))
+                    st.markdown('</div>', unsafe_allow_html=True)
+
             st.markdown('</div>', unsafe_allow_html=True)
 
 except Exception as e:
