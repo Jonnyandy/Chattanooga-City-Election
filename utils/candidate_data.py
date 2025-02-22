@@ -90,7 +90,7 @@ CANDIDATES_2025 = {
             contact=CandidateContact(
                 email="team@votejeffdavis.com",
                 website="https://votejeffdavis.com/",
-                video="https://www.youtube.com/watch?v=Km0LAA8uVGM"
+                video="https://www.youtube.com/embed/Km0LAA8uVGM?si=kUF-pBXICiv2L9AU"
             )
         ),
         Candidate(
