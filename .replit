@@ -22,6 +22,14 @@ args = "Initialize Data"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
+args = "Test Streamlit"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Streamlit Test"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
 args = "Streamlit App"
 
 [[workflows.workflow]]
@@ -39,7 +47,39 @@ task = "shell.exec"
 args = "python utils/district_scraper.py"
 
 [[workflows.workflow]]
-name = "Streamlit App"
+name = "Streamlit"
+author = 37050518
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run My_Districts.py --server.address 0.0.0.0 --server.port 8501"
+
+[[workflows.workflow]]
+name = "Test Streamlit DELETE"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run test_streamlit.py --server.port 5006 --server.address 0.0.0.0"
+waitForPort = 5006
+
+[[workflows.workflow]]
+name = "Streamlit Test DELETE"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run test_streamlit.py --server.address 0.0.0.0 --server.port 8502"
+waitForPort = 8502
+
+[[workflows.workflow]]
+name = "Streamlit App DELETE"
 author = "agent"
 
 [workflows.workflow.metadata]
@@ -48,19 +88,14 @@ agentRequireRestartOnSave = false
 [[workflows.workflow.tasks]]
 task = "packager.installForAll"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run My_Districts.py --server.port 5000 --server.address 0.0.0.0"
-waitForPort = 5000
-
-[[workflows.workflow]]
-name = "Streamlit"
-author = 37050518
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run My_Districts.py --server.address 0.0.0.0"
-
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 5006
+externalPort = 3001
+
+[[ports]]
+localPort = 8501
+externalPort = 3000
