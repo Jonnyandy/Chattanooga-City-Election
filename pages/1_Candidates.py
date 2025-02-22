@@ -111,7 +111,7 @@ def candidate_card(candidate: Candidate):
                 @st.dialog(f"{candidate.name}" + " Video", width="large")
                 def show_youtube_video():
                         st.video(video_url)
-                if st.button("Watch Personal Message"):
+                if st.button("Watch Personal Message", key=f"video_btn_{candidate.name}_{candidate.district}"):
                         show_youtube_video()
 
             if candidate.contact.website:
