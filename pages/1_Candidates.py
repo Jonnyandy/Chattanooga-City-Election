@@ -32,6 +32,21 @@ st.set_page_config(
     layout="wide"
 )
 
+# Add custom CSS to control image and content layout
+st.markdown("""
+    <style>
+        .candidate-photo {
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+        .candidate-info {
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Main content
 st.title("🗳️ City Council Candidates")
 st.markdown("### March 4th, 2025 Election")
@@ -55,10 +70,15 @@ try:
         with st.container():
             st.markdown("---")
 
-            # Basic candidate information
+            # Candidate photo
+            if candidate.assets_photo:
+                st.image(candidate.assets_photo, use_column_width=True, clazz="candidate-photo")
+
+            # Candidate information - centered under photo
+            st.markdown('<div class="candidate-info">', unsafe_allow_html=True)
             st.markdown(f"### {candidate.name}")
 
-            # Simple modal implementation for testing
+            # Campaign video modal
             modal = Modal(
                 title=f"Campaign Video - {candidate.name}",
                 key=f"modal_{candidate.district}_{candidate.name.replace(' ', '_')}"
@@ -103,6 +123,7 @@ try:
                     social_links.append(f'[Twitter]({candidate.contact.twitter})')
                 if social_links:
                     st.markdown(" • ".join(social_links))
+            st.markdown('</div>', unsafe_allow_html=True)
 
 except Exception as e:
     st.error(f"An error occurred while loading candidates: {str(e)}")
