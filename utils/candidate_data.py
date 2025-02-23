@@ -49,7 +49,12 @@ class Candidate:
                 if self.assets_photo:
                     break
 
-# Candidate data
+# Mayoral candidates data
+MAYORAL_CANDIDATES_2025 = [
+    # Placeholder for mayoral candidates
+]
+
+# City Council candidates data
 CANDIDATES_2025 = {
     "1": [
         Candidate(

@@ -190,9 +190,20 @@ st.markdown(
 )
 
 st.markdown("""
-# 🗳️ Chattanooga City Council Candidates
+# 🗳️ Chattanooga Election Candidates
 ### March 4th, 2025 Election
+""")
 
+# Display Mayoral Candidates
+st.markdown("""
+## 🎖️ Mayoral Candidates
+""")
+
+for candidate in MAYORAL_CANDIDATES_2025:
+    candidate_card(candidate)
+
+st.markdown("""
+## 🏛️ City Council Candidates
 Meet the candidates running for Chattanooga City Council. Learn about their platforms, experience, and vision for our city. Browse by district or view all candidates.
 """)
 
