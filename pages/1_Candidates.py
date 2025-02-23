@@ -199,8 +199,13 @@ st.markdown("""
 ## 🎖️ Mayoral Candidates
 """)
 
-for candidate in MAYORAL_CANDIDATES_2025:
-    candidate_card(candidate)
+# Create two columns for mayoral candidates
+col1, col2 = st.columns(2)
+
+# Display each mayoral candidate in a column
+for i, candidate in enumerate(MAYORAL_CANDIDATES_2025):
+    with col1 if i == 0 else col2:
+        candidate_card(candidate)
 
 st.markdown("""
 ## 🏛️ City Council Candidates
