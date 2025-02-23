@@ -51,7 +51,24 @@ class Candidate:
 
 # Mayoral candidates data
 MAYORAL_CANDIDATES_2025 = [
-    # Placeholder for mayoral candidates
+    Candidate(
+        name="Chris Long",
+        district="Mayor",
+        contact=CandidateContact(
+            website="https://ChrisLongForMayor2025.com",
+            email="ChrisLong@ChrisLongForMayor2025.com",
+            phone="(423) 653-3107"
+        )
+    ),
+    Candidate(
+        name="Tim Kelly",
+        district="Mayor",
+        contact=CandidateContact(
+            website="https://www.kellyforcha.com/",
+            email="info@kellyforcha.com",
+            phone="423.762.2713"
+        )
+    )
 ]
 
 # City Council candidates data
