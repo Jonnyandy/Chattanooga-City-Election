@@ -16,7 +16,7 @@ def get_candidate_info() -> Dict[str, Dict[str, Dict[str, str]]]:
             "James \"Skip\" Burnette": {}
         },
         "2": {
-            "Jenny Hill": {"website": "https://www.votejennyhill.org/"}
+            "Jenny Hill": {}
         },
         "3": {
             "Jeff Davis": {},
@@ -48,7 +48,7 @@ def get_candidate_info() -> Dict[str, Dict[str, Dict[str, str]]]:
             "Kelvin Scott": {}
         },
         "9": {
-            "Demetrus Coonrod": {},
+            
             "Ron Elliott": {},
             "Letechia Ellis": {},
             "Evelina Irén Kertay": {}
