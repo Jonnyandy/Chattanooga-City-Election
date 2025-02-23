@@ -1,6 +1,6 @@
 # Content from All_Candidates.py
 import streamlit as st
-from utils.candidate_data import get_all_candidates, get_district_candidates, Candidate
+from utils.candidate_data import get_all_candidates, get_district_candidates, Candidate, MAYORAL_CANDIDATES_2025
 from utils.photo_scraper import get_candidate_photo
 from typing import Optional
 from pathlib import Path
