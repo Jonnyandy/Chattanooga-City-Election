@@ -189,8 +189,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("🗳️ City Council Candidates")
-st.markdown("### March 4th, 2025 Election")
+st.markdown("""
+# 🗳️ Chattanooga City Council Candidates
+### March 4th, 2025 Election
+
+Meet the candidates running for Chattanooga City Council. Learn about their platforms, experience, and vision for our city. Browse by district or view all candidates.
+""")
 
 # Get district from URL parameter if available
 params = st.query_params

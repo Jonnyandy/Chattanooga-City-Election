@@ -13,7 +13,7 @@ st.set_page_config(
     page_title="Find Your District | Chattanooga.Vote",
     page_icon="🗳️",
     layout="wide",
-    
+
 )
 
 # CSS remains unchanged through line 123
@@ -22,7 +22,7 @@ st.markdown("""
         section[data-testid="stSidebar"] > div:first-child {
             padding-top: 0;
         }
-       
+
         div[data-testid="stSidebarUserContent"] {
             padding-top: 0;            
         } 
@@ -61,12 +61,12 @@ st.sidebar.markdown("""
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>
-    
+
 """, unsafe_allow_html=True)
 st.sidebar.image('assets/chattanoogashow_jonathanholborn.png', width=320)
 # Add attribution to sidebar
 st.sidebar.markdown("""
-    
+
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
     <p style='font-style: italic; color: #666;'>
         Brought to you by<br>
@@ -97,11 +97,11 @@ st.markdown(
 )
 
 # Main content area
-st.title("Chattanooga Council Elections")
-
 st.markdown("""
-Find your city council district by entering your address below. 
-This tool uses official City of Chattanooga district boundaries.
+# Find Your Chattanooga City Council District
+### Your Guide to Local Representation
+
+Find out which City Council district you belong to and learn about your current representatives. Enter your address below to get started.
 """)
 
 # Main content
@@ -172,7 +172,7 @@ with col1:
             map_data = st_folium(m, width=None, height=MAP_HEIGHT, key=map_key)
 
             # Display district information below map
-            
+
             st.markdown(f"### Your district is District {district_info['district_number']}")
 
             # Current Council Member

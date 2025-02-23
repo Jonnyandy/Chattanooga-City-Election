@@ -11,6 +11,8 @@ enableStaticServing = false
 [browser]
 gatherUsageStats = false
 serverAddress = "0.0.0.0"
+siteTitle = "Chattanooga.Vote | Your Guide to City Council Elections"
+siteDescription = "Find your Chattanooga City Council district, learn about candidates, and get important voting information for the March 4th, 2025 election."
 
 [theme]
 primaryColor = "#00BCD4"
@@ -33,7 +35,12 @@ developmentMode = false
 "og:description" = "Find your district, learn about candidates, and get voting information for the 2025 Chattanooga City Council Elections."
 "og:image" = "https://chattanooga.vote/assets/social/preview.jpg"
 "og:type" = "website"
+"og:locale" = "en_US"
+"og:site_name" = "Chattanooga.Vote"
 "twitter:card" = "summary_large_image"
 "twitter:title" = "Chattanooga City Council Elections 2025"
 "twitter:description" = "Find your district, learn about candidates, and get voting information for the 2025 Chattanooga City Council Elections."
 "twitter:image" = "https://chattanooga.vote/assets/social/preview.jpg"
+"keywords" = "Chattanooga elections, City Council, voting, districts, candidates, 2025 election"
+"author" = "Chattanooga.Vote"
+"robots" = "index, follow"

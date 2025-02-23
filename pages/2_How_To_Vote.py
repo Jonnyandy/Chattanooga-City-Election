@@ -34,8 +34,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("How to Vote")
-st.markdown("### Important Information for Chattanooga Voters")
+st.markdown("""
+# How to Vote in Chattanooga City Council Elections
+### Complete Guide for Chattanooga Voters
+
+Everything you need to know about voting in the March 4th, 2025 City Council election. Find information about registration, polling locations, and important dates.
+""")
 
 # Sample Ballot Section
 with st.expander("📋 View Sample Ballot", expanded=False):

@@ -54,7 +54,12 @@ st.markdown(f"""
             unsafe_allow_html=True)
 
 # Title
-st.title("Helpful Media")
+st.markdown("""
+# Election News & Media Coverage
+### Stay Informed About the 2025 City Council Elections
+
+Watch candidate interviews, read news coverage, and stay up-to-date with the latest election developments from trusted local sources.
+""")
 
 # ChattaMatters Section
 st.header("Chattanooga Times Free Press")
