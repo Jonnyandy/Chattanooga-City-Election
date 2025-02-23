@@ -54,6 +54,7 @@ MAYORAL_CANDIDATES_2025 = [
     Candidate(
         name="Chris Long",
         district="Mayor",
+        assets_photo="attached_assets/Chris-Long-Mayor.avif",
         contact=CandidateContact(
             website="https://ChrisLongForMayor2025.com",
             email="ChrisLong@ChrisLongForMayor2025.com",
@@ -63,6 +64,7 @@ MAYORAL_CANDIDATES_2025 = [
     Candidate(
         name="Tim Kelly",
         district="Mayor",
+        assets_photo="attached_assets/Tim-Kelly-Mayor.avif",
         contact=CandidateContact(
             website="https://www.kellyforcha.com/",
             email="info@kellyforcha.com",
