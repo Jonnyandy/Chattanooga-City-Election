@@ -39,10 +39,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
-# Set sidebar title for the district finder
-st.sidebar.title("Find Your District")
-
 # Initialize session state variables
 if 'search_performed' not in st.session_state:
     st.session_state.search_performed = False
@@ -57,7 +53,6 @@ if 'district_info' not in st.session_state:
 # Add title and attribution to sidebar
 
 st.sidebar.markdown("""
-<hr>
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>

@@ -12,7 +12,6 @@ st.set_page_config(
 
 # Add title and attribution to sidebar
 st.sidebar.markdown("""
-<hr>
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>
@@ -69,14 +68,14 @@ st.markdown(
 
 # YouTube embed
 youtube_embed = """
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+<div style="position: relative; padding-bottom: 600px; height: 0; overflow: hidden;">
     <iframe 
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/PxAKOxZk7z4?si=sbLn-2xCjbRzWayL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
 """
 
 # Use components.html to render the YouTube embed
-components.html(youtube_embed, height=200)
+components.html(youtube_embed, height=600)
 
 # The OurVoices Chattanooga Section
 st.header("Our Voices Chattanooga")
@@ -122,7 +121,7 @@ st.markdown(
 
 # YouTube embed
 youtube_embed = """
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+<div style="position: relative; padding-bottom: 600px; height: 0; overflow: hidden;">
     <iframe 
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
         src="https://www.youtube-nocookie.com/embed/x8wwylBLIVE?si=BrJCCX0u0gCMx0n1" 

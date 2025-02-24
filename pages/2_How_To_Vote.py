@@ -123,7 +123,6 @@ with col2:
 
 # Add title and attribution to sidebar
 st.sidebar.markdown("""
-<hr>
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>

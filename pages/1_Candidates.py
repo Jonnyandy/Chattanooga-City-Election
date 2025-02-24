@@ -6,6 +6,7 @@ from typing import Optional
 from pathlib import Path
 from PIL import Image
 from datetime import datetime, timezone
+import pytz
 
 def social_media_icon(platform: str) -> str:
     """Return HTML img tag for social media platform icon"""
@@ -149,8 +150,8 @@ st.set_page_config(
 )
 
 # Election countdown
-election_date = datetime(2025, 3, 4, tzinfo=timezone.utc)
-current_time = datetime.now(timezone.utc)
+election_date = datetime(2025, 3, 4, tzinfo=pytz.timezone('America/New_York'))
+current_time = datetime.now(pytz.timezone('America/New_York'))
 time_until_election = election_date - current_time
 
 days = time_until_election.days
@@ -159,7 +160,6 @@ minutes = (time_until_election.seconds % 3600) // 60
 
 # Add title and attribution to sidebar
 st.sidebar.markdown("""
-<hr>
     <div style='text-align: center; padding-top: 0; margin-bottom: 10px;'>
         <h1 style='color: #1B4E5D; margin-bottom: 5px;'>chattanooga.vote</h1>
     </div>
@@ -196,7 +196,7 @@ st.markdown("""
 
 # Display Mayoral Candidates
 st.markdown("""
-## 🎖️ Mayoral Candidates
+## Mayoral Candidates
 """)
 
 # Create two columns for mayoral candidates
@@ -208,7 +208,7 @@ for i, candidate in enumerate(MAYORAL_CANDIDATES_2025):
         candidate_card(candidate)
 
 st.markdown("""
-## 🏛️ City Council Candidates
+## City Council Candidates
 Meet the candidates running for Chattanooga City Council. Learn about their platforms, experience, and vision for our city. Browse by district or view all candidates.
 """)
 
