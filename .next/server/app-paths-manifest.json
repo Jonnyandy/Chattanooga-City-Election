@@ -1,0 +1,10 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/candidates/page": "app/candidates/page.js",
+  "/api/district/route": "app/api/district/route.js",
+  "/api/geocode/route": "app/api/geocode/route.js",
+  "/media/page": "app/media/page.js",
+  "/how-to-vote/page": "app/how-to-vote/page.js",
+  "/reliable-map/page": "app/reliable-map/page.js",
+  "/page": "app/page.js"
+}

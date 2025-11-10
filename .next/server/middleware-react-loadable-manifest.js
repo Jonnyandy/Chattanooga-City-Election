@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST="{\"components/DistrictFinder.tsx -> ./DistrictMap\":{\"id\":\"components/DistrictFinder.tsx -> ./DistrictMap\",\"files\":[\"static/css/_app-pages-browser_components_DistrictMap_tsx.css\",\"static/chunks/_app-pages-browser_components_DistrictMap_tsx.js\"]}}"

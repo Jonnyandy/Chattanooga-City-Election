@@ -1,0 +1,167 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 1",
+        "district": "1",
+        "description": "North Chattanooga, Mountain Creek, Moccasin Bend"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.32, 35.09],
+          [-85.25, 35.09],
+          [-85.25, 35.12],
+          [-85.32, 35.12],
+          [-85.32, 35.09]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 2",
+        "district": "2",
+        "description": "East Brainerd, Concord, Tyner, Apison"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.25, 35.02],
+          [-85.15, 35.02],
+          [-85.15, 35.08],
+          [-85.25, 35.08],
+          [-85.25, 35.02]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 3",
+        "district": "3",
+        "description": "Hixson, Big Ridge, Stuart Heights"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.23, 35.06],
+          [-85.15, 35.06],
+          [-85.15, 35.12],
+          [-85.23, 35.12],
+          [-85.23, 35.06]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 4",
+        "district": "4",
+        "description": "Highland Park, Ridgedale, Oak Grove"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.30, 35.00],
+          [-85.23, 35.00],
+          [-85.23, 35.06],
+          [-85.30, 35.06],
+          [-85.30, 35.00]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 5",
+        "district": "5",
+        "description": "Alton Park, Lookout Valley, St. Elmo"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.32, 34.96],
+          [-85.25, 34.96],
+          [-85.25, 35.02],
+          [-85.32, 35.02],
+          [-85.32, 34.96]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 6",
+        "district": "6",
+        "description": "East Lake, Missionary Ridge, Brainerd"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.25, 34.99],
+          [-85.15, 34.99],
+          [-85.15, 35.05],
+          [-85.25, 35.05],
+          [-85.25, 34.99]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 7",
+        "district": "7",
+        "description": "Downtown, MLK, North Shore"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.32, 35.03],
+          [-85.30, 35.03],
+          [-85.30, 35.06],
+          [-85.32, 35.06],
+          [-85.32, 35.03]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 8",
+        "district": "8",
+        "description": "Eastside, Avondale, Bushtown"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.30, 35.02],
+          [-85.26, 35.02],
+          [-85.26, 35.05],
+          [-85.30, 35.05],
+          [-85.30, 35.02]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District 9",
+        "district": "9",
+        "description": "Lookout Mountain, St. Elmo, East Lake"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-85.37, 34.96],
+          [-85.32, 34.96],
+          [-85.32, 35.02],
+          [-85.37, 35.02],
+          [-85.37, 34.96]
+        ]]
+      }
+    }
+  ]
+} 
