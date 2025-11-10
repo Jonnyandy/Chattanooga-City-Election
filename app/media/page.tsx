@@ -150,12 +150,12 @@ export default function MediaPage() {
         
         <TabsContent value="news" className="p-6 bg-white rounded-lg shadow-md mt-2">
           <h3 className="text-xl font-semibold mb-4">Latest News Articles</h3>
-          
+
           <div className="space-y-6">
             <div className="border-b pb-4">
               <h4 className="font-medium text-lg mb-1">
-                <a href="https://chattamatters.com/whos-running-for-mayor-and-city-council-chattanooga-2025/" 
-                   target="_blank" 
+                <a href="https://chattamatters.com/whos-running-for-mayor-and-city-council-chattanooga-2025/"
+                   target="_blank"
                    rel="noopener noreferrer"
                    className="text-blue-700 hover:underline">
                   Who's Running for Mayor and City Council? Chattanooga 2025
@@ -164,38 +164,18 @@ export default function MediaPage() {
               <p className="text-gray-600 mb-2">ChattaMatters • January 15, 2025</p>
               <p>A comprehensive guide to all the candidates in the upcoming Chattanooga municipal elections, including backgrounds, platforms, and key issues.</p>
             </div>
-            
-            <div className="border-b pb-4">
-              <h4 className="font-medium text-lg mb-1">
-                <a href="#" className="text-blue-700 hover:underline">
-                  District 8 Race Heats Up with Four Candidates Vying for Council Seat
-                </a>
-              </h4>
-              <p className="text-gray-600 mb-2">Chattanooga Times Free Press • December 28, 2024</p>
-              <p>Four candidates have qualified to run in what is expected to be one of the most competitive races in the 2025 city elections.</p>
-            </div>
-            
-            <div>
-              <h4 className="font-medium text-lg mb-1">
-                <a href="#" className="text-blue-700 hover:underline">
-                  Early Voting Locations Announced for March Election
-                </a>
-              </h4>
-              <p className="text-gray-600 mb-2">NewsChannel 9 • January 5, 2025</p>
-              <p>The Hamilton County Election Commission has announced the locations and hours for early voting in the upcoming city council elections.</p>
-            </div>
           </div>
         </TabsContent>
         
         <TabsContent value="social" className="p-6 bg-white rounded-lg shadow-md mt-2">
           <h3 className="text-xl font-semibold mb-4">Social Media Updates</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
             {/* Instagram Embed - The Chattanooga Show */}
             <div className="bg-white rounded-lg overflow-hidden">
               <div className="instagram-embed-container">
-                <blockquote 
-                  className="instagram-media" 
+                <blockquote
+                  className="instagram-media"
                   data-instgrm-permalink="https://www.instagram.com/reel/DE7SC4JtTrl/"
                   data-instgrm-version="14"
                 >
@@ -205,7 +185,7 @@ export default function MediaPage() {
               <div className="p-4 text-center">
                 <h4 className="font-medium">The Chattanooga Show</h4>
                 <p className="text-sm text-gray-500 mb-2">@chattanoogashow</p>
-                <a 
+                <a
                   href="https://www.instagram.com/reel/DE7SC4JtTrl/"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -214,61 +194,6 @@ export default function MediaPage() {
                   View this post on Instagram
                 </a>
               </div>
-            </div>
-
-            {/* Other Instagram Embeds */}
-            <div className="bg-white rounded-lg overflow-hidden">
-              <div className="instagram-embed-container">
-                <blockquote 
-                  className="instagram-media" 
-                  data-instgrm-permalink="https://www.instagram.com/p/CwDnYQPvnNW/"
-                  data-instgrm-version="14"
-                >
-                </blockquote>
-              </div>
-              <div className="p-4 text-center">
-                <h4 className="font-medium">Chattanooga Elections</h4>
-                <p className="text-sm text-gray-500 mb-2">@chattanooga_elections</p>
-                <a 
-                  href="https://www.instagram.com/p/CwDnYQPvnNW/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  View this post on Instagram
-                </a>
-              </div>
-            </div>
-
-            {/* Previous social media posts */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex items-center mb-3">
-                <div className="h-10 w-10 rounded-full bg-[#1B4E5D] flex items-center justify-center text-white font-bold">OV</div>
-                <div className="ml-2">
-                  <p className="font-medium">Our Voices Chattanooga</p>
-                  <p className="text-sm text-gray-500">@ourvoicescha</p>
-                </div>
-              </div>
-              <p className="mb-2">
-                We're excited to announce our first candidate forum for the 2025 City Council election on Jan 25th! 
-                Join us to hear directly from candidates in Districts 1, 3, and 5.
-              </p>
-              <p className="text-blue-600 text-sm">January 10, 2025</p>
-            </div>
-            
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex items-center mb-3">
-                <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">CS</div>
-                <div className="ml-2">
-                  <p className="font-medium">The Chattanooga Show</p>
-                  <p className="text-sm text-gray-500">@chattanoogashow</p>
-                </div>
-              </div>
-              <p className="mb-2">
-                Check out our latest interviews with mayoral candidates Chris Long and Tim Kelly! 
-                Learn about their vision for Chattanooga's future and where they stand on key issues.
-              </p>
-              <p className="text-blue-600 text-sm">January 5, 2025</p>
             </div>
           </div>
         </TabsContent>

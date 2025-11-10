@@ -167,26 +167,6 @@ export default function HowToVotePage() {
           </Card>
         </TabsContent>
       </Tabs>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">Sample Ballot</CardTitle>
-          <CardDescription>Preview what you'll see on election day</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p>
-            Preview the ballot for the March 4th, 2025 City Council Election. The sample ballot shows all races and candidates that will appear on your actual ballot.
-          </p>
-          <Button asChild className="bg-blue-600 hover:bg-blue-700">
-            <a 
-              href="/sample-ballot-2025.pdf" 
-              target="_blank"
-            >
-              View Sample Ballot
-            </a>
-          </Button>
-        </CardContent>
-      </Card>
     </main>
   );
 } 

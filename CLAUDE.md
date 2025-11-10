@@ -19,7 +19,7 @@ This is a Next.js 14 application for the Chattanooga City Council Election, buil
 - **TypeScript** for type safety
 - **Tailwind CSS** with shadcn/ui components
 - **Leaflet** for interactive maps
-- **Google Maps API** for geocoding
+- **OpenStreetMap Nominatim** for geocoding
 - **GeoJSON** for district boundary data
 
 ### Core Structure
@@ -53,7 +53,6 @@ This is a Next.js 14 application for the Chattanooga City Council Election, buil
 **Libraries:**
 - `lib/` - Shared utilities
   - `district-data.ts` - District data fetching and processing
-  - `geocoding.ts` - Google Maps geocoding utilities
   - `utils.ts` - General utilities (includes shadcn/ui cn function)
 
 ### District Data System
@@ -78,7 +77,7 @@ Two map implementations are available:
 Both use react-leaflet and support:
 - District boundary visualization
 - User location detection
-- Address geocoding via Google Maps API
+- Address geocoding via OpenStreetMap Nominatim API
 - Responsive design
 
 ### Styling System
@@ -93,7 +92,7 @@ Both use react-leaflet and support:
 - **Next.js Config**: Configured for large GeoJSON files with increased page data limits
 - **TypeScript**: Strict mode enabled with path aliases (`@/*`)
 - **Tailwind**: Extended with shadcn/ui theme system
-- **Google Maps**: API key included for geocoding services
+- **Geocoding**: Uses OpenStreetMap Nominatim API (no API key required)
 
 ### Development Patterns
 
